@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resource/logo.ico</file>
+        <file>resource/logo_32x32.ico</file>
+        <file>resource/logo.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>releasenotes.txt</file>
+    </qresource>
+</RCC>

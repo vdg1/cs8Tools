@@ -1,0 +1,23 @@
+Version 5.0
+- Migrated to SQlite database handling
+
+Version 4.4
+- Fixed bug which resets synchronization settings to NULL. After this version has been updated all settings in the sync tool must be verified and corrected.
+- Added information about available version when performing update check.
+
+Version 4.3
+- Fixed auto start of sync tool.
+
+Version 4.0
+- Ported to Qt5 framwork
+
+Version 3.2
+- Fixed bug in file parsing in catalogue import function
+
+Version 3.1
+- Fixed bug when importing new catalogue file.
+- Added setting to allow or disallow backup synchronization via VPN connection in order to safe bandwidth. However, detecting a VPN connection only works for Windows VPN connection. VPN solution like OpenVPN are not detected.
+- Minor changes and fixes
+
+Version 3.0
+- Added sync function. This function allows to syncronize backups from local computer to network drives.

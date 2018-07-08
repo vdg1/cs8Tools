@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>CS8 Backup</DisplayName>
+    <Description>CS8 Backup program and synchronisation tool.</Description>
+    <Version>_VERSION_</Version>
+    <ReleaseDate>_DATE_</ReleaseDate>
+    <Default>true</Default>
+    <Script>installscript.qs</Script>
+    <Licenses>
+            <License name="License Agreement" file="License.txt" />
+        </Licenses>
+</Package>

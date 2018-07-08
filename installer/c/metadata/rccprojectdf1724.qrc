@@ -1,0 +1,13 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file>./config/config-internal.ini</file>
+<file>./installer-config/config.xml</file>
+<file>./org.vdg.cs8Tools/installscript.qs</file>
+<file>./org.vdg.cs8Tools/License.txt</file>
+<file>./org.vdg.cs8Tools.cs8Backup/installscript.qs</file>
+<file>./org.vdg.cs8Tools.cs8Backup/License.txt</file>
+<file>./org.vdg.cs8Tools.cs8LogViewer/installscript.qs</file>
+<file>./rccprojectdf1724.qrc</file>
+<file>./Updates.xml</file>
+</qresource>
+</RCC>

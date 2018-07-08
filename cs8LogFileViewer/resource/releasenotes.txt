@@ -1,0 +1,23 @@
+Version 5.0
+- Migrated to SQlite database handling
+
+Version 4.6
+- Added detailed view in configuration tree view which shows customer name and internal robot number
+- Added funtion to look up robot machine file in Podio
+
+Version 4.5
+- Fixed copy function in log viewer
+- Added function to copy and send log data via mail
+- Added function to download log files from controller
+- Minor fixes in log file viewer
+
+Version 4.4
+- Minor fixes in log file viewer
+
+Version 4.3
+- Added support for CS9 log files in log file viewer
+- Added function to log messages online on CS8 controller (use "Online" dialog in cs8LogFileViewer)
+
+Version 4.0
+- Ported to Qt5 framwork
+- Integrated cs8LogFileViewer

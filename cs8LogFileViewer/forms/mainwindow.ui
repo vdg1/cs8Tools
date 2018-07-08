@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="leftMargin">
+     <number>2</number>
+    </property>
+    <property name="topMargin">
+     <number>2</number>
+    </property>
+    <property name="rightMargin">
+     <number>2</number>
+    </property>
+    <property name="bottomMargin">
+     <number>2</number>
+    </property>
+    <item>
+     <widget class="QMdiArea" name="mdiArea">
+      <property name="viewMode">
+       <enum>QMdiArea::TabbedView</enum>
+      </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="tabsMovable">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_File">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actOpen"/>
+    <addaction name="actionOnline"/>
+    <addaction name="actionSave_as"/>
+    <addaction name="separator"/>
+    <addaction name="actExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="actCopy"/>
+    <addaction name="actionSend_selected_lines_to"/>
+   </widget>
+   <widget class="QMenu" name="menu_Window">
+    <property name="title">
+     <string>&amp;Window</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actHide_USR_messages"/>
+    <addaction name="actionHide_Swap_File_Messages"/>
+    <addaction name="actionReverse_Order"/>
+    <addaction name="actionOpen_Machine_File"/>
+    <addaction name="actionUse_Computer_Time"/>
+    <addaction name="actionHighlighting"/>
+    <addaction name="actionReset_Dialog_Options"/>
+   </widget>
+   <widget class="QMenu" name="menuNavigate">
+    <property name="title">
+     <string>Navigate</string>
+    </property>
+    <addaction name="actionNext_System_Start"/>
+    <addaction name="actionPrevious_System_Start"/>
+   </widget>
+   <addaction name="menu_File"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuNavigate"/>
+   <addaction name="menuTools"/>
+   <addaction name="menu_Window"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget">
+   <property name="windowTitle">
+    <string>System Configurations</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="QTreeView" name="treeViewSystemConfigurations">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="animated">
+        <bool>true</bool>
+       </property>
+       <attribute name="headerVisible">
+        <bool>false</bool>
+       </attribute>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actOpen"/>
+   <addaction name="actionOnline"/>
+  </widget>
+  <widget class="QToolBar" name="toolBar_2">
+   <property name="windowTitle">
+    <string>toolBar_2</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actCopy"/>
+   <addaction name="actHide_USR_messages"/>
+   <addaction name="actionHide_Swap_File_Messages"/>
+   <addaction name="actionReverse_Order"/>
+   <addaction name="separator"/>
+   <addaction name="actionPrevious_System_Start"/>
+   <addaction name="actionNext_System_Start"/>
+   <addaction name="actionScroll_to_Bottom"/>
+   <addaction name="actionOpen_Machine_File"/>
+  </widget>
+  <widget class="QDockWidget" name="dockWidget_2">
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <property name="leftMargin">
+      <number>2</number>
+     </property>
+     <property name="topMargin">
+      <number>2</number>
+     </property>
+     <property name="rightMargin">
+      <number>2</number>
+     </property>
+     <property name="bottomMargin">
+      <number>2</number>
+     </property>
+     <item>
+      <widget class="cs8SearchWidget" name="widgetSearch" native="true"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <action name="actOpen">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/document-open-folder.png</normaloff>:/icons/32x32/32x32/actions/document-open-folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open a log file</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actCopy">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/edit-copy.png</normaloff>:/icons/32x32/32x32/actions/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy current selection</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actExit">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/application-exit.png</normaloff>:/icons/32x32/32x32/actions/application-exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Exit</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit CS8 Log File Viewer</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actHide_USR_messages">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/view-filter.png</normaloff>:/icons/32x32/32x32/actions/view-filter.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hide USR: messages</string>
+   </property>
+  </action>
+  <action name="actionHighlighting">
+   <property name="text">
+    <string>Highlighting</string>
+   </property>
+  </action>
+  <action name="actionNext_System_Start">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/arrow-right-double.png</normaloff>:/icons/32x32/32x32/actions/arrow-right-double.png</iconset>
+   </property>
+   <property name="text">
+    <string>Next System Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Jump to next system start</string>
+   </property>
+  </action>
+  <action name="actionPrevious_System_Start">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/arrow-left-double.png</normaloff>:/icons/32x32/32x32/actions/arrow-left-double.png</iconset>
+   </property>
+   <property name="text">
+    <string>Previous System Start</string>
+   </property>
+   <property name="toolTip">
+    <string>Jump to previous system start</string>
+   </property>
+  </action>
+  <action name="actionHide_Swap_File_Messages">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/run-build-clean.png</normaloff>:/icons/32x32/32x32/actions/run-build-clean.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hide Swap File Messages</string>
+   </property>
+  </action>
+  <action name="actionReverse_Order">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/view-sort-descending.png</normaloff>:/icons/32x32/32x32/actions/view-sort-descending.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reverse Order</string>
+   </property>
+  </action>
+  <action name="actionOnline">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/network-connect.png</normaloff>:/icons/32x32/32x32/actions/network-connect.png</iconset>
+   </property>
+   <property name="text">
+    <string>Online...</string>
+   </property>
+  </action>
+  <action name="actionUse_Computer_Time">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Computer Time</string>
+   </property>
+  </action>
+  <action name="actionSend_selected_lines_to">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/mail-forwarded.png</normaloff>:/icons/32x32/32x32/actions/mail-forwarded.png</iconset>
+   </property>
+   <property name="text">
+    <string>Send selected lines to ...</string>
+   </property>
+  </action>
+  <action name="actionSave_as">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/document-save-as.png</normaloff>:/icons/32x32/32x32/actions/document-save-as.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+  <action name="actionOpen_Machine_File">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/view-pim-tasks.png</normaloff>:/icons/32x32/32x32/actions/view-pim-tasks.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Machine File</string>
+   </property>
+   <property name="toolTip">
+    <string>Open Machine File</string>
+   </property>
+  </action>
+  <action name="actionScroll_to_Bottom">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/view-sort-ascending.png</normaloff>:/icons/32x32/32x32/actions/view-sort-ascending.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scroll to Bottom</string>
+   </property>
+  </action>
+  <action name="actionReset_Dialog_Options">
+   <property name="text">
+    <string>Reset Dialog Options</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>cs8SearchWidget</class>
+   <extends>QWidget</extends>
+   <header>cs8searchwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../../../Icons/resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

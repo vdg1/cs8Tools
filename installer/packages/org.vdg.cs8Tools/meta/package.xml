@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+<DisplayName>Base Components</DisplayName>
+<Description>Mandatory files</Description>
+<Version>5.7.1</Version>
+<ReleaseDate>2018-01-24</ReleaseDate>
+<Default>true</Default>
+<ForcedInstallation>true</ForcedInstallation>
+<Essential>true</Essential>
+<Script>installscript.qs</Script>
+<RequiresAdminRights>true</RequiresAdminRights>
+<Licenses>
+        <License name="License Agreement" file="License.txt" />
+    </Licenses>
+</Package>

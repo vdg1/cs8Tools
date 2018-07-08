@@ -1,0 +1,72 @@
+Version 5.0
+- Minor bug fixes
+
+Version 4.4
+- Fixed bug which resets synchronization settings to NULL. After this version has been updated all settings in the sync tool must be verified and corrected.
+
+Version 4.3
+- Fixed issue where backup program complains about failed download of file. The error message is shown when the file size changes between file list download and actual file download.
+
+Version 4.0
+- Ported to Qt5 framwork
+
+Version 3.2
+
+Version 3.1
+- Added dialog where operator can enter information on a robot that is not listed yet in the machine catalogue.
+- Minor changes and fixes
+
+Version 3.0
+
+Version 2.3.1
+- Fixed problem in setting correct download path for backup
+- Added automtatic retry function for failed downloads
+
+Version 2.3
+- Improved network scanner
+- Added "Explore" button to access download folder easily
+
+Version 2.2
+- Added support for Val3 s7
+
+Version 2.1b
+- Removed nasty bug in threading code that crashes the backup program 9 out of 10 times.
+
+Version 2.1a
+- Fixed time out problem that occurs when download time is longer than a few seconds.
+
+Version 2.1
+- Added serial number information in scanner list.
+- Fixed problem when downloading files with size 0.
+- Corrected calculation of transfer rate
+- Added possiblity to select backup of essential configuration files in /usr/configs and /sys/configs
+
+Version 2.0
+- Complete rewrite of FTP module
+- Improved functionality of backup storage facility
+- Display transfer rate in main window when backup is being executed
+- Pre-select the backup location with the latest backup if multiple backup locations of a system were found
+
+Version 1.3.1
+- Improved performance of backup search function
+- Resume backup if connection breaks
+
+Version 1.3
+- Added network scanner
+
+Version 1.2-pre
+- New UI layout.
+- Changed the date and time for the backup folder from 2 digit year to 4 digit year.
+- Improved detection of robot serial number.
+- Use native separators ("\" for Windows platform) for file paths.
+- Removed bug which caused backup application to quit after a backup has been compressed.
+- Search controller backup folder recursively in download folder.
+- Ask user if he wants to save a changed download folder or if he wants to keep the change only for the current session.
+- Let the user choose the backup folder if multiple backup folders of a controller were found.
+- Ask the user to enter the serial number manually if it could not be determined automatically.
+- Added language support.
+- Save size and position of main window.
+
+Version 1.1.2
+- Do not append "_unkown" to the name of download directory if this is the first backup downloaded from the robot.
+- Set up the list of files to download after the user has confirmed to create the backup for time saving reasons. The user does not have to wait until the file list is complete before he can start the backup operation.

@@ -1,0 +1,33 @@
+
+IDI_ICON1 ICON DISCARDABLE      "logo.ico"
+
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION VERSION_RC
+PRODUCTVERSION VERSION_RC
+               FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+FILEFLAGS 0x0L
+#else
+FILEFLAGS 0x0L
+#endif
+FILESUBTYPE 0x0L
+BEGIN
+               BLOCK "StringFileInfo"
+BEGIN
+               BLOCK "080904B0"
+BEGIN
+               VALUE "CompanyName", "Volkers CS8 Tools"
+VALUE "FileDescription", "CS8 Backup"
+VALUE "FileVersion", PRODUCT_VERSION_STRING
+               VALUE "LegalCopyright", "© All rights reserved."
+VALUE "OriginalFilename", "cs8Backup.exe"
+VALUE "ProductName", "CS8 Backup"
+VALUE "ProductVersion", PRODUCT_VERSION_STRING
+END
+END
+               BLOCK "VarFileInfo"
+BEGIN
+               VALUE "Translation", 0x809, 1200
+END
+               END
