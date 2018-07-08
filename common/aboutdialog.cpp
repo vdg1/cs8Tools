@@ -10,12 +10,12 @@ aboutDialog::aboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::aboutDia
 
   ui->setupUi(this);
   ui->labelVersion->setText(qApp->applicationVersion());
-  setWindowTitle(tr("About %1").arg(qApp->applicationName()));
-  //:/releasenotes.txt
-  QFile file("qrc:/releasenotes.txt");
+
+  QFile file(":/files/releasenotes.txt");
   qDebug() << "release notes file:" << file.fileName() << " exists:" << file.exists();
   if (file.open(QFile::ReadOnly))
     ui->textEditChangelog->setPlainText(file.readAll());
+  this->setWindowTitle(tr("About %1").arg(qApp->applicationName()));
 }
 
 aboutDialog::~aboutDialog() { delete ui; }

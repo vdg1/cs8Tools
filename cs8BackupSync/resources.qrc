@@ -4,7 +4,7 @@
         <file>resource/logo_32x32.ico</file>
         <file>resource/logo.png</file>
     </qresource>
-    <qresource prefix="/">
-        <file>releasenotes.txt</file>
+    <qresource prefix="/files">
+        <file alias="releasenotes.txt">releasenotes.txt</file>
     </qresource>
 </RCC>

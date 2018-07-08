@@ -17,7 +17,7 @@ LogFileViewer.CONFIG += target_predeps no_link combine
 
 root.input = INPUT
 root.output = $$INSTALLER
-root.commands = $$QFIW_DIR/bin/binarycreator --online-only -c $$PWD/config/config.xml  -p $$PWD/packages --exclude org.vdg.cs8Tools,org.vdg.cs8Tools.cs8Backup,org.vdg.cs8Tools.cs8LogViewer cs8ToolsInstaller.exe
+root.commands = $$QFIW_DIR/bin/binarycreator -v --online-only -c $$PWD/config/config.xml  -p $$PWD/packages --exclude org.vdg.cs8Tools,org.vdg.cs8Tools.cs8Backup,org.vdg.cs8Tools.cs8LogViewer cs8ToolsInstaller.exe
 #-p $$PWD/packages
 root.CONFIG += target_predeps no_link combine
 root.depends = Backup LogFileViewer
@@ -31,8 +31,8 @@ repository.depends = root
 CONFIG(release, debug|release) {
 QMAKE_EXTRA_TARGETS += LogFileViewer
 QMAKE_EXTRA_TARGETS += Backup
-QMAKE_EXTRA_TARGETS += root
 QMAKE_EXTRA_TARGETS += repository
+QMAKE_EXTRA_TARGETS += root
 
 PRE_TARGETDEPS += root Backup LogFileViewer repository
 }

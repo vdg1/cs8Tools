@@ -48,11 +48,14 @@ FORMS += \
     $$PWD/dialogwhatsnew.ui
 
 # increase build number
-build_nr.commands = $$PWD/build_inc.bat $$shell_path($$_PRO_FILE_PWD_)
-build_nr.depends = FORCE
-QMAKE_EXTRA_TARGETS += build_nr
-PRE_TARGETDEPS += build_nr
-system(build_inc.bat $$shell_path($$_PRO_FILE_PWD_))
+# increase build number only in release mode
+CONFIG(release, debug|release) {
+    build_nr.commands = $$PWD/build_inc.bat $$shell_path($$_PRO_FILE_PWD_)
+    build_nr.depends = FORCE
+    QMAKE_EXTRA_TARGETS += build_nr
+    PRE_TARGETDEPS += build_nr
+    system(build_inc.bat $$shell_path($$_PRO_FILE_PWD_))
+}
 BUILD_NO=$$cat($$_PRO_FILE_PWD_"/build.txt")
 
 # set version information

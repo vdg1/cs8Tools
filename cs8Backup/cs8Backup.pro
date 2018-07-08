@@ -55,8 +55,7 @@ SOURCES = selectbackupfolderdialog.cpp \
     zlib/adler32.c \
     wizardcreatebackup.cpp
 
-RESOURCES += cs8Backup.qrc \
-    releasenotes.txt
+RESOURCES += cs8Backup.qrc
 
 QT += network \
     xml \

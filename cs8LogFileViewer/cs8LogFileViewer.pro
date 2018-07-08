@@ -60,10 +60,9 @@ FORMS += \
 
 QT += sql widgets gui concurrent winextras
 
-#OTHER_FILES +=  resource/resources.rc
+OTHER_FILES +=  resource/resources.rc
 RC_FILE = resource/resources.rc
-RESOURCES     +=  ../../Icons/resources.qrc \
-resource/resources.qrc
+RESOURCES     +=  resource/cs8logviewer.qrc ../../Icons/resources.qrc
 
 LIBS += -lWs2_32
 
