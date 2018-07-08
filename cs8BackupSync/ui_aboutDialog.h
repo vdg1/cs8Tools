@@ -39,12 +39,12 @@ public:
     QLabel *label_2;
     QSpacerItem *spacerItem1;
     QTabWidget *tabWidget;
-    QWidget *tab;
-    QVBoxLayout *vboxLayout1;
-    QTextEdit *textEdit;
     QWidget *tab_2;
-    QVBoxLayout *vboxLayout2;
+    QVBoxLayout *vboxLayout1;
     QTextEdit *textEditChangelog;
+    QWidget *tab;
+    QVBoxLayout *vboxLayout2;
+    QTextEdit *textEdit;
     QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *aboutDialog)
@@ -100,28 +100,28 @@ public:
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
         tabWidget->setTabPosition(QTabWidget::North);
         tabWidget->setTabShape(QTabWidget::Rounded);
-        tab = new QWidget();
-        tab->setObjectName(QStringLiteral("tab"));
-        vboxLayout1 = new QVBoxLayout(tab);
-        vboxLayout1->setObjectName(QStringLiteral("vboxLayout1"));
-        textEdit = new QTextEdit(tab);
-        textEdit->setObjectName(QStringLiteral("textEdit"));
-        textEdit->setReadOnly(true);
-
-        vboxLayout1->addWidget(textEdit);
-
-        tabWidget->addTab(tab, QString());
         tab_2 = new QWidget();
         tab_2->setObjectName(QStringLiteral("tab_2"));
-        vboxLayout2 = new QVBoxLayout(tab_2);
-        vboxLayout2->setObjectName(QStringLiteral("vboxLayout2"));
+        vboxLayout1 = new QVBoxLayout(tab_2);
+        vboxLayout1->setObjectName(QStringLiteral("vboxLayout1"));
         textEditChangelog = new QTextEdit(tab_2);
         textEditChangelog->setObjectName(QStringLiteral("textEditChangelog"));
         textEditChangelog->setReadOnly(true);
 
-        vboxLayout2->addWidget(textEditChangelog);
+        vboxLayout1->addWidget(textEditChangelog);
 
         tabWidget->addTab(tab_2, QString());
+        tab = new QWidget();
+        tab->setObjectName(QStringLiteral("tab"));
+        vboxLayout2 = new QVBoxLayout(tab);
+        vboxLayout2->setObjectName(QStringLiteral("vboxLayout2"));
+        textEdit = new QTextEdit(tab);
+        textEdit->setObjectName(QStringLiteral("textEdit"));
+        textEdit->setReadOnly(true);
+
+        vboxLayout2->addWidget(textEdit);
+
+        tabWidget->addTab(tab, QString());
 
         vboxLayout->addWidget(tabWidget);
 
@@ -147,13 +147,19 @@ public:
     {
         aboutDialog->setWindowTitle(QApplication::translate("aboutDialog", "About CS8 Tools", Q_NULLPTR));
         label_3->setText(QApplication::translate("aboutDialog", "Version:", Q_NULLPTR));
-        labelVersion->setText(QApplication::translate("aboutDialog", "4.0", Q_NULLPTR));
+        labelVersion->setText(QString());
         label->setText(QApplication::translate("aboutDialog", "Author:", Q_NULLPTR));
         label_2->setText(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"mailto:volker.drewer@gmail.com\"><span style=\" font-family:'Courier New,courier'; text-decoration: underline; color:#0000ff;\">Volker Drewer-Gutland</span></a></p></body></html>", Q_NULLPTR));
+        textEditChangelog->setHtml(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>", Q_NULLPTR));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("aboutDialog", "Changelog", Q_NULLPTR));
         textEdit->setHtml(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -165,12 +171,6 @@ public:
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.</span></p></body></html>", Q_NULLPTR));
         tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("aboutDialog", "Gnu General Public License", Q_NULLPTR));
-        textEditChangelog->setHtml(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>", Q_NULLPTR));
-        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("aboutDialog", "Changelog", Q_NULLPTR));
     } // retranslateUi
 
 };
