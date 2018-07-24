@@ -24,7 +24,7 @@ OTHER_FILES +=  resource/resources.rc
 RC_FILE += resource/resources.rc
 
 MAJOR_VERSION=5
-MINOR_VERSION=1
+MINOR_VERSION=2
 
 include (../common/common.pri)
 

@@ -90,6 +90,23 @@ p, li { white-space: pre-wrap; }
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Web: </string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/vdg1/cs8Tools&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/vdg1/cs8Tools&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::RichText</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

@@ -49,15 +49,21 @@ bool checkDBSchemas(QSqlDatabase &db) {
       qDebug() << "Failed to create table tbLogFiles:" << q.lastError();
   }
 
+  // update log file archive table scheme
+  if (!q.exec(QLatin1String("ALTER TABLE tbLogFiles "
+                            "ADD lastOpen TIMESTAMP;")))
+    qDebug() << "Failed to update table tbLogFiles:" << q.lastError() << " query: " << q.executedQuery();
+  if (!q.exec(QLatin1String("ALTER TABLE tbLogFiles "
+                            "ADD firstOpen TIMESTAMP;")))
+    qDebug() << "Failed to update table tbLogFiles:" << q.lastError() << " query: " << q.executedQuery();
+
   db.commit();
   return true;
 }
 
 bool createDBConnection() {
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(
-      QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-      "/machineCatalogue.db");
+  db.setDatabaseName(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/machineCatalogue.db");
   if (!db.open()) {
     qDebug() << "Couldn't open database:" << db.lastError();
     return false;

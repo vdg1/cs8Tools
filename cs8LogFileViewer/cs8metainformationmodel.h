@@ -5,6 +5,7 @@
 #include <logfilemodel.h>
 
 #include <QSqlTableModel>
+#define TABLE_NAME_LOG_FILES "tbLogFiles"
 
 class cs8SystemConfigurationModel;
 
@@ -19,12 +20,14 @@ public:
   void setLogData(logFileModel *logData);
   int currentRow();
   static Preselection dlgOpenSwapFile(qint64 hash);
-  static void setDlgOpenSwapFile(qint64 hash, Preselection value);
+  void setDlgOpenSwapFile(qint64 hash, Preselection value);
   static Preselection dlgIgnoreTimeGap(qint64 hash);
   static void setDlgIgnoreTimeGap(qint64 hash, Preselection value);
   static void resetDialogOptions();
 
   QString URLId() const;
+
+  QString serialNumber() const;
 
 signals:
   void informationUpdated(int row);
@@ -45,6 +48,8 @@ private:
   int indexArmType;
   int indexDlgOpenSwap;
   int indexDlgIgnoreTimeGap;
+  int indexFirstOpened;
+  int indexLastOpen;
   int activeRow;
   bool firstTimeOpened;
 
@@ -56,6 +61,9 @@ protected slots:
 
 protected:
   QString m_URLId;
+  QString m_serialNumber;
+  void setLogfileInfo(uint hash, const QDateTime &spanFrom, const QDateTime &spanTill, const QString &machineNumber,
+                      const QString &armType = QString());
 };
 
 #endif // CS8METAINFORMATIONMODEL_H

@@ -48,7 +48,10 @@ public:
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         lbHeader = new QLabel(DialogGetMachineData);
         lbHeader->setObjectName(QStringLiteral("lbHeader"));
-        lbHeader->setTextFormat(Qt::RichText);
+        QFont font;
+        font.setPointSize(12);
+        lbHeader->setFont(font);
+        lbHeader->setTextFormat(Qt::PlainText);
         lbHeader->setWordWrap(true);
 
         verticalLayout->addWidget(lbHeader);
@@ -117,7 +120,8 @@ public:
     void retranslateUi(QDialog *DialogGetMachineData)
     {
         DialogGetMachineData->setWindowTitle(QApplication::translate("DialogGetMachineData", "Robot System Information", Q_NULLPTR));
-        lbHeader->setText(QApplication::translate("DialogGetMachineData", "<html><head/><body><p><span style=\" font-size:12pt;\">The robot system with serial number </span><span style=\" font-size:12pt; font-weight:600;\">%1</span><span style=\" font-size:12pt;\"> could not be found neither in the machine catalogue nor in your backup storage.</span></p><p><span style=\" font-size:12pt;\">Please enter some details about this robot system:</span></p></body></html>", Q_NULLPTR));
+        lbHeader->setText(QApplication::translate("DialogGetMachineData", "The robot system with serial number %1 could not be found neither in the machine catalogue nor in your backup storage.\n"
+"Please enter some details about this robot system:", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
         cbInternalNumber->setToolTip(QApplication::translate("DialogGetMachineData", "Enter here the customers' internal machine number.", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP

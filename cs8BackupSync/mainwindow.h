@@ -33,8 +33,7 @@ protected:
 
 protected slots:
   void iconActivated(QSystemTrayIcon::ActivationReason reason);
-  void slotUpdateCheckFinished(const QStringList &updates,
-                               const QStringList &versions, bool error);
+  void slotUpdateCheckFinished(const QStringList &updates, const QStringList &versions, bool error);
 
 private slots:
   void on_pbRemotePathBrowse_clicked();
@@ -57,8 +56,6 @@ private slots:
 
   void on_actionAbout_Qt_triggered();
 
-  void on_actionReport_bug_triggered();
-
   void on_cbAvoidVpn_toggled(bool);
 
   void on_leMaintainer_editingFinished();
@@ -68,6 +65,8 @@ private slots:
   void slotCheckUpdate();
 
   void on_cbAutoStart_toggled(bool);
+
+  void on_leCatalogue_URL_editingFinished();
 
 private:
   Ui::MainWindow *ui;

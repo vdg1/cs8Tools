@@ -14,7 +14,6 @@
 #include <QTimer>
 
 #include <../common/aboutdialog.h>
-#include <../common/bugreportdialog.h>
 #include <../common/cs8checkupdate.h>
 #include <../common/databaseconnection.h>
 #include <../common/dialogmachinecatalogueimportconfiguration.h>
@@ -126,11 +125,8 @@ void MainWindow::restoreSettings() {
   ui->cbEnableCatalogueImport->setChecked(settings.value("enableCatalogueImport", true).toBool());
   ui->leCatalogueFile->setText(QDir::toNativeSeparators(
       settings.value("catalogueFile", QString::fromUtf8("S:/Service/RobotBackups/Catalogue.xlsx")).toString()));
-  ui->leMaintainer->setText(settings.value("maintainer", QString::fromUtf8("vdg@saxe-group.com")).toString());
-  ui->leCatalogue_URL->setText(settings
-                                   .value("catalogueURL", "https://podio.com/saxe-group/machine-db/apps/"
-                                                          "machine-catalogue/items/%1")
-                                   .toString());
+  ui->leMaintainer->setText(settings.value("maintainer").toString());
+  ui->leCatalogue_URL->setText(settings.value("catalogueURL").toString());
 
   ui->leMaintainer->blockSignals(false);
   ui->cbEnableCatalogueImport->blockSignals(false);
@@ -368,12 +364,6 @@ void MainWindow::on_leCatalogueFile_textChanged(const QString & /*arg1*/) {
   // watcher->addPath (ui->leCatalogueFile->text ());
 }
 
-void MainWindow::on_actionReport_bug_triggered() {
-  bugReportDialog dlg;
-
-  dlg.exec();
-}
-
 void MainWindow::on_cbAvoidVpn_toggled(bool /*checked*/) { saveSettings(); }
 
 void MainWindow::on_leMaintainer_editingFinished() { saveSettings(); }
@@ -389,3 +379,5 @@ void MainWindow::on_cbAutoStart_toggled(bool /*checked*/) {
   saveSettings();
   checkAutoStart();
 }
+
+void MainWindow::on_leCatalogue_URL_editingFinished() { saveSettings(); }

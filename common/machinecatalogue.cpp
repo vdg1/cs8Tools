@@ -147,6 +147,25 @@ bool machineCatalogue::findByMachineNumber(const QString &serialNumber, QString 
   }
 }
 
+bool machineCatalogue::findByCustomerName(const QString &customer, const QString &internalNumber, QString &serialNumber,
+                                          QString &armNumber, QString &UrlId) {
+
+  m_table->setFilter(QString("customerName='%1' and internalNumber='%2'").arg(customer, internalNumber));
+  m_table->select();
+  if (m_table->rowCount() != 0) {
+    QSqlRecord record = m_table->record(0);
+    serialNumber = record.value("ctrlSerial").toString();
+    armNumber = record.value("armSerial").toString();
+    UrlId = record.value("catalogueID").toString();
+    return true;
+  } else {
+    serialNumber = QString("");
+    armNumber = QString("");
+    UrlId = QString("");
+    return false;
+  }
+}
+
 void machineCatalogue::setControllerSerialNumberColumn(int arg) {
   QSettings settings;
   settings.setValue("controllerSerialNumberColumn", arg);

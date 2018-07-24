@@ -59,7 +59,6 @@
 #include "cs8ControllerComponent.h"
 #include "qftp.h"
 
-#include "bugreportdialog.h"
 #include "dialoggetmachinedata.h"
 #include "windows.h"
 
@@ -853,11 +852,6 @@ void FtpWindow::slotDetected(const QString & /*host*/) { ui.tableViewDetectedCon
 
 void FtpWindow::on_pushButtonExplore_clicked() {
   QDesktopServices::openUrl(QUrl(QString("file:///%1").arg(ui.leDownloadDir->text())));
-}
-
-void FtpWindow::on_actionReport_a_bug_triggered() {
-  bugReportDialog dlg;
-  dlg.exec();
 }
 
 void FtpWindow::on_leIPAddress_currentTextChanged(const QString &arg1) {

@@ -9,8 +9,7 @@
 
 #include <../common/machinecatalogue.h>
 
-DialogGetMachineData::DialogGetMachineData(QWidget *parent)
-    : QDialog(parent), ui(new Ui::DialogGetMachineData) {
+DialogGetMachineData::DialogGetMachineData(QWidget *parent) : QDialog(parent), ui(new Ui::DialogGetMachineData) {
   ui->setupUi(this);
   headerText = ui->lbHeader->text();
   ui->cbCustomerName->lineEdit()->setPlaceholderText("Customer Name");
@@ -50,6 +49,11 @@ void DialogGetMachineData::remoteCatalogue() {
   ui->cbInternalNumber->addItems(interalNumbers);
 }
 
+void DialogGetMachineData::setInfoText(const QString &text) {
+  headerText = text;
+  ui->lbHeader->setText(headerText);
+}
+
 QString DialogGetMachineData::backupPath() const {
   QRegExp rx("[<>:\"/\\\|?*]");
   QString customer = ui->cbCustomerName->currentText();
@@ -61,20 +65,14 @@ QString DialogGetMachineData::backupPath() const {
   return p;
 }
 
-QString DialogGetMachineData::customer() const {
-  return ui->cbCustomerName->currentText();
-}
+QString DialogGetMachineData::customer() const { return ui->cbCustomerName->currentText(); }
 
-QString DialogGetMachineData::internalNumber() const {
-  return ui->cbInternalNumber->currentText();
-}
+QString DialogGetMachineData::internalNumber() const { return ui->cbInternalNumber->currentText(); }
 
 void DialogGetMachineData::on_buttonBox_accepted() {
   if (ui->cbInformMaintainer->isChecked()) {
     QSettings settings;
-    QString rcv =
-        settings.value("maintainer", QString::fromUtf8("vdg@saxe-group.com"))
-            .toString();
+    QString rcv = settings.value("maintainer", QString::fromUtf8("vdg@saxe-group.com")).toString();
     QString body = QString("Robot missing in catalogue:\n\n"
                            "Serial Number: %1\n\n"
                            "Customer: %2\n\n"
@@ -83,10 +81,7 @@ void DialogGetMachineData::on_buttonBox_accepted() {
                        .arg(ui->cbCustomerName->currentText().trimmed())
                        .arg(ui->cbInternalNumber->currentText().trimmed());
 
-    QString data = QString("mailto:%1?subject=%2&body=%3")
-                       .arg(rcv)
-                       .arg("Robot not in catalogue")
-                       .arg(body);
+    QString data = QString("mailto:%1?subject=%2&body=%3").arg(rcv).arg("Robot not in catalogue").arg(body);
     QUrl url(data);
     QDesktopServices::openUrl(url);
   }

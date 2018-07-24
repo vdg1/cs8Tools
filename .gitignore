@@ -1,4 +1,7 @@
-Makefile
+**/Makefile
 */debug/
 */release/
+*/repository/
 **/build.txt
+**/ui_*.h
+**/package.xml

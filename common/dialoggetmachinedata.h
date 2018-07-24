@@ -15,6 +15,7 @@ public:
   ~DialogGetMachineData();
   void setSerialNumber(const QString &serialNumber);
   void remoteCatalogue();
+  void setInfoText(const QString &text);
   QString backupPath() const;
   QString customer() const;
   QString internalNumber() const;

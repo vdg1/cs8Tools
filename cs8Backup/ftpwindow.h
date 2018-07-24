@@ -62,8 +62,7 @@ public:
   ~FtpWindow();
 
   void startSyncProcess();
-  bool storeBackupLog(const QString &serialNumber, const QString &backupName,
-                      const QString &baseDir);
+  bool storeBackupLog(const QString &serialNumber, const QString &backupName, const QString &baseDir);
 private slots:
 
   void cancelDownload();
@@ -103,9 +102,6 @@ private slots:
   void slotSelectionChanged(QItemSelection topLeft, QItemSelection bottomRight);
 
   void on_pushButtonExplore_clicked();
-
-  void on_actionReport_a_bug_triggered();
-
   void on_leIPAddress_currentTextChanged(const QString &arg1);
 
   void on_actionCheck_for_Updates_triggered();

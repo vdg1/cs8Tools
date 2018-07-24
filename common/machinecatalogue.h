@@ -34,7 +34,8 @@ public:
   QStringList internalNumbers() const;
   QString filePath() const;
   bool findByMachineNumber(const QString &serialNumber, QString &customer, QString &internalNumber, QString &UrlId);
-
+  bool findByCustomerName(const QString &customer, const QString &internalNumber, QString &serialNumber,
+                          QString &armNumber, QString &UrlId);
   qint32 URLIdColumn() const;
 
   QString appData() const;

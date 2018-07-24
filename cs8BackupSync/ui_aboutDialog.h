@@ -38,6 +38,8 @@ public:
     QLabel *label;
     QLabel *label_2;
     QSpacerItem *spacerItem1;
+    QLabel *label_4;
+    QLabel *label_5;
     QTabWidget *tabWidget;
     QWidget *tab_2;
     QVBoxLayout *vboxLayout1;
@@ -92,6 +94,17 @@ public:
         spacerItem1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         hboxLayout1->addItem(spacerItem1);
+
+        label_4 = new QLabel(aboutDialog);
+        label_4->setObjectName(QStringLiteral("label_4"));
+
+        hboxLayout1->addWidget(label_4);
+
+        label_5 = new QLabel(aboutDialog);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setTextFormat(Qt::RichText);
+
+        hboxLayout1->addWidget(label_5);
 
 
         vboxLayout->addLayout(hboxLayout1);
@@ -154,6 +167,8 @@ public:
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><a href=\"mailto:volker.drewer@gmail.com\"><span style=\" font-family:'Courier New,courier'; text-decoration: underline; color:#0000ff;\">Volker Drewer-Gutland</span></a></p></body></html>", Q_NULLPTR));
+        label_4->setText(QApplication::translate("aboutDialog", "Web: ", Q_NULLPTR));
+        label_5->setText(QApplication::translate("aboutDialog", "<html><head/><body><p><a href=\"https://github.com/vdg1/cs8Tools\"><span style=\" text-decoration: underline; color:#0000ff;\">https://github.com/vdg1/cs8Tools</span></a></p></body></html>", Q_NULLPTR));
         textEditChangelog->setHtml(QApplication::translate("aboutDialog", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

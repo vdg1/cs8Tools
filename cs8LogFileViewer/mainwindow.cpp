@@ -638,15 +638,18 @@ void MainWindow::on_actionSave_as_triggered() {
 
 void MainWindow::on_actionOpen_Machine_File_triggered() {
   if (activeMdiChild()) {
-    QString id = activeMdiChild()->model()->URLId();
-    if (!id.isEmpty()) {
-      QSettings settings;
-      QString url = QString("%1").arg(settings
-                                          .value("catalogueURL", "https://podio.com/saxe-group/machine-db/apps/"
-                                                                 "machine-catalogue/items/%1")
-                                          .toString()
-                                          .arg(id));
-      QDesktopServices::openUrl(url);
+    QSettings settings;
+    qDebug() << settings.fileName();
+    if (!settings.value("catalogueURL").toString().isEmpty()) {
+      QString id = activeMdiChild()->model()->URLId();
+      if (!id.isEmpty()) {
+
+        QString url = QString("%1").arg(settings.value("catalogueURL").toString().arg(id));
+        QDesktopServices::openUrl(url);
+      }
+    } else {
+      QMessageBox::critical(this, tr("Online machine catalogue"),
+                            tr("No URL is configured for the online machine catalogue. Please check settings!"));
     }
   }
 }

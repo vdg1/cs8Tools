@@ -7,37 +7,32 @@
 #include <QProcess>
 #include <QXmlInputSource>
 
-cs8CheckUpdate::cs8CheckUpdate(QObject *parent)
-    : QObject(parent), m_notifyOnSuccess(false), m_notifyOnError(false) {
+cs8CheckUpdate::cs8CheckUpdate(QObject *parent) : QObject(parent), m_notifyOnSuccess(false), m_notifyOnError(false) {
   m_maintenaceProcess = new QProcess();
 
-  m_maintenaceProcess->setProgram(qApp->applicationDirPath() +
-                                  "/maintenancetool.exe");
+  QString updateProgram = qApp->applicationDirPath() + "/maintenancetool.exe";
+  if (!QFile::exists(updateProgram))
+    updateProgram = qApp->applicationDirPath() + "/cs8ToolsMaintenanceTool.exe";
+  m_maintenaceProcess->setProgram(updateProgram);
 
-  connect(m_maintenaceProcess, SIGNAL(finished(int, QProcess::ExitStatus)),
-          this, SLOT(slotFinished(int, QProcess::ExitStatus)));
-  connect(m_maintenaceProcess, &QProcess::errorOccurred, this,
-          &cs8CheckUpdate::slotError);
-  connect(this, &cs8CheckUpdate::checkCompleted, this,
-          &cs8CheckUpdate::slotCheckCompleted);
+  connect(m_maintenaceProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(slotFinished(int, QProcess::ExitStatus)));
+  connect(m_maintenaceProcess, &QProcess::errorOccurred, this, &cs8CheckUpdate::slotError);
+  connect(this, &cs8CheckUpdate::checkCompleted, this, &cs8CheckUpdate::slotCheckCompleted);
 
   m_checkTimer = new QTimer(this);
-  connect(m_checkTimer, &QTimer::timeout, this,
-          &cs8CheckUpdate::slotCheckTimer);
+  connect(m_checkTimer, &QTimer::timeout, this, &cs8CheckUpdate::slotCheckTimer);
 }
 
-void cs8CheckUpdate::checkForUpdates(const bool notifyOnSuccess,
-                                     const bool notifyOnError) {
+void cs8CheckUpdate::checkForUpdates(const bool notifyOnSuccess, const bool notifyOnError) {
   if (m_maintenaceProcess->state() == QProcess::NotRunning) {
-    qDebug() << "Started update check:" << m_maintenaceProcess->program()
-             << m_maintenaceProcess->arguments();
+    qDebug() << "Started update check:" << m_maintenaceProcess->program() << m_maintenaceProcess->arguments();
     m_maintenaceProcess->setArguments(QStringList() << "--checkupdates");
     m_maintenaceProcess->start();
     m_notifyOnSuccess = notifyOnSuccess;
     m_notifyOnError = notifyOnError;
   } else {
-    QMessageBox::information(qApp->topLevelWidgets().at(0),
-                             tr("cs8Tools Update Check"),
+    QMessageBox::information(qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
                              tr("An update check is already active!"));
   }
 }
@@ -49,8 +44,7 @@ void cs8CheckUpdate::enableRegularCheck(int intervalInMin) {
     m_checkTimer->stop();
 }
 
-void cs8CheckUpdate::slotFinished(int /*exitCode*/,
-                                  QProcess::ExitStatus exitStatus) {
+void cs8CheckUpdate::slotFinished(int /*exitCode*/, QProcess::ExitStatus exitStatus) {
   if (exitStatus == QProcess::NormalExit) {
     // read output channel
     QString output = m_maintenaceProcess->readAllStandardOutput();
@@ -90,38 +84,30 @@ void cs8CheckUpdate::slotError(QProcess::ProcessError error) {
   emit checkCompleted(QStringList(), QStringList(), true);
 }
 
-void cs8CheckUpdate::slotCheckCompleted(const QStringList &updates,
-                                        const QStringList &versions,
-                                        bool error) {
+void cs8CheckUpdate::slotCheckCompleted(const QStringList &updates, const QStringList &versions, bool error) {
 
   if (error) {
     if (m_notifyOnError)
-      QMessageBox::warning(
-          qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
-          tr("An error occured during update check. Try again later!"));
+      QMessageBox::warning(qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
+                           tr("An error occured during update check. Try again later!"));
   } else {
     if (m_notifyOnSuccess)
       if (updates.count() > 0) {
         QStringList updateList;
         for (int i = 0; i < updates.count(); i++)
-          updateList
-              << QString("%1 (%2)").arg(updates.at(i)).arg(versions.at(i));
+          updateList << QString("%1 (%2)").arg(updates.at(i)).arg(versions.at(i));
 
-        if (QMessageBox::question(
-                qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
-                tr("An update of following module(s) is available:\n%1\nDo you "
-                   "want to install the updates?")
-                    .arg(updateList.join("\n")),
-                QMessageBox::Yes, QMessageBox::No,
-                QMessageBox::NoButton) == QMessageBox::Yes) {
+        if (QMessageBox::question(qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
+                                  tr("An update of following module(s) is available:\n%1\nDo you "
+                                     "want to install the updates?")
+                                      .arg(updateList.join("\n")),
+                                  QMessageBox::Yes, QMessageBox::No, QMessageBox::NoButton) == QMessageBox::Yes) {
           QProcess maintenance;
-          maintenance.startDetached(m_maintenaceProcess->program(),
-                                    QStringList() << "--updater");
+          maintenance.startDetached(m_maintenaceProcess->program(), QStringList() << "--updater");
         }
       } else {
         if (m_notifyOnError)
-          QMessageBox::information(qApp->topLevelWidgets().at(0),
-                                   tr("cs8Tools Update Check"),
+          QMessageBox::information(qApp->topLevelWidgets().at(0), tr("cs8Tools Update Check"),
                                    tr("No updates available!"));
       }
   }

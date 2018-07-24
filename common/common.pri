@@ -1,5 +1,5 @@
 
-VERSION = 5.1
+VERSION = 5.2
 
 # Define the preprocessor macro to get the application version in our application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -10,7 +10,6 @@ QT += network xml sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 HEADERS += \
-    ../common/bugreportdialog.h \
     ../common/aboutdialog.h \
     ../common/version.h \
     ../common/vpnconnectivity.h \
@@ -26,7 +25,6 @@ HEADERS += \
     $$PWD/cs8systemlogging.h
 
 SOURCES += \
-    ../common/bugreportdialog.cpp \
     ../common/aboutdialog.cpp \
     ../common/vpnconnectivity.cpp \
     ../common/machinecatalogue.cpp \
@@ -41,7 +39,6 @@ SOURCES += \
 
 FORMS += \
     $$PWD/ui/aboutDialog.ui \
-    $$PWD/ui/bugreportdialog.ui \
     $$PWD/ui/dialoggetmachinedata.ui \
     $$PWD/ui/dialogmachinecatalogueimportconfiguration.ui \
     $$PWD/dialogwhatsnew.ui \
