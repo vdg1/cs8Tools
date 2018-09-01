@@ -114,7 +114,14 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
         if (pos != -1) {
           // qDebug() << "captured set: " << item->rx.cap(2) << " in " <<
           // logText->messageList().at(i) << item->rx.pattern();
-          item->value = item->rx.cap(3).trimmed().replace('/', '_');
+          QString value = item->rx.cap(3).trimmed().replace('/', '_');
+          // remove leading and trailing '-'
+          if (value.startsWith('-'))
+            value.remove(0, 1);
+          if (value.endsWith('-'))
+            value.chop(1);
+
+          item->value = value.trimmed();
           item->line = line;
           break;
         }
