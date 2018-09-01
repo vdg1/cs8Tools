@@ -2,8 +2,8 @@
 <Package>
 <DisplayName>Base Components</DisplayName>
 <Description>Mandatory files</Description>
-<Version>5.7.1</Version>
-<ReleaseDate>2018-01-24</ReleaseDate>
+<Version>5.7.2</Version>
+<ReleaseDate>2018-08-23</ReleaseDate>
 <Default>true</Default>
 <ForcedInstallation>true</ForcedInstallation>
 <Essential>true</Essential>
