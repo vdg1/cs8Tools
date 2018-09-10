@@ -65,7 +65,16 @@ int main(int argc, char *argv[]) {
    */
 
   // QApplication instance(argc, argv);
-  QString message;
+  QStringList args = instance.arguments();
+  args.removeFirst();
+  bool ok = false;
+
+  qDebug() << "Arguments:" << args;
+  QString message = "[open]@@" + args.join(" ");
+  if (instance.sendMessage(message))
+    return 0;
+
+  /*
   for (int a = 1; a < argc; ++a) {
     message += argv[a];
     if (a < argc - 1)
@@ -76,7 +85,7 @@ int main(int argc, char *argv[]) {
 
   if (instance.sendMessage(message))
     return 0;
-
+*/
   MainWindow mw;
 
   instance.setActivationWindow(&mw, true);
