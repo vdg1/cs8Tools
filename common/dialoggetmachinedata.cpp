@@ -14,6 +14,8 @@ DialogGetMachineData::DialogGetMachineData(QWidget *parent) : QDialog(parent), u
   headerText = ui->lbHeader->text();
   ui->cbCustomerName->lineEdit()->setPlaceholderText("Customer Name");
   ui->cbInternalNumber->lineEdit()->setPlaceholderText("Internal number");
+  ui->leControllerSerialNumber->hide();
+  ui->lbSerialNumber->hide();
 }
 
 DialogGetMachineData::~DialogGetMachineData() { delete ui; }
@@ -21,6 +23,10 @@ DialogGetMachineData::~DialogGetMachineData() { delete ui; }
 void DialogGetMachineData::setSerialNumber(const QString &serialNumber) {
   m_serialNumber = serialNumber;
   ui->lbHeader->setText(headerText.arg(serialNumber));
+  if (serialNumber.isEmpty()) {
+    ui->leControllerSerialNumber->show();
+    ui->lbSerialNumber->show();
+  }
 }
 
 void DialogGetMachineData::changeEvent(QEvent *e) {

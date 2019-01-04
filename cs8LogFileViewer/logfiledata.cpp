@@ -19,6 +19,14 @@ QStringList logFileData::updateCache() {
 
 QStringList logFileData::toStringList() { return updateCache(); }
 
+QStringList logFileData::messageTypes() {
+  QStringList types;
+  for (int i = 0; i < size(); ++i) {
+    types << at(i).type;
+  }
+  return types;
+}
+
 int logFileData::lastValidLine() const {
   for (int i = size() - 1; i >= 0; i--) {
     if (at(i).date.isValid())

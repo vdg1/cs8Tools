@@ -74,8 +74,9 @@ protected slots:
   void resizeSystemConfigViewColumns();
 
 private slots:
+  void slotDoubleClickedSystemConfig(const QModelIndex &index);
   void open();
-  void copy();
+  void copy(bool withRobotInfo = false);
   void about();
   void updateMenus();
   void updateWindowMenu();
@@ -116,6 +117,8 @@ private slots:
   void on_actionScroll_to_Bottom_triggered(bool checked);
 
   void on_actionReset_Dialog_Options_triggered();
+
+  void on_actionCopy_lines_and_add_info_triggered();
 
 private:
   void createActions();

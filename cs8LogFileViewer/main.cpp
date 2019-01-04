@@ -67,25 +67,22 @@ int main(int argc, char *argv[]) {
   // QApplication instance(argc, argv);
   QStringList args = instance.arguments();
   args.removeFirst();
-  bool ok = false;
 
   qDebug() << "Arguments:" << args;
-  QString message = "[open]@@" + args.join(" ");
-  if (instance.sendMessage(message))
-    return 0;
-
-  /*
-  for (int a = 1; a < argc; ++a) {
-    message += argv[a];
-    if (a < argc - 1)
-      message += "@@";
+  // parse arguments
+  bool couldSend = false;
+  foreach (auto argument, args) {
+    if (QFile::exists(argument)) {
+      QString message = "[open]@@" + argument;
+      if (instance.sendMessage(message))
+        couldSend = true;
+    }
   }
-  if (!message.isEmpty())
-    message = "[open]@@" + message;
 
-  if (instance.sendMessage(message))
+  // if message could be send to another instance we can quit this instance
+  if (couldSend)
     return 0;
-*/
+
   MainWindow mw;
 
   instance.setActivationWindow(&mw, true);
@@ -93,7 +90,7 @@ int main(int argc, char *argv[]) {
 
   // instance.setActivationWindow(&mw, false);
   QObject::connect(&mw, &MainWindow::needToShow, &instance, &SharedTools::QtSingleApplication::activateWindow);
-  mw.handleMessage(message);
+  mw.handleMessage(args.join(" "));
   mw.show();
   return instance.exec();
 }

@@ -97,7 +97,11 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
   cs8SystemConfigurationSet *systemSet;
 
   while (line > 0) {
-    systemStart = qMax(0, logText->messageList().lastIndexOf(systemStartRx, line));
+    if (logText->fileType() == cs8LogFileData::CS8) {
+      systemStart = qMax(0, logText->messageList().lastIndexOf(systemStartRx, line));
+    } else {
+      systemStart = qMax(0, logText->typeList().lastIndexOf("run", line));
+    }
     systemSet = new cs8SystemConfigurationSet();
     systemSet->setFrom(systemStart + 1,
                        logText->logTimeStamp(systemStart + 1)); //  logText.at(systemStart+1).timeStamp);
@@ -122,7 +126,7 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
             value.chop(1);
 
           item->value = value.trimmed();
-          item->line = line;
+          item->line = i;
           break;
         }
       }
@@ -171,6 +175,8 @@ void cs8SystemConfigurationModel::reprocess() {
   int i = 0;
   while (i < rowCount()) {
     cs8SystemConfigurationSet *a = systemConfigurationSet(i);
+    // remove empty items in configuration set
+    a->removeEmptyItems();
     if (a->isEmpty()) {
       qDebug() << "Remove empty configuration" << a;
       cs8SystemConfigurationSet *next = i + 1 < rowCount() ? systemConfigurationSet(i + 1) : nullptr;
@@ -256,7 +262,8 @@ cs8SystemConfigurationSet *cs8SystemConfigurationModel::systemConfigurationSet(i
   if (idx < rowCount() && rowCount() != 0)
     return data(index(idx == -1 ? rowCount() - 1 : idx, 0), Qt::UserRole).value<cs8SystemConfigurationSet *>();
   else
-    return nullptr; // new cs8SystemConfigurationSet();
+    /// TODO correct to return empty set or nullptr?
+    return new cs8SystemConfigurationSet(); // new cs8SystemConfigurationSet();
 }
 
 cs8SystemConfigurationSet *cs8SystemConfigurationModel::systemConfigurationSetAtLine(int row) const {
@@ -307,6 +314,9 @@ void cs8SystemConfigurationModel::slotProcessingFinished() {
         if (!i.value()->value.isEmpty()) {
           QStandardItem *childItemTitle = new QStandardItem(i.key());
           QStandardItem *childItemValue = new QStandardItem(i.value()->value);
+          childItemValue->setData(i.value()->line, Qt::UserRole);
+          childItemTitle->setData(i.value()->line, Qt::UserRole);
+
           childItemValue->setToolTip(childItemValue->text());
 
           item(row, 0)->appendRow(QList<QStandardItem *>() << childItemTitle << childItemValue);

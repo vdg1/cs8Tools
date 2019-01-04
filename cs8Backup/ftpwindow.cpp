@@ -444,7 +444,7 @@ void FtpWindow::cancelDownload() { ui.fileList->clear(); }
 void FtpWindow::recursiveList(const QStringList &pathList) {
   foreach (QString path, pathList) {
     QList<QUrlInfo> list;
-    m_controller->getFolderContents(path, list);
+    m_controller->getFolderContents(path, "", QDir::NoFilter, list);
     /*
      * dir.setPath( QString( "cs8://%1:%2@%3%4" )
                  .arg( ui.leUserName->text() )

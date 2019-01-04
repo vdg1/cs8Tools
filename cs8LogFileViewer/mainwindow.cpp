@@ -82,6 +82,7 @@ MainWindow::MainWindow() : QMainWindow() {
   connect(ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::updateMenus);
   windowMapper = new QSignalMapper(this);
   connect(windowMapper, SIGNAL(mapped(QWidget *)), this, SLOT(setActiveSubWindow(QWidget *)));
+  connect(ui.treeViewSystemConfigurations, &QTreeView::doubleClicked, this, &MainWindow::slotDoubleClickedSystemConfig);
 
   createDBConnection();
   createActions();
@@ -158,13 +159,15 @@ void MainWindow::open() {
   }
 }
 
-void MainWindow::copy() {
+void MainWindow::copy(bool withRobotInfo) {
   if (activeMdiChild()) {
     QClipboard *clip = QApplication::clipboard();
-    // QMimeData *data = new QMimeData;
-    // data->setHtml(activeMdiChild()->getSelectedLines(true));
+    QMimeData *data = new QMimeData;
+
+    data->setData("text/html", activeMdiChild()->getSelectedLines(true).toLatin1());
+    qDebug() << "is html: " << data->hasHtml();
     // clip->setMimeData(data);
-    clip->setText(activeMdiChild()->getSelectedLines(false));
+    clip->setText(activeMdiChild()->getSelectedLines(false, withRobotInfo));
   }
 }
 
@@ -176,6 +179,17 @@ void MainWindow::about() {
 void MainWindow::resizeSystemConfigViewColumns() {
   ui.treeViewSystemConfigurations->resizeColumnToContents(0);
   ui.treeViewSystemConfigurations->resizeColumnToContents(1);
+}
+
+void MainWindow::slotDoubleClickedSystemConfig(const QModelIndex &index) {
+  if (activeMdiChild() != nullptr) {
+    cs8SystemConfigurationModel *model =
+        qobject_cast<cs8SystemConfigurationModel *>(ui.treeViewSystemConfigurations->model());
+    if (model->data(index, Qt::UserRole).isValid()) {
+      int lineNumber = model->data(index, Qt::UserRole).toInt();
+      activeMdiChild()->scrollToLine(lineNumber);
+    }
+  }
 }
 
 void MainWindow::updateMenus() {
@@ -326,6 +340,7 @@ void MainWindow::createMenus() {
 
   m_contextMenu = new QMenu(this);
   m_contextMenu->addAction(ui.actCopy);
+  m_contextMenu->addAction(ui.actionCopy_lines_and_add_info);
   m_contextMenu->addAction(ui.actionSend_selected_lines_to);
   m_contextMenu->addAction(ui.actionOpen_Machine_File);
 }
@@ -664,3 +679,5 @@ void MainWindow::on_actionReset_Dialog_Options_triggered() {
       QMessageBox::Yes)
     cs8MetaInformationModel::resetDialogOptions();
 }
+
+void MainWindow::on_actionCopy_lines_and_add_info_triggered() { copy(true); }

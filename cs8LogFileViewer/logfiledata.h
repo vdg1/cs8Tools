@@ -17,6 +17,7 @@ struct logFileLineItem {
   QVariant userData;
   QBrush foregroundColor, backgroundColor;
   QFont font;
+  QString type;
 };
 
 class logFileData : public QVector<logFileLineItem> {
@@ -25,6 +26,7 @@ public:
 
 public:
   QStringList toStringList();
+  QStringList messageTypes();
   int lastValidLine() const;
 
 protected:

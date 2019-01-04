@@ -72,8 +72,9 @@ void logFileModel::loadData(const QStringList &data) {
   // loadFileData(data);
   // slotLoadingFinished();
 }
-void logFileModel::slotSetLogLine(int row, QDateTime timeStamp, QString message, int level, double ms) {
-  setLine(row, timeStamp, message, level, ms);
+void logFileModel::slotSetLogLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ms,
+                                  const QString &type) {
+  setLine(row, timeStamp, message, level, ms, type);
   // m_logData.append(message);
 }
 
@@ -118,7 +119,7 @@ void logFileModel::slotLineReceived(const QString &data) {
     } else
       /*item.*/ message = line;
     lineNumber = rowCount() - 1;
-    slotSetLogLine(lineNumber, timeStamp, message, cs8LogFileData::Anything, 0);
+    slotSetLogLine(lineNumber, timeStamp, message, cs8LogFileData::Anything, 0, "msg");
     runHighlightRules(lineNumber, lineNumber);
     emit logMessageReceived();
   }
@@ -215,7 +216,7 @@ bool logFileModel::loadFileData(const QStringList &data) {
             // replace place holders in message
             if (dataArray.size() > 0) {
               QRegExp rx;
-              rx.setPattern("(%[sdg]){1}");
+              rx.setPattern("(%[usdg]){1}");
               rx.setMinimal(false);
               rx.setCaseSensitivity(Qt::CaseInsensitive);
               int pos = 0;
@@ -242,14 +243,14 @@ bool logFileModel::loadFileData(const QStringList &data) {
             m_timeSpanTill = /*item.*/ dateTime;
             m_lastValidLineWithDate = lineNumber;
 
-            emit p_setLogLine(lineNumber, dateTime, message, level, timeStamp);
+            emit p_setLogLine(lineNumber, dateTime, message, level, timeStamp, type);
             lineNumber++;
           }
         } else {
           qDebug() << "Document is not an object" << endl;
         }
       } else {
-        qDebug() << "Invalid JSON...\n" << endl;
+        qDebug() << "Invalid JSON:" << line;
       }
 
     } else {
@@ -267,7 +268,7 @@ bool logFileModel::loadFileData(const QStringList &data) {
         m_lastValidLineWithDate = lineNumber;
       } else
         /*item.*/ message = line;
-      emit p_setLogLine(lineNumber, dateTime, message, cs8LogFileData::Undefined, 0);
+      emit p_setLogLine(lineNumber, dateTime, message, cs8LogFileData::Undefined, 0, "msg");
       lineNumber++;
     }
   }
@@ -318,9 +319,12 @@ int logFileModel::lastValidLineWithTimeStamp() const { return m_lastValidLineWit
 
 QStringList logFileModel::messageList() { return m_logData.toStringList(); }
 
+QStringList logFileModel::typeList() { return m_logData.messageTypes(); }
+
 void logFileModel::setHighlightRules(highlightItemList *list) { m_highlightRules = list; }
 
-void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns) {
+void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns,
+                           const QString &type) {
   Q_ASSERT(row < rowCount());
   int r = row == -1 ? rowCount() - 1 : row;
 
@@ -331,6 +335,7 @@ void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &m
   setData(index(r, 1), level, Qt::DisplayRole);
 
   setData(index(r, 2), QString("[%1]:%2").arg(timeStamp.toString("dd/MM/yy HH:mm:ss"), message), Qt::UserRole);
+  setData(index(r, 1), type, Qt::UserRole);
 }
 
 QVariant logFileModel::headerData(int section, Qt::Orientation orientation, int role) const {
@@ -402,6 +407,9 @@ bool logFileModel::setData(const QModelIndex &index, const QVariant &value, int 
     case 0:
       m_logData[index.row()].ts = value.value<double>();
       break;
+    case 1:
+      m_logData[index.row()].type = value.toString();
+      break;
     default:
       m_logData[index.row()].userData = value;
       break;
@@ -437,7 +445,7 @@ bool logFileModel::loadLogFile(QFile *logFile, QFile *swapFile) {
       switch (cs8MetaInformationModel::dlgIgnoreTimeGap(m_hashLogFile)) {
       case cs8MetaInformationModel::Unset: {
         QMessageBox dlg;
-        QCheckBox *cb = new QCheckBox(tr("Don't ask ma again for this file."));
+        QCheckBox *cb = new QCheckBox(tr("Don't ask me again for this file."));
         dlg.setText(tr("The time gap between the log file and the swap file is "
                        "invalid."
                        "The swap file ends at %1, the log file starts at %2. Do you "

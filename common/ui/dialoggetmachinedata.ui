@@ -47,7 +47,7 @@ Please enter some details about this robot system:</string>
     </spacer>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0">
+    <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
      <item row="1" column="1">
       <widget class="QComboBox" name="cbInternalNumber">
        <property name="toolTip">
@@ -91,6 +91,23 @@ Please enter some details about this robot system:</string>
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Internal No:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="lbSerialNumber">
+       <property name="text">
+        <string>Controller Serial Number:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="leControllerSerialNumber">
+       <property name="inputMask">
+        <string>F99/NNNNN/C/99</string>
+       </property>
+       <property name="placeholderText">
+        <string>Controller Serial Number</string>
        </property>
       </widget>
      </item>

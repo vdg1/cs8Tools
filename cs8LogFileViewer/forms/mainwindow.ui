@@ -70,6 +70,7 @@
     </property>
     <addaction name="actCopy"/>
     <addaction name="actionSend_selected_lines_to"/>
+    <addaction name="actionCopy_lines_and_add_info"/>
    </widget>
    <widget class="QMenu" name="menu_Window">
     <property name="title">
@@ -374,6 +375,11 @@
   <action name="actionReset_Dialog_Options">
    <property name="text">
     <string>Reset Dialog Options</string>
+   </property>
+  </action>
+  <action name="actionCopy_lines_and_add_info">
+   <property name="text">
+    <string>Copy lines and add info</string>
    </property>
   </action>
  </widget>

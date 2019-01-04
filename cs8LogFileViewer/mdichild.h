@@ -73,7 +73,7 @@ public:
   bool showsUSRMessages();
   bool showsSwapFileMessages();
   bool reverseOrder();
-  QString getSelectedLines(bool formated = true) const;
+  QString getSelectedLines(bool formated = true, bool withRobotInfo = false) const;
 
   void setContextMenu(QMenu *contextMenu);
 

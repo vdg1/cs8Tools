@@ -35,8 +35,6 @@ void cs8MetaInformationModel::setLogData(logFileModel *logData) {
   m_systemConfigurationModel->setLogData(logData);
 }
 
-int cs8MetaInformationModel::currentRow() { return activeRow; }
-
 cs8MetaInformationModel::Preselection cs8MetaInformationModel::dlgOpenSwapFile(qint64 hash) {
   QSqlTableModel table;
   table.setTable(TABLE_NAME_LOG_FILES);
@@ -67,12 +65,13 @@ void cs8MetaInformationModel::setDlgOpenSwapFile(qint64 hash, Preselection value
   select();
   if (rowCount() == 0) {
     QSqlRecord record = this->record();
-    record.setValue("hashLogFile", hash);
-    record.setValue("dlgOpenSwap", value);
+    record.setValue(indexHashLogFile, hash);
+    record.setValue(indexFirstOpened, QDateTime::currentDateTime());
+    record.setValue(indexDlgOpenSwap, value);
     insertRecord(0, record);
   } else {
     QSqlRecord record = this->record(0);
-    record.setValue("dlgOpenSwap", value);
+    record.setValue(indexDlgOpenSwap, value);
     setRecord(0, record);
   }
   submitAll();
@@ -125,40 +124,49 @@ void cs8MetaInformationModel::resetDialogOptions() {
   */
 void cs8MetaInformationModel::setLogfileInfo(uint hash, const QDateTime &spanFrom, const QDateTime &spanTill,
                                              const QString &machineNumber, const QString &armType) {
+
+  setFilter(QString("hashLogFile='%1'").arg(hash));
   select();
-  setData(index(activeRow, indexHashLogFile), hash);
-  setData(index(activeRow, indexSpanFrom), spanFrom);
-  setData(index(activeRow, indexSpanTill), spanTill);
-  setData(index(activeRow, indexIdControllers), machineNumber);
+  if (rowCount() > 1)
+    qWarning() << "Log file table has multiple entries for hash: " << hash;
+  QSqlRecord record = this->record();
+  record.setValue(indexHashLogFile, hash);
+  record.setValue(indexSpanFrom, spanFrom);
+  record.setValue(indexSpanTill, spanTill);
+  record.setValue(indexIdControllers, machineNumber);
   if (!armType.isNull())
-    setData(index(activeRow, indexIdArms), armType);
-  if (data(index(activeRow, indexFirstOpened)).toString().isEmpty())
-    setData(index(activeRow, indexFirstOpened), QDateTime::currentDateTime());
+    record.setValue(indexIdArms, armType);
+
+  if (rowCount() == 0) {
+    record.setValue(indexFirstOpened, QDateTime::currentDateTime());
+    insertRecord(0, record);
+  } else {
+    setRecord(0, record);
+  }
+
   submitAll();
 }
 
 bool cs8MetaInformationModel::selectRecord(uint hash) {
 
+  setFilter(QString("hashLogFile='%1'").arg(hash));
   select();
-  for (int i = 0; i < rowCount(); i++) {
-    if (data(index(i, indexHashLogFile)).toUInt() == hash) {
-      activeRow = i;
-      setData(index(activeRow, indexLastOpen), QDateTime::currentDateTime());
-      setData(index(activeRow, indexFirstOpened), QDateTime::currentDateTime());
-      if (!data(index(activeRow, indexIdControllers)).toString().isEmpty())
-        m_serialNumber = data(index(activeRow, indexIdControllers)).toString();
-      submitAll();
-      emit informationUpdated(activeRow);
-      return true;
-    }
+  if (rowCount() > 1)
+    qWarning() << "Log file table has multiple entries for hash: " << hash;
+  if (rowCount() != 0) {
+    record(0).setValue(indexLastOpen, QDateTime::currentDateTime());
+    if (!record(0).value(indexIdControllers).toString().isEmpty())
+      m_serialNumber = record(0).value(indexIdControllers).toString();
+    if (!setRecord(0, record(0)))
+      qWarning() << "Failed to set record for hash " << hash;
+    submitAll();
+    return true;
+  } else {
+    setLogfileInfo(hash, m_model->logTimeStamp(0), m_model->logTimeStamp(m_model->lastValidLineWithTimeStamp()),
+                   m_systemConfigurationModel->systemConfigurationSet()->machineNumber(),
+                   m_systemConfigurationModel->systemConfigurationSet()->armType());
+    return false;
   }
-  insertRow(0);
-  activeRow = 0;
-  setLogfileInfo(hash, m_model->logTimeStamp(0), m_model->logTimeStamp(m_model->lastValidLineWithTimeStamp()),
-                 m_systemConfigurationModel->systemConfigurationSet()->machineNumber(),
-                 m_systemConfigurationModel->systemConfigurationSet()->armType());
-  emit informationUpdated(activeRow);
-  return false;
 }
 
 void cs8MetaInformationModel::process(logFileModel *logData) {}
@@ -231,3 +239,5 @@ void cs8MetaInformationModel::slotProcessingConfigurationsFinished() {
 QString cs8MetaInformationModel::URLId() const { return m_URLId; }
 
 QString cs8MetaInformationModel::serialNumber() const { return m_serialNumber; }
+
+int cs8MetaInformationModel::hash() const { return m_model->hash(); }

@@ -16,54 +16,48 @@ QDebug operator<<(QDebug debug, const cs8SystemConfigurationSet *c) {
 }
 
 cs8SystemConfigurationSet::cs8SystemConfigurationSet() {
-  m_settingKeywords << "Arm serial number"
-                    << "Machine Number"
-                    << "Arm"
-                    << "Arm Type"
-                    << "VAL3"
-                    << "System"
-                    << "Starc"
-                    << "Configuration Version"
-                    // mark setting with "[" to indicate they are dynamic and to
-                    // be excluded when parsing system settings
-                    << "[Power hour count";
+  m_settingKeywords.insertMulti("Arm serial number", "Arm serial number");
+  m_settingKeywords.insertMulti("Arm serial number", "Arm S/N");
+  m_settingKeywords.insertMulti("Machine Number", "Machine Number");
+  m_settingKeywords.insertMulti("Machine Number", "Controller S/N");
+  m_settingKeywords.insertMulti("Arm", "Arm");
+  m_settingKeywords.insertMulti("Arm Type", "Arm Type");
+  m_settingKeywords.insertMulti("VAL3", "VAL3");
+  m_settingKeywords.insertMulti("System", "System");
+  m_settingKeywords.insertMulti("Starc", "Starc");
+  m_settingKeywords.insertMulti("Configuration Version", "Configuration Version");
+  // mark setting with "[" to indicate they are dynamic and to
+  // be excluded when parsing system settings
+  m_settingKeywords.insertMulti("Power hour count", "[Power hour count");
   QString checksumRegExp("(($|\\{[0-9a-f]{8}\\})$)");
   QString logIdRegExp("(<0x\\d{4}> )*");
 
-  foreach (QString keyword, m_settingKeywords) {
-    addItem(keyword,
-            QStringLiteral("^%1%3(:| =) ([^{]*)%2").arg(logIdRegExp).arg(checksumRegExp).arg(keyword.remove("[")),
-            keyword.contains("["));
+  QHashIterator<QString, QString> i(m_settingKeywords);
+  while (i.hasNext()) {
+    i.next();
+    QString value = i.value();
+    addItem(i.key(),
+            QStringLiteral("^%1%3(:| =) ([^{]*)%2").arg(logIdRegExp).arg(checksumRegExp).arg(value.remove("[")),
+            i.value().startsWith("["));
   }
 }
 
-QString cs8SystemConfigurationSet::machineNumber() const {
-  if (!m_items.value("Machine Number")->value.isEmpty())
-    return m_items.value("Machine Number")->value;
+QString cs8SystemConfigurationSet::machineNumber() const { return itemValue("Machine Number"); }
+
+QString cs8SystemConfigurationSet::armNumber() const { return itemValue("Arm serial number"); }
+
+QString cs8SystemConfigurationSet::armType() const { return itemValue("Arm Type"); }
+
+QString cs8SystemConfigurationSet::itemValue(const QString key) const {
+  if (m_items.contains(key) && !m_items.value(key)->value.isEmpty())
+    return m_items.value(key)->value;
   else
     return QString();
-}
-
-QString cs8SystemConfigurationSet::armNumber() const {
-  if (!m_items.value("Arm serial number")->value.isEmpty())
-    return m_items.value("Arm serial number")->value;
-  else
-    return QString();
-}
-
-QString cs8SystemConfigurationSet::armType() const {
-  if (!m_items.value("Arm Type")->value.isEmpty())
-    return m_items.value("Arm Type")->value;
-  else
-    return QString("unknown");
 }
 
 cs8SystemConfigurationSet::~cs8SystemConfigurationSet() {}
 
-/*! Returns a hash of configuration items contained in a configuration set
- *
- */
-QHash<QString, cs8SystemConfigurationItem *> cs8SystemConfigurationSet::items() const { return m_items; }
+QMultiHash<QString, cs8SystemConfigurationItem *> cs8SystemConfigurationSet::items() const { return m_items; }
 
 /*! Set the line number from which this configuration set is used.
  *
@@ -83,12 +77,12 @@ void cs8SystemConfigurationSet::setTo(int value, const QDateTime &timeStamp) {
   m_timeStampTo = timeStamp;
 }
 
-void cs8SystemConfigurationSet::setWorkingHours(cs8SystemConfigurationItem *value) {
-  if (value != nullptr)
-    m_items["Power hour count"] = value;
+void cs8SystemConfigurationSet::setWorkingHours(cs8SystemConfigurationItem *item) {
+  m_items.replace("Power hour count", new cs8SystemConfigurationItem("Power hour count", item->rx.pattern(),
+                                                                     item->dynamic, item->value, item->line));
 }
 
-cs8SystemConfigurationItem *cs8SystemConfigurationSet::workingHours() {
+cs8SystemConfigurationItem *cs8SystemConfigurationSet::workingHours() const {
   if (items().contains("Power hour count"))
     return items().value("Power hour count");
   else
@@ -145,22 +139,21 @@ bool cs8SystemConfigurationSet::operator==(cs8SystemConfigurationSet *set) const
 void cs8SystemConfigurationSet::addItem(const QString &name, const QString &rx, bool dynamicItem,
                                         const QString &value) {
   cs8SystemConfigurationItem *item = new cs8SystemConfigurationItem(name, rx, dynamicItem, value);
-  m_items[name] = item;
+  m_items.insertMulti(name, item);
 }
 
-bool cs8SystemConfigurationSet::isEqual(cs8SystemConfigurationSet *set) const {
-  if (set->items().count() != m_items.count())
-    return false;
+bool cs8SystemConfigurationSet::isEqual(cs8SystemConfigurationSet *other) const {
+  // if (other->items().count() != m_items.count())
+  //  return false;
 
   QHashIterator<QString, cs8SystemConfigurationItem *> i(m_items);
   while (i.hasNext()) {
     i.next();
     //			qDebug() << i.key() << ": " << i.value();
-    if (set->items().contains(i.key())) {
-      // qDebug() << i.key() << ": " << i.value()->value << "   " <<
-      // set->items().value(i.key())->value;
+    if (other->items().contains(i.key())) {
+      qDebug() << i.key() << ": " << i.value()->value << "   " << other->items().value(i.key())->value;
       // ignore dynamic items
-      if (set->items().value(i.key())->value != i.value()->value && !set->items().value(i.key())->dynamic)
+      if (other->items().value(i.key())->value != i.value()->value && !other->items().value(i.key())->dynamic)
         return false;
     } else
       return false;
@@ -179,7 +172,7 @@ void cs8SystemConfigurationSet::dumpData() {
 
 bool cs8SystemConfigurationSet::isEmpty() const {
 
-  QHashIterator<QString, cs8SystemConfigurationItem *> i(items());
+  QHashIterator<QString, cs8SystemConfigurationItem *> i(m_items);
   while (i.hasNext()) {
     i.next();
     if (!i.value()->value.isEmpty())
@@ -187,4 +180,15 @@ bool cs8SystemConfigurationSet::isEmpty() const {
     // qDebug() << "item: " << i.key() << " value: " << i.value()->value;
   }
   return true;
+}
+
+void cs8SystemConfigurationSet::removeEmptyItems() {
+  QHashIterator<QString, cs8SystemConfigurationItem *> i(m_items);
+  while (i.hasNext()) {
+    i.next();
+    if (i.value()->value.isEmpty()) {
+      qDebug() << "Remove item: " << i.key() << ":" << i.value();
+      m_items.remove(i.key(), i.value());
+    }
+  }
 }

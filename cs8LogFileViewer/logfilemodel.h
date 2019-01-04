@@ -40,6 +40,7 @@ public:
   uint hash() const;
   int lastValidLineWithTimeStamp() const;
   QStringList messageList();
+  QStringList typeList();
 
   int rowCount(const QModelIndex & = QModelIndex()) const;
   int columnCount(const QModelIndex & = QModelIndex()) const;
@@ -64,7 +65,7 @@ signals:
 
   // internal signals
   void p_resetHighlight();
-  void p_setLogLine(uint, QDateTime, QString, int, double);
+  void p_setLogLine(uint, const QDateTime &, const QString &, int, double, const QString &);
   void p_setHighlight(int, QFont, QBrush, QBrush, bool);
   void p_setLogSize(int);
   void logMessageReceived();
@@ -73,7 +74,7 @@ signals:
 
 public slots:
   void setHighlightRules(highlightItemList *list);
-  void setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns);
+  void setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns, const QString &type);
   void slotRunHighlightRules();
 
 protected:
@@ -82,7 +83,8 @@ protected:
 protected slots:
   void slotLoadingFinished();
   void slotReadingComplete(bool valid);
-  void slotSetLogLine(int row, QDateTime timeStamp, QString message, int level, double ms);
+  void slotSetLogLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ms,
+                      const QString &type);
   void slotSetHighlight(int row, QFont font, QBrush fgBrush, QBrush bgBrush, bool highLight_);
   void slotSetLogSize(int rowCount);
   void slotAppendRows(int rowCount);

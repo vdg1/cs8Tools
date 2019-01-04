@@ -18,7 +18,6 @@ public:
   explicit cs8MetaInformationModel(QObject *parent = 0);
   cs8SystemConfigurationModel *systemConfigurationModel();
   void setLogData(logFileModel *logData);
-  int currentRow();
   static Preselection dlgOpenSwapFile(qint64 hash);
   void setDlgOpenSwapFile(qint64 hash, Preselection value);
   static Preselection dlgIgnoreTimeGap(qint64 hash);
@@ -28,9 +27,9 @@ public:
   QString URLId() const;
 
   QString serialNumber() const;
+  int hash() const;
 
 signals:
-  void informationUpdated(int row);
   void metaInformationAvailable();
 
 public slots:
@@ -50,7 +49,6 @@ private:
   int indexDlgIgnoreTimeGap;
   int indexFirstOpened;
   int indexLastOpen;
-  int activeRow;
   bool firstTimeOpened;
 
   bool selectRecord(uint hash);

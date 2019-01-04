@@ -52,6 +52,7 @@
 
 #include "cs8logfilefiltermodel.h"
 #include "cs8metainformationmodel.h"
+#include "cs8systemconfigurationmodel.h"
 #include "dialogalternativeeditor.h"
 #include "logfilemodel.h"
 #include "mdichild.h"
@@ -89,6 +90,7 @@ MdiChild::MdiChild(QWidget *parent)
   connect(m_model, &logFileModel::readingComplete, this, &MdiChild::slotLoadingFinished);
 
   scrollbar = new cs8ScrollBar(this);
+  scrollbar->setModel(m_filterModel);
   connect(m_model, &logFileModel::highLight, scrollbar, &cs8ScrollBar::addHighlight);
   connect(m_model, &logFileModel::resetHighlight, scrollbar, &cs8ScrollBar::resetHighlight);
   connect(m_filterModel, &cs8LogFileFilterModel::orderChanged, scrollbar, &cs8ScrollBar::reverseHighlights);
@@ -109,15 +111,15 @@ bool MdiChild::loadFile(const QString &fileName) {
     return false;
   }
 
-  // check if errors.old also exist in same directory
+  // check if *.old also exist in same directory
   QFileInfo info(fileName);
   // read hash of file
   QTextStream in(&file);
   qint64 hash = qHash(in.readAll());
   file.seek(0);
 
-  if (info.fileName() == "errors.log") {
-    QString oldFileName = info.path() + "/errors.old";
+  if (info.fileName().contains(QRegExp("(errors|system|user).log"))) {
+    QString oldFileName = info.path() + "/" + info.baseName() + ".old";
     oldFile.setFileName(oldFileName);
 
     if (oldFile.exists()) {
@@ -181,10 +183,11 @@ bool MdiChild::loadFile(const QString &fileName) {
   m_fileName = fileName;
   m_fileWatcher->addPath(fileName);
   // qDebug() << m_fileWatcher->files();
-  ui->widgetInformation->selectRow(m_model->metaInformationModel()->currentRow());
+  // ui->widgetInformation->selectRow(m_model->metaInformationModel()->hash());
   QApplication::restoreOverrideCursor();
   curFile = QFileInfo(fileName).canonicalFilePath();
-  QString title = QDir::toNativeSeparators(fileName + (hasSwapFile ? QString(" + errors.old") : QString("")));
+  QString title =
+      QDir::toNativeSeparators(fileName + (hasSwapFile ? QString(" + " + info.baseName() + ".old") : QString("")));
   setCurrentFile(title);
   setWindowIcon(QIcon(":/icons/32x32/32x32/mimetypes/text-x-log.png"));
   return true;
@@ -231,7 +234,7 @@ void MdiChild::setScrollToBottomWhenLineReceived(bool scrollToBottomWhenLineRece
 
 void MdiChild::setContextMenu(QMenu *contextMenu) { m_contextMenu = contextMenu; }
 
-QString MdiChild::getSelectedLines(bool formated) const {
+QString MdiChild::getSelectedLines(bool formated, bool withRobotInfo) const {
   QStringList selectedRowsText;
   QTextDocument doc;
   QTextCursor cursor(&doc);
@@ -255,13 +258,19 @@ QString MdiChild::getSelectedLines(bool formated) const {
       cursor.setBlockCharFormat(fmt);
       cursor.insertText(line);
     }
-    qDebug() << doc.toHtml();
-    return doc.toHtml();
+    qDebug() << doc.toHtml("utf8");
+    // return doc.toHtml("utf8");
+    return doc.toPlainText();
   } else {
     foreach (QModelIndex index, ui->view->selectionModel()->selectedRows(2)) {
       selectedRowsText.append(ui->view->model()->data(index, Qt::UserRole).toString());
     }
-    return selectedRowsText.join("\n");
+    if (withRobotInfo) {
+      QString serialNumber = model()->metaInformationModel()->systemConfigurationModel()->machineSerialNumber();
+
+      return QString("\nLog data from %1:\n\n[..]\n%2\n[..]\n").arg(serialNumber).arg(selectedRowsText.join("\n"));
+    } else
+      return selectedRowsText.join("\n");
   }
 }
 
@@ -359,11 +368,18 @@ void MdiChild::jumpToStart(int delta) {
   rx.setPattern("-{10,}.*");
   if (delta > 0) {
     int currentLine = ui->view->rowAt(ui->view->height());
-    startLine = m_model->messageList().indexOf(rx, currentLine);
+    if (m_model->fileType() == cs8LogFileData::CS8)
+      startLine = m_model->messageList().indexOf(rx, currentLine);
+    else
+      startLine = m_model->typeList().indexOf("run", currentLine);
+
     startLine = startLine == -1 ? m_model->rowCount() : startLine;
   } else {
     int currentLine = ui->view->rowAt(0);
-    startLine = qMax(0, m_model->messageList().lastIndexOf(rx, currentLine));
+    if (m_model->fileType() == cs8LogFileData::CS8)
+      startLine = qMax(0, m_model->messageList().lastIndexOf(rx, currentLine));
+    else
+      startLine = qMax(0, m_model->typeList().lastIndexOf("run", currentLine));
   }
   scrollToLine(startLine);
 }
