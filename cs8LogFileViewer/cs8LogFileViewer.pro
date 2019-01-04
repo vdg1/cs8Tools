@@ -1,8 +1,7 @@
 
 TEMPLATE = app
 
-MAJOR_VERSION=5
-MINOR_VERSION=2
+
 
 PACKAGE_DIR=$$PWD/../installer/packages/org.vdg.cs8Tools.cs8LogViewer
 include (../common/common.pri)

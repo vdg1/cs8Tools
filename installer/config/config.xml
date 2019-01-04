@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>cs8 Tools Installer</Name>
-    <Version>1.0.7</Version>
+    <Version>1.0.9</Version>
     <Title>cs8 Tools Installer</Title>
     <Publisher>Volker Drewer-Gutland</Publisher>
     <AllowSpaceInPath>true</AllowSpaceInPath>
@@ -12,6 +12,9 @@
 	<RemoteRepositories>
     <Repository>
         <Url>http://drewer-gutland.se/cs8tools/repository/</Url>
+    </Repository>
+	<Repository>
+        <Url>https://vdg1.github.io/repository</Url>
     </Repository>
 </RemoteRepositories>
 </Installer>

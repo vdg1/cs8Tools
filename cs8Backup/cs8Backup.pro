@@ -74,8 +74,7 @@ FORMS = ui/downloaddirdialog.ui \
     ui/detailProgressDialog.ui \
     wizardcreatebackup.ui
 
-MAJOR_VERSION=5
-MINOR_VERSION=2
+
 
 TARGET = cs8backup
 TEMPLATE = app
