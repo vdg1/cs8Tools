@@ -1,3 +1,10 @@
+Version 5.5
+- Fixed bug which prevented log file viewer from opening log files passed on as program arguments
+
+Version 5.4
+- Improved behaviour when loading log files of CS9 controller
+- Minor bug fixes
+
 Version 5.0
 - Migrated to SQlite database handling
 
