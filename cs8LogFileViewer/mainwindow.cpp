@@ -119,6 +119,10 @@ void MainWindow::handleMessage(const QString &message) {
       filename = arguments[1];
       action = Open;
     }
+    if (QFile::exists(arguments[0])) {
+      filename = arguments[0];
+      action = Open;
+    }
   }
 
   switch (action) {
