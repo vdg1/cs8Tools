@@ -89,7 +89,7 @@ MdiChild::MdiChild(QWidget *parent)
   connect(this, &QMdiSubWindow::windowStateChanged, this, &MdiChild::slotWindowStateChanged);
   connect(m_model, &logFileModel::readingComplete, this, &MdiChild::slotLoadingFinished);
 
-  scrollbar = new cs8ScrollBar(this);
+  scrollbar = new cs8ScrollBar(ui->view);
   scrollbar->setModel(m_filterModel);
   connect(m_model, &logFileModel::highLight, scrollbar, &cs8ScrollBar::addHighlight);
   connect(m_model, &logFileModel::resetHighlight, scrollbar, &cs8ScrollBar::resetHighlight);

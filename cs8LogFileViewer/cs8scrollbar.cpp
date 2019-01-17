@@ -7,9 +7,10 @@
 
 cs8ScrollBar::cs8ScrollBar(QWidget *parent) : QScrollBar(parent), m_rowCount(0), m_reversed(false), m_model(0) {
   setMouseTracking(true);
+  m_peekView = new cs8Impl::cs8PeekView(parent);
 }
 
-void cs8ScrollBar::setModel(QAbstractItemModel *model) { m_model = model; }
+void cs8ScrollBar::setModel(cs8LogFileFilterModel *model) { m_model = model; }
 
 void cs8ScrollBar::addHighlight(int row, int totalRow, QBrush brush) {
   highLights[row] = brush;
@@ -66,7 +67,7 @@ void cs8ScrollBar::paintEvent(QPaintEvent *event) {
 
 void cs8ScrollBar::mouseMoveEvent(QMouseEvent *event) {
   QScrollBar::mouseMoveEvent(event);
-  qDebug() << minimum() << maximum() << event->pos() << height();
+
   if (m_model != Q_NULLPTR) {
     double row = (event->pos().y() - 17);
     row /= (height() - 17 * 2);
@@ -74,5 +75,76 @@ void cs8ScrollBar::mouseMoveEvent(QMouseEvent *event) {
     row *= m_model->rowCount();
     row = (int)row;
     QToolTip::showText(mapToGlobal(event->pos()), QString("Row: %3").arg(row));
+
+    QPoint p(qobject_cast<QWidget *>(m_peekView->parent())->width() - m_peekView->width() - this->width() - 10,
+             qMin(qMax(0, event->pos().ry() - m_peekView->height() / 2), this->height() - m_peekView->height()));
+    m_peekView->move(p);
+    // m_peekView->setText(qobject_cast<logFileModel *>(m_model->sourceModel())->logMessage(row));
+    m_peekView->setText(qobject_cast<logFileModel *>(m_model->sourceModel())->getLines(row - 7, 15));
   }
+}
+
+void cs8ScrollBar::leaveEvent(QEvent *event) {
+  QScrollBar::leaveEvent(event);
+  m_peekView->delayHide();
+}
+
+void cs8ScrollBar::enterEvent(QEvent *event) {
+  QScrollBar::enterEvent(event);
+  m_peekView->show();
+}
+
+cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent) : QTextEdit(parent), sticky(false) {
+
+  hide();
+  setReadOnly(true);
+  setFontPointSize(10);
+  setLineWrapMode(QTextEdit::NoWrap);
+  setFontFamily("courier");
+  QFontMetrics m(font());
+  resize(500, m.height() * 15);
+
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+  m_buttonSticky = new QPushButton(this);
+  m_buttonSticky->setCheckable(true);
+  m_buttonSticky->resize(32, 32);
+  m_buttonSticky->move(width() - 32, 0);
+  m_buttonSticky->setIcon(QIcon(":/icons/32x32/32x32/actions/layer-visible-off.png"));
+  connect(m_buttonSticky, &QPushButton::clicked, this, [this]() {
+    sticky = !sticky;
+    if (sticky) {
+      m_buttonSticky->setIcon(QIcon(":/icons/32x32/32x32/actions/layer-visible-on.png"));
+      m_timerHideView->stop();
+    } else {
+      m_buttonSticky->setIcon(QIcon(":/icons/32x32/32x32/actions/layer-visible-off.png"));
+      hide();
+    }
+  });
+
+  m_timerHideView = new QTimer(this);
+  m_timerHideView->setSingleShot(true);
+  m_timerHideView->setInterval(1000);
+  connect(m_timerHideView, &QTimer::timeout, this, [this]() {
+    if (!sticky)
+      hide();
+  });
+}
+
+void cs8Impl::cs8PeekView::delayHide() { m_timerHideView->start(); }
+
+void cs8Impl::cs8PeekView::leaveEvent(QEvent *event) {
+  QTextEdit::leaveEvent(event);
+  delayHide();
+}
+
+void cs8Impl::cs8PeekView::enterEvent(QEvent *event) {
+  QTextEdit::enterEvent(event);
+  m_timerHideView->stop();
+}
+
+void cs8Impl::cs8PeekView::show() {
+  QTextEdit::show();
+  m_timerHideView->stop();
 }

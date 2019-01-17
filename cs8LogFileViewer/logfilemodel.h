@@ -10,6 +10,7 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QStandardItemModel>
+#include <QTextDocument>
 
 class cs8MetaInformationModel;
 class cs8SystemConfigurationModel;
@@ -41,6 +42,7 @@ public:
   int lastValidLineWithTimeStamp() const;
   QStringList messageList();
   QStringList typeList();
+  QString getLines(int start, int count = 1);
 
   int rowCount(const QModelIndex & = QModelIndex()) const;
   int columnCount(const QModelIndex & = QModelIndex()) const;

@@ -20,7 +20,7 @@ void logFileDetailedInformationForm::setModel(cs8MetaInformationModel *model) {
   m_mapper->addMapping(ui->lineEditSpanTill, model->fieldIndex("spanTill"));
   m_mapper->addMapping(ui->lineEditControllerSerialNumber, model->fieldIndex("id_controllers"));
   m_mapper->addMapping(ui->lineEditArmType, model->fieldIndex("armType"));
-  connect(model, SIGNAL(informationUpdated(int)), this, SLOT(selectRecord(int)));
+  // connect(model, SIGNAL(informationUpdated(int)), this, SLOT(selectRecord(int)));
 }
 
 void logFileDetailedInformationForm::selectRow(int row) {

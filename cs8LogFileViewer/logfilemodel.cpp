@@ -11,6 +11,8 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <QStringList>
+#include <QTextBlockFormat>
+#include <QTextCursor>
 #include <QtConcurrent>
 
 logFileModel::logFileModel(QObject *parent)
@@ -321,6 +323,30 @@ QStringList logFileModel::messageList() { return m_logData.toStringList(); }
 
 QStringList logFileModel::typeList() { return m_logData.messageTypes(); }
 
+QString logFileModel::getLines(int start, int count) {
+  QTextDocument doc;
+  QTextCursor cursor(&doc);
+  for (int row = qMax(0, start); row < qMin(qMax(0, start) + count, m_logData.size() - 1); ++row) {
+    QBrush brush = m_logData[row].foregroundColor;
+    QFont font = m_logData[row].font;
+
+    QString line =
+        QString("%3:[%1]:%2\n").arg(m_logData[row].date.toString()).arg(m_logData[row].message).arg(row + 1, 5);
+
+    QTextBlockFormat format;
+    format.setForeground(brush);
+    QTextCharFormat fmt;
+    fmt.setFont(font);
+    fmt.setForeground(brush);
+    cursor.movePosition(QTextCursor::EndOfBlock);
+    cursor.setBlockFormat(format);
+    cursor.setBlockCharFormat(fmt);
+    cursor.setCharFormat(fmt);
+    cursor.insertText(line);
+  }
+  return doc.toHtml();
+}
+
 void logFileModel::setHighlightRules(highlightItemList *list) { m_highlightRules = list; }
 
 void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns,
@@ -500,7 +526,7 @@ void logFileModel::downloadLogFile(const QString &address) {
   progressDlg.setModal(true);
   progressDlg.setCancelButton(0);
 
-  cs8Controller *controller = new cs8Controller();
+  cs8Controller *controller = new cs8Controller(this);
   QByteArray buffer;
   controller->setAddress(address);
   controller->setLoginData("default", "");
@@ -516,6 +542,7 @@ void logFileModel::downloadLogFile(const QString &address) {
     QMessageBox::critical(qApp->activeWindow(), tr("Error"),
                           tr("Loading file /log/errors.log failed: %1").arg(controller->lastError()));
   }
+  controller->deleteLater();
 }
 
 bool logFileModel::connectToController(const cs8LogInterface::ControllerType type, const QString &address, quint16 port,
