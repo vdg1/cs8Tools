@@ -287,8 +287,8 @@ bool machineCatalogue::addLocalEntry(const QString &controllerSerialNumber, cons
   record.setValue("armSerial", armSerialNumber);
   record.setValue("customerName", customer);
   record.setValue("internalNumber", internalNumber);
-
   record.setValue("localyAdded", true);
+
   qDebug() << "Add local record to table: " << record;
   if (!m_table->insertRecord(0, record)) {
     qDebug() << "Inserting record failed: " << record << m_table->lastError();

@@ -202,7 +202,7 @@ void cs8MetaInformationModel::slotProcessingConfigurationsFinished() {
           catalogue.findByCustomerName(dlg.customer(), dlg.internalNumber(), m_serialNumber, armSerialNumber, m_URLId);
         } else if (!m_serialNumber.isEmpty() && !dlg.customer().isEmpty() && !dlg.internalNumber().isEmpty()) {
           // add to local database
-          catalogue.addLocalEntry(m_serialNumber, armSerialNumber, dlg.customer(), dlg.internalNumber());
+          // catalogue.addLocalEntry(m_serialNumber, armSerialNumber, dlg.customer(), dlg.internalNumber());
         }
         m_systemConfigurationModel->setMachineInfo(dlg.customer(), dlg.internalNumber(), m_serialNumber, QString());
       }

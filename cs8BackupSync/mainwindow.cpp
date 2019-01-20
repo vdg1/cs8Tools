@@ -337,6 +337,8 @@ void MainWindow::updateCatalogue() {
     QDateTime lastUpdate = settings.value("lastCatalogueImport").toDateTime();
     QFileInfo remoteFileInfo(ui->leCatalogueFile->text());
     machineCatalogue catalogue;
+    qDebug() << "remote catalogue: " << remoteFileInfo.absoluteFilePath() << " exists: " << remoteFileInfo.exists()
+             << " modified: " << remoteFileInfo.lastModified().toString() << " last update: " << lastUpdate.toString();
     if (remoteFileInfo.exists() &&
         ((remoteFileInfo.lastModified() > lastUpdate) || !lastUpdate.isValid() || catalogue.entries() == 0)) {
       // qxtLog->info() << "Importing new machine catalogue";

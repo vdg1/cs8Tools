@@ -76,6 +76,10 @@ QString DialogGetMachineData::customer() const { return ui->cbCustomerName->curr
 QString DialogGetMachineData::internalNumber() const { return ui->cbInternalNumber->currentText(); }
 
 void DialogGetMachineData::on_buttonBox_accepted() {
+  // add robot to local database
+  machineCatalogue catalogue;
+  catalogue.addLocalEntry(m_serialNumber, m_serialNumber, ui->cbCustomerName->currentText().trimmed(),
+                          ui->cbInternalNumber->currentText().trimmed());
   if (ui->cbInformMaintainer->isChecked()) {
     QSettings settings;
     QString rcv = settings.value("maintainer", QString::fromUtf8("vdg@saxe-group.com")).toString();
