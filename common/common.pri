@@ -25,7 +25,8 @@ HEADERS += \
     $$PWD/databaseconnection.h \
     $$PWD/xlstablemodel.h \
     $$PWD/dialogwhatsnew.h \
-    $$PWD/cs8systemlogging.h
+    $$PWD/cs8systemlogging.h \
+    $$PWD/cs8serialnumbervalidator.h
 
 SOURCES += \
     ../common/aboutdialog.cpp \
@@ -38,7 +39,8 @@ SOURCES += \
     $$PWD/databaseconnection.cpp \
     $$PWD/xlstablemodel.cpp \
     $$PWD/dialogwhatsnew.cpp \
-    $$PWD/cs8systemlogging.cpp
+    $$PWD/cs8systemlogging.cpp \
+    $$PWD/cs8serialnumbervalidator.cpp
 
 FORMS += \
     $$PWD/ui/aboutDialog.ui \

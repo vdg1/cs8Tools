@@ -1,6 +1,7 @@
 #ifndef DIALOGGETMACHINEDATA_H
 #define DIALOGGETMACHINEDATA_H
 
+#include "cs8serialnumbervalidator.h"
 #include <QtWidgets/QDialog>
 
 namespace Ui {
@@ -30,6 +31,7 @@ private:
   Ui::DialogGetMachineData *ui;
   QString headerText;
   QString m_serialNumber;
+  cs8SerialNumberValidator *m_validator;
 };
 
 #endif // DIALOGGETMACHINEDATA_H
