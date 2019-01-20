@@ -104,13 +104,13 @@ cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent) : QTextEdit(parent), sticky(f
   QFontMetrics m(font());
   resize(500, m.height() * 15);
 
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  // setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   m_buttonSticky = new QPushButton(this);
   m_buttonSticky->setCheckable(true);
-  m_buttonSticky->resize(32, 32);
-  m_buttonSticky->move(width() - 32, 0);
+  m_buttonSticky->resize(16, 16);
+  m_buttonSticky->move(width() - m_buttonSticky->width(), 0);
   m_buttonSticky->setIcon(QIcon(":/icons/32x32/32x32/actions/layer-visible-off.png"));
   connect(m_buttonSticky, &QPushButton::clicked, this, [this]() {
     sticky = !sticky;

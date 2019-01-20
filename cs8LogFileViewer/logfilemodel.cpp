@@ -326,21 +326,23 @@ QStringList logFileModel::typeList() { return m_logData.messageTypes(); }
 QString logFileModel::getLines(int start, int count) {
   QTextDocument doc;
   QTextCursor cursor(&doc);
+  QTextCharFormat fmt;
+  QBrush brush;
+  QFont font;
+  QString line;
+
   for (int row = qMax(0, start); row < qMin(qMax(0, start) + count, m_logData.size() - 1); ++row) {
-    QBrush brush = m_logData[row].foregroundColor;
-    QFont font = m_logData[row].font;
+    brush = m_logData[row].foregroundColor;
+    font = m_logData[row].font;
+    line = QString("%3:[%1]:%2\n")
+               .arg(m_logData[row].date.toString("dd/MM/yyyy hh:mm:ss"))
+               .arg(m_logData[row].message)
+               .arg(row + 1, 5);
 
-    QString line =
-        QString("%3:[%1]:%2\n").arg(m_logData[row].date.toString()).arg(m_logData[row].message).arg(row + 1, 5);
-
-    QTextBlockFormat format;
-    format.setForeground(brush);
-    QTextCharFormat fmt;
     fmt.setFont(font);
-    fmt.setForeground(brush);
+    fmt.setFontFamily("courier");
+    fmt.setForeground(QBrush(brush.color()));
     cursor.movePosition(QTextCursor::EndOfBlock);
-    cursor.setBlockFormat(format);
-    cursor.setBlockCharFormat(fmt);
     cursor.setCharFormat(fmt);
     cursor.insertText(line);
   }
