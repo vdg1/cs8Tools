@@ -1,3 +1,5 @@
+- Added peek preview window when mouse is hovering over scrollbar.
+
 Version 5.5
 - Fixed bug which prevented log file viewer from opening log files passed on as program arguments
 
