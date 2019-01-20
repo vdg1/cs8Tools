@@ -1,3 +1,5 @@
+- Fixed bug which prevented from robots not in remote catalogue being added to local catalogue
+
 Version 5.0
 - Minor bug fixes
 
