@@ -1,3 +1,5 @@
+- Added support for new serial number format
+
 Version 5.0
 - Minor bug fixes
 
