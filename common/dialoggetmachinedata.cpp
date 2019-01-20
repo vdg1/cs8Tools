@@ -16,6 +16,7 @@ DialogGetMachineData::DialogGetMachineData(QWidget *parent) : QDialog(parent), u
   ui->cbInternalNumber->lineEdit()->setPlaceholderText("Internal number");
   ui->leControllerSerialNumber->hide();
   ui->lbSerialNumber->hide();
+  m_validator = new cs8SerialNumberValidator(ui->leControllerSerialNumber);
 }
 
 DialogGetMachineData::~DialogGetMachineData() { delete ui; }
