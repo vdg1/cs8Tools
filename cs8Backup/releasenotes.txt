@@ -1,3 +1,4 @@
+Version 5.6
 - Fixed bug which prevented from robots not in remote catalogue being added to local catalogue
 - Added support for new serial number format
 
