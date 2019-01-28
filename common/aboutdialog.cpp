@@ -6,12 +6,12 @@
 #include <QDomDocument>
 #include <QFile>
 
-aboutDialog::aboutDialog(QWidget *parent) : QDialog(parent), ui(new Ui::aboutDialog) {
+aboutDialog::aboutDialog(const QString &releaseNotesFile, QWidget *parent) : QDialog(parent), ui(new Ui::aboutDialog) {
 
   ui->setupUi(this);
   ui->labelVersion->setText(qApp->applicationVersion());
 
-  QFile file(":/files/releasenotes.txt");
+  QFile file(releaseNotesFile);
   qDebug() << "release notes file:" << file.fileName() << " exists:" << file.exists();
   if (file.open(QFile::ReadOnly))
     ui->textEditChangelog->setPlainText(file.readAll());

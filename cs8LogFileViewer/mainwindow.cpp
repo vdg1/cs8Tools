@@ -176,7 +176,7 @@ void MainWindow::copy(bool withRobotInfo) {
 }
 
 void MainWindow::about() {
-  aboutDialog dlg;
+  aboutDialog dlg(":/files/releasenotes.txt", this);
   dlg.exec();
 }
 

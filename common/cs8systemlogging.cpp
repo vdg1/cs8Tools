@@ -69,7 +69,7 @@ void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
   // check file size and if needed create new log!
   {
     QFile outFileCheck(logFileName);
-    int size = outFileCheck.size();
+    qint64 size = outFileCheck.size();
 
     if (size > LOGSIZE) // check current log size
     {

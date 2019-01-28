@@ -3,8 +3,6 @@
         <file>images/cdtoparent.png</file>
         <file>images/dir.png</file>
         <file>images/file.png</file>
-        <file>res/loading19.gif</file>
-        <file alias="releasenotes.txt">releasenotes.txt</file>
     </qresource>
     <qresource prefix="/translations">
         <file>cs8backup_de.ts</file>
@@ -13,6 +11,7 @@
     </qresource>
     <qresource prefix="/images"/>
     <qresource prefix="/files">
-        <file alias="releasenote.txt">releasenotes.txt</file>
+        <file>resource/releasenotes.txt</file>
+        <file>resource/loading19.gif</file>
     </qresource>
 </RCC>

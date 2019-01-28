@@ -11,7 +11,7 @@ class aboutDialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit aboutDialog(QWidget *parent = Q_NULLPTR);
+  explicit aboutDialog(const QString &releaseNotesFile, QWidget *parent = Q_NULLPTR);
   ~aboutDialog();
 
 protected:

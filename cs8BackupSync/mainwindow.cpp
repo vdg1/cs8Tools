@@ -62,7 +62,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_actionAbout_triggered() {
-  aboutDialog widget(this);
+  aboutDialog widget(":/files/releasenotes.txt", this);
   widget.exec();
 }
 

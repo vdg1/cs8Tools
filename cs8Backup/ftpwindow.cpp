@@ -109,7 +109,7 @@ void FtpWindow::setupUi() {
   statusBar()->showMessage(tr("Disconnected"));
 
   m_movie = new QMovie();
-  m_movie->setFileName(":res/loading19.gif");
+  m_movie->setFileName(":/files/resource/loading19.gif");
   ui.lbScannerStatus->setMovie(m_movie);
 
   m_progressDialog = new DetailProgressDialog(this);
@@ -666,7 +666,7 @@ void FtpWindow::slotSelectDownLoadDir() {
 }
 
 void FtpWindow::on_action_About_triggered() {
-  aboutDialog widget(this);
+  aboutDialog widget(":/files/resource/releasenotes.txt", this);
   widget.exec();
 }
 

@@ -108,8 +108,6 @@ else:win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../_Libr
 else:win32:!win32-g++:CONFIG(release, debug|release): PRE_TARGETDEPS += $$PWD/../../_Libraries/cs8Components/cs8Components/lib/cs8ControllerComponent.lib
 else:win32:!win32-g++:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$PWD/../../_Libraries/cs8Components/cs8Components/lib/cs8ControllerComponentd.lib
 
-DISTFILES += \
-    releasenotes.txt
 
 CONFIG(release, debug|release) {
   message( "release" )
