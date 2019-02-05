@@ -146,7 +146,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="toolBarConnection">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -178,6 +178,10 @@
    <addaction name="actionNext_System_Start"/>
    <addaction name="actionScroll_to_Bottom"/>
    <addaction name="actionOpen_Machine_File"/>
+   <addaction name="separator"/>
+   <addaction name="actionShow_Errors"/>
+   <addaction name="actionShow_Warnings"/>
+   <addaction name="actionShow_Information"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2">
    <attribute name="dockWidgetArea">
@@ -380,6 +384,39 @@
   <action name="actionCopy_lines_and_add_info">
    <property name="text">
     <string>Copy lines and add info</string>
+   </property>
+  </action>
+  <action name="actionShow_Errors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Errors</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Events of Type &quot;Error&quot; in CS9 log file</string>
+   </property>
+  </action>
+  <action name="actionShow_Warnings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Warnings</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Events of Type &quot;Warning&quot; in CS9 log file</string>
+   </property>
+  </action>
+  <action name="actionShow_Information">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Information</string>
+   </property>
+   <property name="toolTip">
+    <string>Show Events of Type &quot;Information&quot; in CS9 log file</string>
    </property>
   </action>
  </widget>
