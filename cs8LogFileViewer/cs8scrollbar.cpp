@@ -46,11 +46,10 @@ void cs8ScrollBar::paintEvent(QPaintEvent *event) {
   QColor c;
   QMapIterator<int, QBrush> i(highLights);
   int pos = 0;
-  auto posFract = 0.0;
 
   while (i.hasNext()) {
     i.next();
-    posFract = static_cast<double>(i.key()) / m_rowCount;
+    auto posFract = static_cast<double>(i.key()) / m_rowCount;
     if (!m_reversed)
       pos = static_cast<double>(posFract) * h;
     else

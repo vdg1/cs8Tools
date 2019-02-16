@@ -5,11 +5,10 @@
 
 class QFile;
 
-class cs8RobotCatalogueTable : public QSqlTableModel
-{
+class cs8RobotCatalogueTable : public QSqlTableModel {
 public:
-    cs8RobotCatalogueTable(QObject *parent = 0);
-    bool importCSVFile(QFile *file, bool clearBeforeImport=false);
+  cs8RobotCatalogueTable(QObject *parent = 0);
+  bool importCSVFile(QFile * /*file*/, bool = false);
 };
 
 #endif // CS8ROBOTCATALOGUETABLE_H

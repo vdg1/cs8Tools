@@ -694,6 +694,6 @@ void MainWindow::on_actionCopy_lines_and_add_info_triggered() { copy(true); }
 
 void MainWindow::on_actionShow_Warnings_toggled(bool arg1) { activeMdiChild()->showWarningMessages(arg1); }
 
-void MainWindow::on_actionShow_Information_toggled(bool arg1) { activeMdiChild()->showInformation(arg1); }
+void MainWindow::on_actionShow_Information_toggled(bool arg1) { activeMdiChild()->showInformationMessages(arg1); }
 
 void MainWindow::on_actionShow_Errors_toggled(bool arg1) { activeMdiChild()->showErrorMessages(arg1); }

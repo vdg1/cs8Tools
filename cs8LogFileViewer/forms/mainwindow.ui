@@ -178,10 +178,6 @@
    <addaction name="actionNext_System_Start"/>
    <addaction name="actionScroll_to_Bottom"/>
    <addaction name="actionOpen_Machine_File"/>
-   <addaction name="separator"/>
-   <addaction name="actionShow_Errors"/>
-   <addaction name="actionShow_Warnings"/>
-   <addaction name="actionShow_Information"/>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2">
    <attribute name="dockWidgetArea">
@@ -206,6 +202,20 @@
      </item>
     </layout>
    </widget>
+  </widget>
+  <widget class="QToolBar" name="toolBarCS9Filters">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionShow_Errors"/>
+   <addaction name="actionShow_Warnings"/>
+   <addaction name="actionShow_Information"/>
   </widget>
   <action name="actOpen">
    <property name="icon">
@@ -377,11 +387,19 @@
    </property>
   </action>
   <action name="actionReset_Dialog_Options">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/view-refresh.png</normaloff>:/icons/32x32/32x32/actions/view-refresh.png</iconset>
+   </property>
    <property name="text">
     <string>Reset Dialog Options</string>
    </property>
   </action>
   <action name="actionCopy_lines_and_add_info">
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/actions/edit-copy.png</normaloff>:/icons/32x32/32x32/actions/edit-copy.png</iconset>
+   </property>
    <property name="text">
     <string>Copy lines and add info</string>
    </property>
@@ -389,6 +407,10 @@
   <action name="actionShow_Errors">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/images/dialog-error.png</normaloff>:/images/dialog-error.png</iconset>
    </property>
    <property name="text">
     <string>Show Errors</string>
@@ -401,6 +423,10 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/images/dialog-warning.png</normaloff>:/images/dialog-warning.png</iconset>
+   </property>
    <property name="text">
     <string>Show Warnings</string>
    </property>
@@ -411,6 +437,10 @@
   <action name="actionShow_Information">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../../../Icons/resources.qrc">
+     <normaloff>:/icons/32x32/32x32/mimetypes/text-x-texinfo.png</normaloff>:/icons/32x32/32x32/mimetypes/text-x-texinfo.png</iconset>
    </property>
    <property name="text">
     <string>Show Information</string>
