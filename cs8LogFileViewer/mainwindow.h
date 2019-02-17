@@ -120,6 +120,12 @@ private slots:
 
   void on_actionCopy_lines_and_add_info_triggered();
 
+  void on_actionShow_Warnings_toggled(bool arg1);
+
+  void on_actionShow_Information_toggled(bool arg1);
+
+  void on_actionShow_Errors_toggled(bool arg1);
+
 private:
   void createActions();
   void createMenus();

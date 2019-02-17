@@ -221,6 +221,12 @@ void MainWindow::updateMenus() {
     ui.actionOpen_Machine_File->setEnabled(!activeMdiChild()->model()->URLId().isEmpty());
     ui.actionReverse_Order->setChecked(activeMdiChild()->reverseOrder());
     ui.actionScroll_to_Bottom->setChecked(activeMdiChild()->scrollToBottomWhenLineReceived());
+    ui.actionShow_Errors->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
+    ui.actionShow_Warnings->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
+    ui.actionShow_Information->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
+    ui.actionShow_Errors->setChecked(activeMdiChild()->showsErrorMessages());
+    ui.actionShow_Warnings->setChecked(activeMdiChild()->showsWarningMessages());
+    ui.actionShow_Information->setChecked(activeMdiChild()->showsInformationMesages());
 
     for (int row = 0; row < model->rowCount(); row++) {
       ui.treeViewSystemConfigurations->expand(model->index(row, 0));
@@ -685,3 +691,9 @@ void MainWindow::on_actionReset_Dialog_Options_triggered() {
 }
 
 void MainWindow::on_actionCopy_lines_and_add_info_triggered() { copy(true); }
+
+void MainWindow::on_actionShow_Warnings_toggled(bool arg1) { activeMdiChild()->showWarningMessages(arg1); }
+
+void MainWindow::on_actionShow_Information_toggled(bool arg1) { activeMdiChild()->showInformationMessages(arg1); }
+
+void MainWindow::on_actionShow_Errors_toggled(bool arg1) { activeMdiChild()->showErrorMessages(arg1); }

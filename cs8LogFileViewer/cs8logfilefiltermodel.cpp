@@ -30,14 +30,26 @@ void cs8LogFileFilterModel::setHideSwapFileMessages(bool hide) {
 
 bool cs8LogFileFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
   bool acceptRow = true;
-  QModelIndex index1 = m_model->index(sourceRow, 2, sourceParent);
+
   if (m_hideSwapFileMessages)
     if (sourceRow <= m_model->swapLineCount())
       acceptRow = false;
 
-  if (m_hideUserMessages)
-    if (m_model->data(index1).toString().contains(filterRegExp()))
+  if (m_model->fileType() == cs8LogFileData::CS8) {
+    QModelIndex index1 = m_model->index(sourceRow, 2, sourceParent);
+    if (m_hideUserMessages)
+      if (m_model->data(index1).toString().contains(filterRegExp()))
+        acceptRow = false;
+  } else {
+    QModelIndex index1 = m_model->index(sourceRow, 1, sourceParent);
+    int level = m_model->data(index1, Qt::UserRole).toInt();
+    if (!m_showError && level == cs8LogFileData::Error)
       acceptRow = false;
+    if (!m_showWarning && level == cs8LogFileData::Warning)
+      acceptRow = false;
+    if (!m_showInformation && level == cs8LogFileData::Information)
+      acceptRow = false;
+  }
 
   return acceptRow;
 }
@@ -69,6 +81,27 @@ bool cs8LogFileFilterModel::lessThan(const QModelIndex &left, const QModelIndex 
     return leftTime > rightTime;
   } else
     return l.row() > r.row();
+}
+
+bool cs8LogFileFilterModel::showError() const { return m_showError; }
+
+void cs8LogFileFilterModel::setShowError(bool showError) {
+  m_showError = showError;
+  invalidateFilter();
+}
+
+bool cs8LogFileFilterModel::showWarning() const { return m_showWarning; }
+
+void cs8LogFileFilterModel::setShowWarning(bool showWarning) {
+  m_showWarning = showWarning;
+  invalidateFilter();
+}
+
+bool cs8LogFileFilterModel::showInformation() const { return m_showInformation; }
+
+void cs8LogFileFilterModel::setShowInformation(bool showInformation) {
+  m_showInformation = showInformation;
+  invalidateFilter();
 }
 
 bool cs8LogFileFilterModel::reverseOrder() const { return m_reverseOrder; }

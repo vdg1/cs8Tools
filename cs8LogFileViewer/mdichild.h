@@ -72,6 +72,9 @@ public:
   logFileModel *model() const;
   bool showsUSRMessages();
   bool showsSwapFileMessages();
+  bool showsInformationMesages();
+  bool showsWarningMessages();
+  bool showsErrorMessages();
   bool reverseOrder();
   QString getSelectedLines(bool formated = true, bool withRobotInfo = false) const;
 
@@ -87,6 +90,9 @@ public slots:
   void scrollToLine(int line);
   void jumpToStart(int delta);
   void showSwapFileMessages(bool show = true);
+  void showErrorMessages(bool show = true);
+  void showWarningMessages(bool show = true);
+  void showInformationMessages(bool show = true);
   void setReverseOrder(bool reverse = false);
 
   void adjustColumnWidth();

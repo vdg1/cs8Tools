@@ -390,11 +390,23 @@ void MdiChild::showSwapFileMessages(bool show) {
   QApplication::restoreOverrideCursor();
 }
 
+void MdiChild::showErrorMessages(bool show) { m_filterModel->setShowError(show); }
+
+void MdiChild::showWarningMessages(bool show) { m_filterModel->setShowWarning(show); }
+
+void MdiChild::showInformationMessages(bool show) { m_filterModel->setShowInformation(show); }
+
 void MdiChild::setReverseOrder(bool reverse) { m_filterModel->setReverseOrder(reverse); }
 
 bool MdiChild::showsUSRMessages() { return !m_filterModel->hideUserMessages(); }
 
 bool MdiChild::showsSwapFileMessages() { return !m_filterModel->hideSwapFileMessages(); }
+
+bool MdiChild::showsInformationMesages() { return m_filterModel->showInformation(); }
+
+bool MdiChild::showsWarningMessages() { return m_filterModel->showWarning(); }
+
+bool MdiChild::showsErrorMessages() { return m_filterModel->showError(); }
 
 bool MdiChild::reverseOrder() { return m_filterModel->reverseOrder(); }
 
