@@ -19,18 +19,24 @@ class cs8PeekView;
 class cs8Impl::cs8PeekView : public QTextEdit {
   Q_OBJECT
 public:
-  explicit cs8PeekView(QWidget *parent = 0);
+  explicit cs8PeekView(QWidget *parent = 0, QScrollBar *scrollbar = 0);
   void delayHide();
   void show();
+
+protected slots:
+  void showContextMenu(const QPoint &p);
 
 protected:
   void leaveEvent(QEvent *event) override;
   void enterEvent(QEvent *event) override;
+  void contextMenuEvent(QContextMenuEvent *event) override;
 
   bool sticky;
+  bool blockByContext;
 
   QTimer *m_timerHideView;
   QPushButton *m_buttonSticky;
+  QAction *m_actionGotoLine;
 };
 
 class cs8ScrollBar : public QScrollBar {

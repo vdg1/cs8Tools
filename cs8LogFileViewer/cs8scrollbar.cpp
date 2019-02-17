@@ -1,13 +1,15 @@
 #include "cs8scrollbar.h"
 
+#include <QAction>
 #include <QDebug>
+#include <QMenu>
 #include <QPainter>
 #include <QStyleOptionSlider>
 #include <QToolTip>
 
 cs8ScrollBar::cs8ScrollBar(QWidget *parent) : QScrollBar(parent), m_rowCount(0), m_reversed(false), m_model(0) {
   setMouseTracking(true);
-  m_peekView = new cs8Impl::cs8PeekView(parent);
+  m_peekView = new cs8Impl::cs8PeekView(parent, this);
 }
 
 void cs8ScrollBar::setModel(cs8LogFileFilterModel *model) { m_model = model; }
@@ -94,7 +96,17 @@ void cs8ScrollBar::enterEvent(QEvent *event) {
   m_peekView->show();
 }
 
-cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent) : QTextEdit(parent), sticky(false) {
+cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent, QScrollBar *scrollbar) : QTextEdit(parent), sticky(false) {
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(this, &QTextEdit::customContextMenuRequested, this, &cs8Impl::cs8PeekView::showContextMenu);
+
+  m_actionGotoLine = new QAction(this);
+  m_actionGotoLine->setText(tr("Goto line"));
+  connect(m_actionGotoLine, &QAction::triggered, this, [=]() {
+    QScrollBar *sb = scrollbar;
+    sb->setValue(m_actionGotoLine->data().toInt() - 1);
+  });
 
   hide();
   setReadOnly(true);
@@ -136,7 +148,9 @@ void cs8Impl::cs8PeekView::delayHide() { m_timerHideView->start(); }
 
 void cs8Impl::cs8PeekView::leaveEvent(QEvent *event) {
   QTextEdit::leaveEvent(event);
-  delayHide();
+  if (!blockByContext)
+    delayHide();
+  blockByContext = false;
 }
 
 void cs8Impl::cs8PeekView::enterEvent(QEvent *event) {
@@ -144,7 +158,27 @@ void cs8Impl::cs8PeekView::enterEvent(QEvent *event) {
   m_timerHideView->stop();
 }
 
+void cs8Impl::cs8PeekView::contextMenuEvent(QContextMenuEvent *event) {
+  QTextEdit::contextMenuEvent(event);
+  m_timerHideView->stop();
+  blockByContext = true;
+}
+
 void cs8Impl::cs8PeekView::show() {
   QTextEdit::show();
   m_timerHideView->stop();
+}
+
+void cs8Impl::cs8PeekView::showContextMenu(const QPoint &p) {
+  QMenu *menu = createStandardContextMenu();
+
+  QTextCursor tc = cursorForPosition(p);
+  tc.select(QTextCursor::LineUnderCursor);
+  QString strWord = tc.selectedText();
+  int lineNumber = strWord.split(":").at(0).toInt();
+  m_actionGotoLine->setData(lineNumber);
+  m_actionGotoLine->setText(tr("Goto line %1").arg(lineNumber));
+  menu->addAction(m_actionGotoLine);
+  menu->exec(mapToGlobal(p));
+  delete menu;
 }
