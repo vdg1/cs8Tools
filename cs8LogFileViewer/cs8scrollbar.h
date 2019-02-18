@@ -15,11 +15,12 @@ class QAbstractItemModel;
 namespace cs8Impl {
 class cs8PeekView;
 }
+class cs8ScrollBar;
 
 class cs8Impl::cs8PeekView : public QTextEdit {
   Q_OBJECT
 public:
-  explicit cs8PeekView(QWidget *parent = 0, QScrollBar *scrollbar = 0);
+  explicit cs8PeekView(QWidget *parent = 0, cs8ScrollBar *scrollbar = 0);
   void delayHide();
   void show();
 
@@ -42,19 +43,25 @@ protected:
 class cs8ScrollBar : public QScrollBar {
   Q_OBJECT
 public:
-  cs8ScrollBar(QWidget *parent = Q_NULLPTR);
+  explicit cs8ScrollBar(QWidget *parent = Q_NULLPTR);
   void setModel(cs8LogFileFilterModel *model);
+  void scrollViewToRow(int lineNumber);
+
 public slots:
   void addHighlight(int row, int totalRow, QBrush brush);
   void resetHighlight();
   void completedHighlight();
   void reverseHighlights(bool reverse);
 
+signals:
+  void scrollToRow(int);
+
 protected:
   void paintEvent(QPaintEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void leaveEvent(QEvent *event) override;
   void enterEvent(QEvent *event) override;
+
   QMap<int, QBrush> highLights;
   int m_rowCount;
   bool m_reversed;
