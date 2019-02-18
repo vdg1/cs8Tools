@@ -32,6 +32,8 @@ public:
   bool showError() const;
   void setShowError(bool showError);
 
+  QString getLines(int start, int count);
+
 signals:
   bool orderChanged(bool reversed);
 
