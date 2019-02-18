@@ -94,6 +94,7 @@ MdiChild::MdiChild(QWidget *parent)
   connect(m_model, &logFileModel::highLight, scrollbar, &cs8ScrollBar::addHighlight);
   connect(m_model, &logFileModel::resetHighlight, scrollbar, &cs8ScrollBar::resetHighlight);
   connect(m_filterModel, &cs8LogFileFilterModel::orderChanged, scrollbar, &cs8ScrollBar::reverseHighlights);
+  connect(scrollbar, &cs8ScrollBar::scrollToRow, this, &MdiChild::scrollToLine);
 
   connect(m_model, &logFileModel::logMessageReceived, this, &MdiChild::slotLogMessageReceived);
   ui->view->setVerticalScrollBar(scrollbar);
@@ -358,8 +359,9 @@ void MdiChild::showInformation(bool show) {
 }
 
 void MdiChild::scrollToLine(int line) {
-  ui->view->scrollTo(ui->view->model()->index(line, 0), QAbstractItemView::PositionAtCenter);
-  ui->view->selectRow(line);
+  QModelIndex index = m_filterModel->mapFromSource(m_model->index(line, 0));
+  ui->view->scrollTo(index, QAbstractItemView::PositionAtCenter);
+  ui->view->selectRow(index.row());
 }
 
 void MdiChild::jumpToStart(int delta) {

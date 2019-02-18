@@ -81,7 +81,8 @@ void cs8ScrollBar::mouseMoveEvent(QMouseEvent *event) {
              qMin(qMax(0, event->pos().ry() - m_peekView->height() / 2), this->height() - m_peekView->height()));
     m_peekView->move(p);
     // m_peekView->setText(qobject_cast<logFileModel *>(m_model->sourceModel())->logMessage(row));
-    m_peekView->setText(qobject_cast<logFileModel *>(m_model->sourceModel())->getLines(row - 7, 15));
+    // m_peekView->setText(qobject_cast<logFileModel *>(m_model->sourceModel())->getLines(row - 7, 15));
+    m_peekView->setText(m_model->getLines(row - 7, 15));
   }
 }
 
@@ -95,7 +96,9 @@ void cs8ScrollBar::enterEvent(QEvent *event) {
   m_peekView->show();
 }
 
-cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent, QScrollBar *scrollbar) : QTextEdit(parent), sticky(false) {
+void cs8ScrollBar::scrollViewToRow(int lineNumber) { emit scrollToRow(lineNumber); }
+
+cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent, cs8ScrollBar *scrollbar) : QTextEdit(parent), sticky(false) {
 
   setContextMenuPolicy(Qt::CustomContextMenu);
   connect(this, &QTextEdit::customContextMenuRequested, this, &cs8Impl::cs8PeekView::showContextMenu);
@@ -103,8 +106,8 @@ cs8Impl::cs8PeekView::cs8PeekView(QWidget *parent, QScrollBar *scrollbar) : QTex
   m_actionGotoLine = new QAction(this);
   m_actionGotoLine->setText(tr("Goto line"));
   connect(m_actionGotoLine, &QAction::triggered, this, [=]() {
-    QScrollBar *sb = scrollbar;
-    sb->setValue(m_actionGotoLine->data().toInt() - 1);
+    cs8ScrollBar *sb = scrollbar;
+    sb->scrollViewToRow(m_actionGotoLine->data().toInt() - 1);
   });
 
   hide();

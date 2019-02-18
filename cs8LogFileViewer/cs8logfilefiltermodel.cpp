@@ -1,9 +1,11 @@
 #include "cs8logfilefiltermodel.h"
 
 #include <QSortFilterProxyModel>
+#include <QTextCursor>
 
 cs8LogFileFilterModel::cs8LogFileFilterModel(QObject *parent)
-    : QSortFilterProxyModel(parent), m_hideUserMessages(false), m_hideSwapFileMessages(false), m_reverseOrder(false) {
+    : QSortFilterProxyModel(parent), m_hideUserMessages(false), m_hideSwapFileMessages(false), m_reverseOrder(false),
+      m_model(0) {
 
   setFilterRegExp(QRegExp("((^|^<0x\\d{4}> )USR:)"));
   setDynamicSortFilter(true);
@@ -115,3 +117,33 @@ void cs8LogFileFilterModel::setReverseOrder(bool reverseOrder) {
 bool cs8LogFileFilterModel::hideSwapFileMessages() const { return m_hideSwapFileMessages; }
 
 bool cs8LogFileFilterModel::hideUserMessages() const { return m_hideUserMessages; }
+
+QString cs8LogFileFilterModel::getLines(int start, int count) {
+  QTextDocument doc;
+  QTextCursor cursor(&doc);
+  QTextCharFormat fmt;
+  QBrush brush;
+  QFont font;
+  QString line;
+
+  for (int row = qMax(0, start); row < qMin(qMax(0, start) + count, rowCount() - 1); ++row) {
+    brush = data(index(row, 0), Qt::ForegroundRole).value<QBrush>(); //  m_logData[row].foregroundColor;
+    font = data(index(row, 0), Qt::FontRole).value<QFont>();         // m_logData[row].font;
+    // line = QString("%3:[%1]:%2\n")
+    //           .arg(m_logData[row].date.toString("dd/MM/yyyy hh:mm:ss"))
+    //           .arg(m_logData[row].message)
+    //           .arg(row + 1, 5);
+    line = QString("%3:[%1]:%2\n")
+               .arg(data(index(row, 0)).toString())
+               .arg(data(index(row, 2)).toString())
+               .arg(mapToSource(index(row, 0)).row() + 1, 5);
+
+    fmt.setFont(font);
+    fmt.setFontFamily("courier");
+    fmt.setForeground(QBrush(brush.color()));
+    cursor.movePosition(QTextCursor::EndOfBlock);
+    cursor.setCharFormat(fmt);
+    cursor.insertText(line);
+  }
+  return doc.toHtml();
+}
