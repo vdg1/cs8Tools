@@ -15,7 +15,7 @@ QDebug operator<<(QDebug debug, const cs8SystemConfigurationSet *c) {
   return debug;
 }
 
-cs8SystemConfigurationSet::cs8SystemConfigurationSet() {
+cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_to(), m_from() {
   m_settingKeywords.insertMulti("Arm serial number", "Arm serial number");
   m_settingKeywords.insertMulti("Arm serial number", "Arm S/N");
   m_settingKeywords.insertMulti("Machine Number", "Machine Number");
@@ -26,6 +26,16 @@ cs8SystemConfigurationSet::cs8SystemConfigurationSet() {
   m_settingKeywords.insertMulti("System", "System");
   m_settingKeywords.insertMulti("Starc", "Starc");
   m_settingKeywords.insertMulti("Configuration Version", "Configuration Version");
+  //
+  m_settingKeywords.insertMulti("Hardware/Starc Serial Number", "STARC-SerialNumber");
+  m_settingKeywords.insertMulti("Hardware/Encoder 1", "STARC-Version Encoder1");
+  m_settingKeywords.insertMulti("Hardware/Encoder 2", "STARC-Version Encoder2");
+  m_settingKeywords.insertMulti("Hardware/Encoder 3", "STARC-Version Encoder3");
+  m_settingKeywords.insertMulti("Hardware/Encoder 4", "STARC-Version Encoder4");
+  m_settingKeywords.insertMulti("Hardware/Encoder 5", "STARC-Version Encoder5");
+  m_settingKeywords.insertMulti("Hardware/Encoder 6", "STARC-Version Encoder6");
+  m_settingKeywords.insertMulti("Hardware/MCP", "MCP firmware version");
+  m_settingKeywords.insertMulti("Hardware/CPU", "CPU board");
   // mark setting with "[" to indicate they are dynamic and to
   // be excluded when parsing system settings
   m_settingKeywords.insertMulti("Power hour count", "[Power hour count");
@@ -37,7 +47,7 @@ cs8SystemConfigurationSet::cs8SystemConfigurationSet() {
     i.next();
     QString value = i.value();
     addItem(i.key(),
-            QStringLiteral("^%1%3(:| =) ([^{]*)%2").arg(logIdRegExp).arg(checksumRegExp).arg(value.remove("[")),
+            QStringLiteral("^%1%3(:| =)\\s{0,1}([^{]*)%2").arg(logIdRegExp).arg(checksumRegExp).arg(value.remove("[")),
             i.value().startsWith("["));
   }
 }
@@ -48,7 +58,7 @@ QString cs8SystemConfigurationSet::armNumber() const { return itemValue("Arm ser
 
 QString cs8SystemConfigurationSet::armType() const { return itemValue("Arm Type"); }
 
-QString cs8SystemConfigurationSet::itemValue(const QString key) const {
+QString cs8SystemConfigurationSet::itemValue(const QString &key) const {
   if (m_items.contains(key) && !m_items.value(key)->value.isEmpty())
     return m_items.value(key)->value;
   else
@@ -78,8 +88,9 @@ void cs8SystemConfigurationSet::setTo(int value, const QDateTime &timeStamp) {
 }
 
 void cs8SystemConfigurationSet::setWorkingHours(cs8SystemConfigurationItem *item) {
-  m_items.replace("Power hour count", new cs8SystemConfigurationItem("Power hour count", item->rx.pattern(),
-                                                                     item->dynamic, item->value, item->line));
+  if (item != nullptr)
+    m_items.replace("Power hour count", new cs8SystemConfigurationItem("Power hour count", item->rx.pattern(),
+                                                                       item->dynamic, item->value, item->line));
 }
 
 cs8SystemConfigurationItem *cs8SystemConfigurationSet::workingHours() const {

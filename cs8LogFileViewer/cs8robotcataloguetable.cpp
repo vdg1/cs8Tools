@@ -3,7 +3,7 @@
 #include <QSqlError>
 
 cs8RobotCatalogueTable::cs8RobotCatalogueTable(QObject *parent) : QSqlTableModel(parent) {
-  setTable("tbRobots");
+  setTable(R"(tbRobots)");
   qDebug() << "Selecting table for meta information: " << lastError().text();
 }
 

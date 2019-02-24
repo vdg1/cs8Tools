@@ -415,7 +415,7 @@ bool logFileModel::setData(const QModelIndex &index, const QVariant &value, int 
       break;
 
     case 2:
-      m_logData[index.row()].message = value.toString();
+      m_logData[index.row()].message = value.toString().trimmed();
       break;
     }
     break;

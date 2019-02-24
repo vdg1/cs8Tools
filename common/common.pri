@@ -1,8 +1,8 @@
 MAJOR_VERSION=5
-MINOR_VERSION=6
+MINOR_VERSION=7
 
 
-VERSION = 5.6
+VERSION = 5.7
 
 # Define the preprocessor macro to get the application version in our application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"

@@ -34,10 +34,9 @@ void cs8SystemConfigurationModel::waitForFinished() {
 
 QString cs8SystemConfigurationModel::machineSerialNumber(int idx) const {
   if (idx == -1) {
-    cs8SystemConfigurationSet *systemSet;
     // retrieve last serial number
     for (int i = rowCount() - 1; i >= 0; i--) {
-      systemSet = systemConfigurationSet(i);
+      cs8SystemConfigurationSet *systemSet = systemConfigurationSet(i);
       qDebug() << "setting: " << i << ":" << systemSet;
       if (!systemSet->machineNumber().isEmpty())
         return systemConfigurationSet(i)->machineNumber();
@@ -52,10 +51,9 @@ QString cs8SystemConfigurationModel::machineSerialNumber(int idx) const {
 
 QString cs8SystemConfigurationModel::armSerialNumber(int idx) const {
   if (idx == -1) {
-    cs8SystemConfigurationSet *systemSet;
     // retrieve last serial number
     for (int i = rowCount() - 1; i >= 0; i--) {
-      systemSet = systemConfigurationSet(i);
+      cs8SystemConfigurationSet *systemSet = systemConfigurationSet(i);
       qDebug() << "setting: " << i << ":" << systemSet;
       if (!systemSet->armNumber().isEmpty())
         return systemConfigurationSet(i)->armNumber();
@@ -90,11 +88,8 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
   int lastSystemStart = line - 1;
   int pos;
 
-  QRegExp systemStartRx;
-  systemStartRx.setPattern("^\\-{10,}$");
-
+  QRegularExpression systemStartRx("^\\-{10,}.*");
   configurationList configSets;
-  cs8SystemConfigurationSet *systemSet;
 
   while (line > 0) {
     if (logText->fileType() == cs8LogFileData::CS8) {
@@ -102,7 +97,7 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
     } else {
       systemStart = qMax(0, logText->typeList().lastIndexOf("run", line));
     }
-    systemSet = new cs8SystemConfigurationSet();
+    cs8SystemConfigurationSet *systemSet = new cs8SystemConfigurationSet();
     systemSet->setFrom(systemStart + 1,
                        logText->logTimeStamp(systemStart + 1)); //  logText.at(systemStart+1).timeStamp);
     systemSet->setTo(lastSystemStart + 1,
@@ -116,8 +111,8 @@ QList<cs8SystemConfigurationSet *> cs8SystemConfigurationModel::parseSystemSetti
         // qDebug() << item->rx.pattern();
         pos = item->rx.indexIn(logText->messageList().at(i));
         if (pos != -1) {
-          // qDebug() << "captured set: " << item->rx.cap(2) << " in " <<
-          // logText->messageList().at(i) << item->rx.pattern();
+          // qDebug() << "captured set: " << item->rx.cap(2) << " in " << logText->messageList().at(i)
+          //          << item->rx.pattern();
           QString value = item->rx.cap(3).trimmed().replace('/', '_');
           // remove leading and trailing '-'
           if (value.startsWith('-'))
@@ -258,7 +253,9 @@ void cs8SystemConfigurationModel::clear() {
  */
 cs8SystemConfigurationSet *cs8SystemConfigurationModel::systemConfigurationSet(int idx) const {
   /// TODO m_future.waitForFinished();
+  ///
   // check if idx is in bounds
+  Q_ASSERT(idx < rowCount() || rowCount() != 0);
   if (idx < rowCount() && rowCount() != 0)
     return data(index(idx == -1 ? rowCount() - 1 : idx, 0), Qt::UserRole).value<cs8SystemConfigurationSet *>();
   else
@@ -282,9 +279,10 @@ void cs8SystemConfigurationModel::slotProcessingFinished() {
     // retrieve found system settings and store them in model
     configurationList list = m_future.result();
     foreach (cs8SystemConfigurationSet *systemSet, list) {
-      QStandardItem *item = new QStandardItem();
-      item->setData(qVariantFromValue(systemSet), Qt::UserRole);
-      insertRow(0, QList<QStandardItem *>() << item << new QStandardItem());
+      QStandardItem *parentItem = new QStandardItem();
+      parentItem->setData(qVariantFromValue(systemSet), Qt::UserRole);
+      parentItem->appendRow(new QStandardItem(tr("Hardware")));
+      insertRow(0, QList<QStandardItem *>() << parentItem << new QStandardItem());
     }
 
     // reprocess model: merge system settings....
@@ -318,8 +316,16 @@ void cs8SystemConfigurationModel::slotProcessingFinished() {
           childItemTitle->setData(i.value()->line, Qt::UserRole);
 
           childItemValue->setToolTip(childItemValue->text());
+          QStringList childPath = childItemTitle->text().split("/");
+          QStandardItem *parent;
+          if (childPath.count() == 1) {
+            parent = item(row, 0);
+          } else {
+            parent = item(row, 0)->child(0, 0);
+            childItemTitle->setText(childPath.last());
+          }
 
-          item(row, 0)->appendRow(QList<QStandardItem *>() << childItemTitle << childItemValue);
+          parent->appendRow(QList<QStandardItem *>() << childItemTitle << childItemValue);
           if (previousSet != nullptr) {
             // check if previous set also contains current item
             if (previousSet->items().contains(i.key())) {
@@ -329,12 +335,14 @@ void cs8SystemConfigurationModel::slotProcessingFinished() {
                 // Setting has changed compared to previous configuration
                 if (val != i.value()->value) {
                   childItemTitle->setBackground(QBrush(Qt::red));
+                  childItemTitle->parent()->setBackground(QBrush(Qt::red));
                   childItemTitle->setToolTip(tr("Setting has changed compared to previous "
                                                 "configuration"));
                 }
               } else {
                 // Setting does not exist in previous configuration
                 childItemTitle->setBackground(QBrush(Qt::gray));
+                childItemTitle->parent()->setBackground(QBrush(Qt::gray));
                 childItemTitle->setToolTip(tr("Setting does not exist in previous configuration"));
               }
             }
@@ -343,6 +351,7 @@ void cs8SystemConfigurationModel::slotProcessingFinished() {
       }
     }
   }
+  sort(0);
   emit completed();
 }
 /*

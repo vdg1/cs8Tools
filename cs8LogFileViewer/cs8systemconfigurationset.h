@@ -50,7 +50,7 @@ public:
   QString machineNumber() const;
   QString armNumber() const;
   QString armType() const;
-  QString itemValue(const QString key) const;
+  QString itemValue(const QString &key) const;
   bool isEmpty() const;
   void removeEmptyItems();
 
