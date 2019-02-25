@@ -27,7 +27,9 @@ cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_to(), m_from() {
   m_settingKeywords.insertMulti("Starc", "Starc");
   m_settingKeywords.insertMulti("Configuration Version", "Configuration Version");
   //
-  m_settingKeywords.insertMulti("Hardware/Starc Serial Number", "STARC-SerialNumber");
+  m_settingKeywords.insertMulti("Hardware/Starc Serial Number",
+                                "STARC-SerialNumber");
+  m_settingKeywords.insertMulti("Hardware/Starc FPGA", "STARC-FpgaVersion");
   m_settingKeywords.insertMulti("Hardware/Encoder 1", "STARC-Version Encoder1");
   m_settingKeywords.insertMulti("Hardware/Encoder 2", "STARC-Version Encoder2");
   m_settingKeywords.insertMulti("Hardware/Encoder 3", "STARC-Version Encoder3");
@@ -36,6 +38,7 @@ cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_to(), m_from() {
   m_settingKeywords.insertMulti("Hardware/Encoder 6", "STARC-Version Encoder6");
   m_settingKeywords.insertMulti("Hardware/MCP", "MCP firmware version");
   m_settingKeywords.insertMulti("Hardware/CPU", "CPU board");
+  m_settingKeywords.insertMulti("Hardware/RSI", "RSI Board rev");
   // mark setting with "[" to indicate they are dynamic and to
   // be excluded when parsing system settings
   m_settingKeywords.insertMulti("Power hour count", "[Power hour count");
