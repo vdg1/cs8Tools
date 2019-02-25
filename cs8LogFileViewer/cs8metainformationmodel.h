@@ -53,9 +53,9 @@ private:
   bool m_firstTimeOpened;
 
   void selectRecord(uint hash, bool &firstTimeOpened);
-  void process(logFileModel *logData);
+  void process(logFileModel *);
 
-protected slots:
+  protected slots:
   void slotProcessingConfigurationsFinished();
 
 protected:

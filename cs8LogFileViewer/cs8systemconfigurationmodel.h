@@ -26,21 +26,21 @@ class cs8SystemConfigurationSet;
 class cs8SystemConfigurationModel : public QStandardItemModel {
   Q_OBJECT
 public:
-  cs8SystemConfigurationModel(QObject *parent = nullptr);
-  ~cs8SystemConfigurationModel();
+    explicit cs8SystemConfigurationModel(QObject *parent = nullptr);
+    ~cs8SystemConfigurationModel();
 
-  cs8SystemConfigurationSet *systemConfigurationSet(int idx = -1) const;
-  cs8SystemConfigurationSet *systemConfigurationSetAtLine(int row = 0) const;
-  // int rowCount() const;
-  void waitForFinished();
-  QString machineSerialNumber(int idx = -1) const;
-  QString armSerialNumber(int idx = -1) const;
-  QDateTime timeStampFrom(int idx = -1) const;
+    cs8SystemConfigurationSet *systemConfigurationSet(int idx = -1) const;
+    cs8SystemConfigurationSet *systemConfigurationSetAtLine(int row = 0) const;
+    // int rowCount() const;
+    void waitForFinished();
+    QString machineSerialNumber(int idx = -1) const;
+    QString armSerialNumber(int idx = -1) const;
+    QDateTime timeStampFrom(int idx = -1) const;
 
 public slots:
   void setLogData(logFileModel *logData);
-  void setMachineInfo(const QString &customer, const QString &internalNumber, const QString &machineNumber,
-                      const QString &workingHours);
+  void setMachineInfo(const QString &customer, const QString &internalNumber,
+                      const QString &machineNumber, const QString &);
   void clear();
 
 signals:
