@@ -15,40 +15,35 @@ QDebug operator<<(QDebug debug, const cs8SystemConfigurationSet *c) {
   return debug;
 }
 
-cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_from(), m_to() {
-    m_settingKeywords.insertMulti("Arm serial number", "Arm serial number");
-    m_settingKeywords.insertMulti("Arm serial number", "Arm S/N");
-    m_settingKeywords.insertMulti("Machine Number", "Machine Number");
-    m_settingKeywords.insertMulti("Machine Number", "Controller S/N");
-    m_settingKeywords.insertMulti("Arm", "Arm");
-    m_settingKeywords.insertMulti("Arm Type", "Arm Type");
-    m_settingKeywords.insertMulti("VAL3", "VAL3");
-    m_settingKeywords.insertMulti("System", "System");
-    m_settingKeywords.insertMulti("Starc", "Starc");
-    m_settingKeywords.insertMulti("Configuration Version",
-                                  "Configuration Version");
-    //
-    m_settingKeywords.insertMulti("Hardware/Starc Serial Number",
-                                  "STARC-SerialNumber");
-    m_settingKeywords.insertMulti("Hardware/Encoder 1",
-                                  "STARC-Version Encoder1");
-    m_settingKeywords.insertMulti("Hardware/Encoder 2",
-                                  "STARC-Version Encoder2");
-    m_settingKeywords.insertMulti("Hardware/Encoder 3",
-                                  "STARC-Version Encoder3");
-    m_settingKeywords.insertMulti("Hardware/Encoder 4",
-                                  "STARC-Version Encoder4");
-    m_settingKeywords.insertMulti("Hardware/Encoder 5",
-                                  "STARC-Version Encoder5");
-    m_settingKeywords.insertMulti("Hardware/Encoder 6",
-                                  "STARC-Version Encoder6");
-    m_settingKeywords.insertMulti("Hardware/MCP", "MCP firmware version");
-    m_settingKeywords.insertMulti("Hardware/CPU", "CPU board");
-    // mark setting with "[" to indicate they are dynamic and to
-    // be excluded when parsing system settings
-    m_settingKeywords.insertMulti("Power hour count", "[Power hour count");
-    QString checksumRegExp("(($|\\{[0-9a-f]{8}\\})$)");
-    QString logIdRegExp("(<0x\\d{4}> )*");
+cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_to(), m_from() {
+  m_settingKeywords.insertMulti("Arm serial number", "Arm serial number");
+  m_settingKeywords.insertMulti("Arm serial number", "Arm S/N");
+  m_settingKeywords.insertMulti("Machine Number", "Machine Number");
+  m_settingKeywords.insertMulti("Machine Number", "Controller S/N");
+  m_settingKeywords.insertMulti("Arm", "Arm");
+  m_settingKeywords.insertMulti("Arm Type", "Arm Type");
+  m_settingKeywords.insertMulti("VAL3", "VAL3");
+  m_settingKeywords.insertMulti("System", "System");
+  m_settingKeywords.insertMulti("Starc", "Starc");
+  m_settingKeywords.insertMulti("Configuration Version", "Configuration Version");
+  //
+  m_settingKeywords.insertMulti("Hardware/Starc Serial Number",
+                                "STARC-SerialNumber");
+  m_settingKeywords.insertMulti("Hardware/Starc FPGA", "STARC-FpgaVersion");
+  m_settingKeywords.insertMulti("Hardware/Encoder 1", "STARC-Version Encoder1");
+  m_settingKeywords.insertMulti("Hardware/Encoder 2", "STARC-Version Encoder2");
+  m_settingKeywords.insertMulti("Hardware/Encoder 3", "STARC-Version Encoder3");
+  m_settingKeywords.insertMulti("Hardware/Encoder 4", "STARC-Version Encoder4");
+  m_settingKeywords.insertMulti("Hardware/Encoder 5", "STARC-Version Encoder5");
+  m_settingKeywords.insertMulti("Hardware/Encoder 6", "STARC-Version Encoder6");
+  m_settingKeywords.insertMulti("Hardware/MCP", "MCP firmware version");
+  m_settingKeywords.insertMulti("Hardware/CPU", "CPU board");
+  m_settingKeywords.insertMulti("Hardware/RSI", "RSI Board rev");
+  // mark setting with "[" to indicate they are dynamic and to
+  // be excluded when parsing system settings
+  m_settingKeywords.insertMulti("Power hour count", "[Power hour count");
+  QString checksumRegExp("(($|\\{[0-9a-f]{8}\\})$)");
+  QString logIdRegExp("(<0x\\d{4}> )*");
 
     QHashIterator<QString, QString> i(m_settingKeywords);
     while (i.hasNext()) {
