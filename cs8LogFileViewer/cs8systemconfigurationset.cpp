@@ -45,17 +45,17 @@ cs8SystemConfigurationSet::cs8SystemConfigurationSet() : m_to(), m_from() {
   QString checksumRegExp("(($|\\{[0-9a-f]{8}\\})$)");
   QString logIdRegExp("(<0x\\d{4}> )*");
 
-    QHashIterator<QString, QString> i(m_settingKeywords);
-    while (i.hasNext()) {
-        i.next();
-        QString value = i.value();
-        addItem(i.key(),
-                QStringLiteral("^%1%3(:| =)\\s{0,1}([^{]*)%2")
-                    .arg(logIdRegExp)
-                    .arg(checksumRegExp)
-                    .arg(value.remove("[")),
-                i.value().startsWith("["));
-    }
+  QHashIterator<QString, QString> i(m_settingKeywords);
+  while (i.hasNext()) {
+      i.next();
+      QString value = i.value();
+      addItem(i.key(),
+              QStringLiteral("^%1%3(:| =)\\s{0,1}([^{]*)%2")
+                  .arg(logIdRegExp)
+                  .arg(checksumRegExp)
+                  .arg(value.remove("[")),
+              i.value().startsWith("["));
+  }
 }
 
 QString cs8SystemConfigurationSet::machineNumber() const { return itemValue("Machine Number"); }
