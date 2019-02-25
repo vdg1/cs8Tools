@@ -52,9 +52,9 @@ private:
   bool firstTimeOpened;
 
   bool selectRecord(uint hash);
-  void process(logFileModel *logData);
+  void process(logFileModel *);
 
-protected slots:
+  protected slots:
   void slotProcessingConfigurationsFinished();
 
 protected:

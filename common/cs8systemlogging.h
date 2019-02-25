@@ -12,9 +12,10 @@
 #include <QTime>
 
 namespace LOGUTILS {
-const QString logFolderName = "logs";
+const QString logFolderName = R"(logs)";
 
 bool initLogging();
-void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+void myMessageHandler(QtMsgType type, const QMessageLogContext &,
+                      const QString &msg);
 } // namespace LOGUTILS
 #endif // CS8SYSTEMLOGGING_H

@@ -218,28 +218,34 @@ void cs8SystemConfigurationModel::setLogData(logFileModel *logData) {
   m_futureWatcher.setFuture(m_future);
 }
 
-void cs8SystemConfigurationModel::setMachineInfo(const QString &customer, const QString &internalNumber,
-                                                 const QString &machineNumber, const QString &workingHours) {
-  QStandardItem *customerItem = nullptr;
-  for (int i = 0; i < rowCount(); i++) {
+void cs8SystemConfigurationModel::setMachineInfo(
+    const QString &customer, const QString &internalNumber,
+    const QString &machineNumber, const QString & /*workingHours*/) {
+    QStandardItem *customerItem = nullptr;
+    for (int i = 0; i < rowCount(); i++) {
 
-    if (item(i, 0)->text() == tr("Robot Information")) {
-      customerItem = item(i, 0);
-      break;
+        if (item(i, 0)->text() == tr("Robot Information")) {
+            customerItem = item(i, 0);
+            break;
+        }
     }
-  }
-  if (customerItem == nullptr) {
-    customerItem = new QStandardItem(tr("Robot Information"));
-    insertRow(0, QList<QStandardItem *>() << customerItem << new QStandardItem());
-  }
-  customerItem->appendRow(QList<QStandardItem *>()
-                          << new QStandardItem(tr("Customer:")) << new QStandardItem(tr("%1").arg(customer)));
-  customerItem->appendRow(QList<QStandardItem *>() << new QStandardItem(tr("Internal Number:"))
-                                                   << new QStandardItem(tr("%1").arg(internalNumber)));
-  customerItem->appendRow(QList<QStandardItem *>() << new QStandardItem(tr("Machine Number:"))
-                                                   << new QStandardItem(tr("%1").arg(machineNumber)));
+    if (customerItem == nullptr) {
+        customerItem = new QStandardItem(tr("Robot Information"));
+        insertRow(
+            0, QList<QStandardItem *>() << customerItem << new QStandardItem());
+    }
+    customerItem->appendRow(QList<QStandardItem *>()
+                            << new QStandardItem(tr("Customer:"))
+                            << new QStandardItem(tr("%1").arg(customer)));
+    customerItem->appendRow(QList<QStandardItem *>()
+                            << new QStandardItem(tr("Internal Number:"))
+                            << new QStandardItem(tr("%1").arg(internalNumber)));
+    customerItem->appendRow(QList<QStandardItem *>()
+                            << new QStandardItem(tr("Machine Number:"))
+                            << new QStandardItem(tr("%1").arg(machineNumber)));
 
-  qDebug() << "Column Counts: " << columnCount() << columnCount(customerItem->index());
+    qDebug() << "Column Counts: " << columnCount()
+             << columnCount(customerItem->index());
 }
 
 void cs8SystemConfigurationModel::clear() {

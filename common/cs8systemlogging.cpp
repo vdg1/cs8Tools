@@ -65,38 +65,44 @@ bool initLogging() {
 #endif
 }
 
-void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &txt) {
-  // check file size and if needed create new log!
-  {
-    QFile outFileCheck(logFileName);
-    qint64 size = outFileCheck.size();
-
-    if (size > LOGSIZE) // check current log size
+void myMessageHandler(QtMsgType type, const QMessageLogContext & /*context*/,
+                      const QString &txt) {
+    // check file size and if needed create new log!
     {
-      deleteOldLogs();
-      initLogFileName();
+        QFile outFileCheck(logFileName);
+        qint64 size = outFileCheck.size();
+
+        if (size > LOGSIZE) // check current log size
+        {
+            deleteOldLogs();
+            initLogFileName();
+        }
     }
-  }
 
-  QFile outFile(logFileName);
-  outFile.open(QIODevice::WriteOnly | QIODevice::Append);
-  QTextStream ts(&outFile);
+    QFile outFile(logFileName);
+    outFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream ts(&outFile);
 
-  switch (type) {
-  case QtInfoMsg:
-    ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ":I: " << txt << endl;
-    break;
-  case QtDebugMsg:
-    ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ":D: " << txt << endl;
-    break;
-  case QtWarningMsg:
-    ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ":W: " << txt << endl;
-    break;
-  case QtCriticalMsg:
-    ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ":C: " << txt << endl;
-    break;
-  case QtFatalMsg:
-    ts << QDateTime::currentDateTime().toString(Qt::ISODate) << ":F: " << txt << endl;
-  }
+    switch (type) {
+    case QtInfoMsg:
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << ":I: " << txt << endl;
+        break;
+    case QtDebugMsg:
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << ":D: " << txt << endl;
+        break;
+    case QtWarningMsg:
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << ":W: " << txt << endl;
+        break;
+    case QtCriticalMsg:
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << ":C: " << txt << endl;
+        break;
+    case QtFatalMsg:
+        ts << QDateTime::currentDateTime().toString(Qt::ISODate)
+           << ":F: " << txt << endl;
+    }
 }
 } // namespace LOGUTILS

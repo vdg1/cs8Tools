@@ -10,14 +10,15 @@
 #include <QStringList>
 
 struct cs8SystemConfigurationItem {
-  cs8SystemConfigurationItem(const QString &name_, const QString &rx_, bool dynamic_, const QString value_ = "?",
-                             int line_ = -1) {
-    rx.setPattern(rx_);
-    line = line_;
-    value = value_;
-    name = name_;
-    dynamic = dynamic_;
-  }
+    cs8SystemConfigurationItem(const QString &name_, const QString &rx_,
+                               bool dynamic_, const QString &value_ = "?",
+                               int line_ = -1) {
+        rx.setPattern(rx_);
+        line = line_;
+        value = value_;
+        name = name_;
+        dynamic = dynamic_;
+    }
   QRegExp rx;
   QString value;
   int line;

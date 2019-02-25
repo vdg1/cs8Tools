@@ -7,16 +7,16 @@
 bool checkDBSchemas(QSqlDatabase &db) {
   QSqlQuery q;
   // check backup table
-  if (!db.tables().contains("backupData")) {
-    if (!q.exec(QLatin1String("CREATE TABLE `backupData` ("
-                              "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
-                              "`ctrlSerial`	varchar,"
-                              "`backupDir`	varchar,"
-                              "`backupName`	varchar,"
-                              "`createdOn`  varchar,"
-                              "`archived`	INTEGER"
-                              ");")))
-      qDebug() << "Failed to create table backupData:" << q.lastError();
+  if (!db.tables().contains(R"(backupData)")) {
+      if (!q.exec(QLatin1String("CREATE TABLE `backupData` ("
+                                "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                "`ctrlSerial`	varchar,"
+                                "`backupDir`	varchar,"
+                                "`backupName`	varchar,"
+                                "`createdOn`  varchar,"
+                                "`archived`	INTEGER"
+                                ");")))
+          qDebug() << "Failed to create table backupData:" << q.lastError();
   }
 
   // check catalogue table

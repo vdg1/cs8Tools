@@ -169,7 +169,7 @@ bool cs8MetaInformationModel::selectRecord(uint hash) {
   }
 }
 
-void cs8MetaInformationModel::process(logFileModel *logData) {}
+void cs8MetaInformationModel::process(logFileModel * /*logData*/) {}
 
 void cs8MetaInformationModel::slotProcessingConfigurationsFinished() {
   // check if a serial number was detected in log file
