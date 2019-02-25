@@ -129,6 +129,8 @@ void logFileModel::slotLineReceived(const QString &data) {
 
 void logFileModel::slotStateChanged(QAbstractSocket::SocketState state) { qDebug() << "Socket state changed" << state; }
 
+QString logFileModel::filePath() const { return m_filePath; }
+
 cs8LogFileData::FileType logFileModel::fileType() const { return m_fileType; }
 
 qint64 logFileModel::diffToComputerTime() const { return m_diffToComputerTime; }
@@ -456,6 +458,7 @@ bool logFileModel::loadLogFile(QFile *logFile, QFile *swapFile) {
   bool loadSwapFile = true;
 
   logFileData.load(logFile);
+  m_filePath = logFile->fileName();
   m_hashLogFile = logFileData.hashLogFile();
   m_dateFormat = logFileData.dateFormat();
   m_fileType = logFileData.fileType();

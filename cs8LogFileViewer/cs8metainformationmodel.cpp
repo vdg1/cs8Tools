@@ -26,6 +26,7 @@ cs8MetaInformationModel::cs8MetaInformationModel(QObject *parent) : QSqlTableMod
   indexDlgIgnoreTimeGap = fieldIndex("dlgIgnoreTimeGap");
   indexFirstOpened = fieldIndex("firstOpen");
   indexLastOpen = fieldIndex("lastOpen");
+  indexFilePath = fieldIndex("filePath");
 }
 
 cs8SystemConfigurationModel *cs8MetaInformationModel::systemConfigurationModel() { return m_systemConfigurationModel; }
@@ -123,7 +124,8 @@ void cs8MetaInformationModel::resetDialogOptions() {
   Returns true if a record of this file already exists
   */
 void cs8MetaInformationModel::setLogfileInfo(uint hash, const QDateTime &spanFrom, const QDateTime &spanTill,
-                                             const QString &machineNumber, const QString &armType) {
+                                             const QString &machineNumber, const QString &armType,
+                                             const QString &filePath) {
 
   setFilter(QString("hashLogFile='%1'").arg(hash));
   select();
@@ -134,6 +136,7 @@ void cs8MetaInformationModel::setLogfileInfo(uint hash, const QDateTime &spanFro
   record.setValue(indexSpanFrom, spanFrom);
   record.setValue(indexSpanTill, spanTill);
   record.setValue(indexIdControllers, machineNumber);
+  record.setValue(indexFilePath, filePath);
   if (!armType.isNull())
     record.setValue(indexIdArms, armType);
 
@@ -147,25 +150,31 @@ void cs8MetaInformationModel::setLogfileInfo(uint hash, const QDateTime &spanFro
   submitAll();
 }
 
-bool cs8MetaInformationModel::selectRecord(uint hash) {
+void cs8MetaInformationModel::selectRecord(uint hash, bool &firstTimeOpened) {
 
   setFilter(QString("hashLogFile='%1'").arg(hash));
   select();
   if (rowCount() > 1)
-    qWarning() << "Log file table has multiple entries for hash: " << hash;
+    qWarning() << __FUNCTION__ << "Log file table has multiple entries for hash: " << hash;
   if (rowCount() != 0) {
-    record(0).setValue(indexLastOpen, QDateTime::currentDateTime());
-    if (!record(0).value(indexIdControllers).toString().isEmpty())
-      m_serialNumber = record(0).value(indexIdControllers).toString();
-    if (!setRecord(0, record(0)))
-      qWarning() << "Failed to set record for hash " << hash;
-    submitAll();
-    return true;
+    QSqlRecord rec = record(0);
+
+    rec.setValue(indexLastOpen, QDateTime::currentDateTime());
+    if (!rec.value(indexIdControllers).toString().isEmpty())
+      m_serialNumber = rec.value(indexIdControllers).toString();
+    rec.setValue(indexFilePath, m_model->filePath());
+
+    if (!setRecord(0, rec))
+      qWarning() << __FUNCTION__ << "Failed to set path to hash " << hash << ":" << m_model->filePath() << ":"
+                 << lastError();
+    if (!submitAll())
+      qWarning() << __FUNCTION__ << "Failed to submit:" << lastError();
+    firstTimeOpened = false;
   } else {
     setLogfileInfo(hash, m_model->logTimeStamp(0), m_model->logTimeStamp(m_model->lastValidLineWithTimeStamp()),
                    m_systemConfigurationModel->systemConfigurationSet()->machineNumber(),
-                   m_systemConfigurationModel->systemConfigurationSet()->armType());
-    return false;
+                   m_systemConfigurationModel->systemConfigurationSet()->armType(), m_model->filePath());
+    firstTimeOpened = true;
   }
 }
 
@@ -177,10 +186,10 @@ void cs8MetaInformationModel::slotProcessingConfigurationsFinished() {
   QString armSerialNumber = m_systemConfigurationModel->armSerialNumber();
   // check if robot table already knows of this robot
 
-  firstTimeOpened = !selectRecord(m_model->hash());
+  selectRecord(m_model->hash(), m_firstTimeOpened);
   machineCatalogue catalogue;
 
-  if (firstTimeOpened) {
+  if (m_firstTimeOpened) {
 
     QString customer, internalNumber;
     if (catalogue.findByMachineNumber(m_serialNumber, customer, internalNumber, m_URLId)) {
@@ -215,7 +224,7 @@ void cs8MetaInformationModel::slotProcessingConfigurationsFinished() {
       /// TODO
       m_systemConfigurationModel->setMachineInfo(customer, internalNumber, m_serialNumber, QString());
       setLogfileInfo(m_model->hash(), m_model->logTimeStamp(0),
-                     m_model->logTimeStamp(m_model->lastValidLineWithTimeStamp()), m_serialNumber);
+                     m_model->logTimeStamp(m_model->lastValidLineWithTimeStamp()), m_serialNumber, m_model->filePath());
     }
   }
   process(m_model);

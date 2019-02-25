@@ -56,6 +56,9 @@ bool checkDBSchemas(QSqlDatabase &db) {
   if (!q.exec(QLatin1String("ALTER TABLE tbLogFiles "
                             "ADD firstOpen TIMESTAMP;")))
     qDebug() << "Failed to update table tbLogFiles:" << q.lastError() << " query: " << q.executedQuery();
+  if (!q.exec(QLatin1String("ALTER TABLE tbLogFiles "
+                            "ADD filePath varchar;")))
+    qDebug() << "Failed to update table tbLogFiles:" << q.lastError() << " query: " << q.executedQuery();
 
   db.commit();
   return true;

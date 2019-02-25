@@ -49,9 +49,10 @@ private:
   int indexDlgIgnoreTimeGap;
   int indexFirstOpened;
   int indexLastOpen;
-  bool firstTimeOpened;
+  int indexFilePath;
+  bool m_firstTimeOpened;
 
-  bool selectRecord(uint hash);
+  void selectRecord(uint hash, bool &firstTimeOpened);
   void process(logFileModel *logData);
 
 protected slots:
@@ -61,7 +62,7 @@ protected:
   QString m_URLId;
   QString m_serialNumber;
   void setLogfileInfo(uint hash, const QDateTime &spanFrom, const QDateTime &spanTill, const QString &machineNumber,
-                      const QString &armType = QString());
+                      const QString &armType = QString(), const QString &filePath = QString());
 };
 
 #endif // CS8METAINFORMATIONMODEL_H

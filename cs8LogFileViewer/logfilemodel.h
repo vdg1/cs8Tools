@@ -59,6 +59,8 @@ public:
 
   cs8LogFileData::FileType fileType() const;
 
+  QString filePath() const;
+
 signals:
   void loadingFinished();
   void readingComplete(bool);
@@ -112,6 +114,7 @@ private:
 
   QFutureWatcher<void> m_watcher;
   QFuture<void> m_future;
+  QString m_filePath;
   void process();
 
   //  QMap<int,QString> m_cellData;
