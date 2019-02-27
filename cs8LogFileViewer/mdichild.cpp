@@ -233,6 +233,11 @@ void MdiChild::setScrollToBottomWhenLineReceived(bool scrollToBottomWhenLineRece
   m_scrollToBottomWhenLineReceived = scrollToBottomWhenLineReceived;
 }
 
+void MdiChild::selectedRowNumbers(int &start, int &end) {
+  start = ui->view->selectionModel()->selectedRows().at(0).row() + 1;
+  end = ui->view->selectionModel()->selectedRows().last().row() + 1;
+}
+
 void MdiChild::setContextMenu(QMenu *contextMenu) { m_contextMenu = contextMenu; }
 
 QString MdiChild::getSelectedLines(bool formated, bool withRobotInfo) const {

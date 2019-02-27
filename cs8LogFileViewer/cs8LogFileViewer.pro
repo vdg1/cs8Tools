@@ -22,7 +22,9 @@ HEADERS       += mainwindow.h \
     cs8logfilefiltermodel.h \
     cs8logfiledata.h \
     cs8connectdialog.h \
-    logfiledata.h
+    logfiledata.h \
+    cs8logfileannotations.h \
+    cs8annotationeditor.h
 
 SOURCES       += main.cpp \
                 mainwindow.cpp \
@@ -42,7 +44,9 @@ SOURCES       += main.cpp \
     cs8logfilefiltermodel.cpp \
     cs8logfiledata.cpp \
     cs8connectdialog.cpp \
-    logfiledata.cpp
+    logfiledata.cpp \
+    cs8logfileannotations.cpp \
+    cs8annotationeditor.cpp
 
 DESTDIR = ../bin
 
@@ -55,7 +59,8 @@ FORMS += \
     forms/dialoghighlightconfiguration.ui \
     dialogrobotdetails.ui \
     dialogalternativeeditor.ui \
-    forms/cs8connectdialog.ui
+    forms/cs8connectdialog.ui \
+    cs8annotationeditor.ui
 
 QT += sql widgets gui concurrent winextras
 

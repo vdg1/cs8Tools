@@ -2,6 +2,7 @@
 #define LOGFILEMODEL_H
 
 #include "cs8ControllerComponent.h"
+#include "cs8logfileannotations.h"
 #include "cs8logfiledata.h"
 #include "logfiledata.h"
 //#include "qttelnet.h"
@@ -61,6 +62,8 @@ public:
 
   QString filePath() const;
 
+  cs8LogFileAnnotations *annotationsModel() const;
+
 signals:
   void loadingFinished();
   void readingComplete(bool);
@@ -108,6 +111,7 @@ private:
   logFileData m_logData;
   // logFileData logData;
   cs8MetaInformationModel *m_metaInformation;
+  cs8LogFileAnnotations *m_annotations;
   highlightItemList *m_highlightRules;
 
   QDateTime m_timeSpanFrom, m_timeSpanTill;

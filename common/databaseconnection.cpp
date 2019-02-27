@@ -8,29 +8,40 @@ bool checkDBSchemas(QSqlDatabase &db) {
   QSqlQuery q;
   // check backup table
   if (!db.tables().contains(R"(backupData)")) {
-      if (!q.exec(QLatin1String("CREATE TABLE `backupData` ("
-                                "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                "`ctrlSerial`	varchar,"
-                                "`backupDir`	varchar,"
-                                "`backupName`	varchar,"
-                                "`createdOn`  varchar,"
-                                "`archived`	INTEGER"
-                                ");")))
-          qDebug() << "Failed to create table backupData:" << q.lastError();
+    if (!q.exec(QLatin1String("CREATE TABLE `backupData` ("
+                              "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
+                              "`ctrlSerial`	varchar,"
+                              "`backupDir`	varchar,"
+                              "`backupName`	varchar,"
+                              "`createdOn`  varchar,"
+                              "`archived`	INTEGER"
+                              ");")))
+      qDebug() << "Failed to create table backupData:" << q.lastError();
+  }
+
+  if (!db.tables().contains(R"(backupData)")) {
+    if (!q.exec(QLatin1String("CREATE TABLE `backupData` ("
+                              "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
+                              "`ctrlSerial`	varchar,"
+                              "`backupDir`	varchar,"
+                              "`backupName`	varchar,"
+                              "`createdOn`  varchar,"
+                              "`archived`	INTEGER"
+                              ");")))
+      qDebug() << "Failed to create table backupData:" << q.lastError();
   }
 
   // check catalogue table
-  if (!db.tables().contains("machineCatalogue")) {
-    if (!q.exec(QLatin1String("CREATE TABLE `machineCatalogue` ("
+  if (!db.tables().contains("tbLogAnnotations")) {
+    if (!q.exec(QLatin1String("CREATE TABLE `tbLogAnnotations` ("
                               "`id`	INTEGER PRIMARY KEY AUTOINCREMENT,"
-                              "`ctrlSerial`	varchar,"
-                              "`armSerial`	varchar,"
-                              "`customerName`	varchar,"
-                              "`internalNumber`	varchar,"
-                              "`catalogueID`	varchar,"
-                              "`localyAdded`	INTEGER"
+                              "`hashLogFile` INTEGER,"
+                              "`rowStart`	 INTEGER,"
+                              "`rowEnd`      INTEGER,"
+                              "`text`        varchar,"
+                              "`level`        INTEGER"
                               ");")))
-      qDebug() << "Failed to create table machineCatalogue:" << q.lastError();
+      qDebug() << "Failed to create table tbLogAnnotations:" << q.lastError();
   }
 
   // check log file archive table

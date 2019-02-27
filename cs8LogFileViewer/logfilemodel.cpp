@@ -1,4 +1,5 @@
 #include "logfilemodel.h"
+#include "cs8logfileannotations.h"
 #include "cs8logfiledata.h"
 #include "cs8metainformationmodel.h"
 #include "cs8systemconfigurationmodel.h"
@@ -26,6 +27,8 @@ logFileModel::logFileModel(QObject *parent)
   connect(this, &logFileModel::readingComplete, this, &logFileModel::slotReadingComplete, Qt::QueuedConnection);
   connect(m_metaInformation, &cs8MetaInformationModel::metaInformationAvailable,
           [=] { emit metaInformationAvailable(); });
+
+  m_annotations = new cs8LogFileAnnotations(this);
 }
 
 logFileModel::~logFileModel() { m_future.waitForFinished(); }
@@ -128,6 +131,8 @@ void logFileModel::slotLineReceived(const QString &data) {
 }
 
 void logFileModel::slotStateChanged(QAbstractSocket::SocketState state) { qDebug() << "Socket state changed" << state; }
+
+cs8LogFileAnnotations *logFileModel::annotationsModel() const { return m_annotations; }
 
 QString logFileModel::filePath() const { return m_filePath; }
 
@@ -462,6 +467,7 @@ bool logFileModel::loadLogFile(QFile *logFile, QFile *swapFile) {
   m_hashLogFile = logFileData.hashLogFile();
   m_dateFormat = logFileData.dateFormat();
   m_fileType = logFileData.fileType();
+  m_annotations->setHash(m_hashLogFile);
 
   if (swapFile != nullptr) {
     swapFileData.load(swapFile);

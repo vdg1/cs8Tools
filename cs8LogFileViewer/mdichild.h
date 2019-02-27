@@ -61,7 +61,7 @@ class MdiChild : public QMdiSubWindow {
   Q_OBJECT
 
 public:
-  MdiChild(QWidget *parent = 0);
+  explicit MdiChild(QWidget *parent = 0);
 
   bool loadFile(const QString &fileName);
   bool connectToHost(const QString &address, quint16 port, bool loadLogFile);
@@ -82,6 +82,7 @@ public:
 
   bool scrollToBottomWhenLineReceived() const;
   void setScrollToBottomWhenLineReceived(bool scrollToBottomWhenLineReceived);
+  void selectedRowNumbers(int &start, int &end);
 
 public slots:
 

@@ -126,6 +126,10 @@ private slots:
 
   void on_actionShow_Errors_toggled(bool arg1);
 
+  void on_actionCreate_Annotation_triggered();
+
+  void on_tbDeleteAnnotaion_triggered(QAction *arg1);
+
 private:
   void createActions();
   void createMenus();

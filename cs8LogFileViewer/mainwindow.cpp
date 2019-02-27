@@ -57,6 +57,7 @@
 
 #include "../common/databaseconnection.h"
 #include "aboutdialog.h"
+#include "cs8annotationeditor.h"
 #include "cs8metainformationmodel.h"
 #include "cs8searchwidget.h"
 #include "cs8systemconfigurationmodel.h"
@@ -215,6 +216,8 @@ void MainWindow::updateMenus() {
     ui.treeViewSystemConfigurations->setModel(model);
     connect(model, &cs8SystemConfigurationModel::completed, this, &MainWindow::resizeSystemConfigViewColumns);
 
+    ui.tableViewAnnotations->setModel(activeMdiChild()->model()->annotationsModel());
+
     ui.widgetSearch->setModel(activeMdiChild()->model());
     ui.actHide_USR_messages->setChecked(!activeMdiChild()->showsUSRMessages());
     ui.actionHide_Swap_File_Messages->setChecked(!activeMdiChild()->showsSwapFileMessages());
@@ -352,7 +355,8 @@ void MainWindow::createMenus() {
   m_contextMenu->addAction(ui.actCopy);
   m_contextMenu->addAction(ui.actionCopy_lines_and_add_info);
   m_contextMenu->addAction(ui.actionSend_selected_lines_to);
-  m_contextMenu->addAction(ui.actionOpen_Machine_File);
+  // m_contextMenu->addAction(ui.actionOpen_Machine_File);
+  m_contextMenu->addAction(ui.actionCreate_Annotation);
 }
 
 void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
@@ -697,3 +701,16 @@ void MainWindow::on_actionShow_Warnings_toggled(bool arg1) { activeMdiChild()->s
 void MainWindow::on_actionShow_Information_toggled(bool arg1) { activeMdiChild()->showInformationMessages(arg1); }
 
 void MainWindow::on_actionShow_Errors_toggled(bool arg1) { activeMdiChild()->showErrorMessages(arg1); }
+
+void MainWindow::on_actionCreate_Annotation_triggered() {
+  int start = 0;
+  int end = 0;
+  activeMdiChild()->selectedRowNumbers(start, end);
+  cs8AnnotationEditor dlg;
+  dlg.setStartAndEnd(start, end);
+  if (dlg.exec() == QDialog::Accepted) {
+    activeMdiChild()->model()->annotationsModel()->addAnnotation(dlg.text(), dlg.level(), dlg.start(), dlg.end());
+  }
+}
+
+void MainWindow::on_tbDeleteAnnotaion_triggered(QAction *arg1) {}
