@@ -237,6 +237,9 @@
      </property>
      <item>
       <widget class="QToolButton" name="tbDeleteAnnotaion">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Delete</string>
        </property>
