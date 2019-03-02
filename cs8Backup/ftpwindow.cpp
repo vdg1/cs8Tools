@@ -238,6 +238,9 @@ void FtpWindow::downloadFiles() {
   // ui.connectButton->setEnabled(false);
   ui.btDownload->setEnabled(false);
   QSettings settings;
+  QStringList protocol;
+  protocol.append("Backup started: " + QDateTime::currentDateTime().toString());
+
   saveSettings();
   int i = 0;
   bool ok;
@@ -295,6 +298,9 @@ void FtpWindow::downloadFiles() {
         if (!ok) {
           lastError = m_controller->lastError();
           qDebug() << "transfer failed:" << lastError;
+          protocol.append(QString("Failed to download: %1 : %2")
+                              .arg(fileName)
+                              .arg(lastError));
         }
         if (ok) {
           QUrlInfo *infoItem =
@@ -327,6 +333,7 @@ void FtpWindow::downloadFiles() {
             case QMessageBox::Cancel:
               ui.fileList->clear();
               completedWithoutError = false;
+              protocol.append("Backup canceled by user");
               break;
 
             case QMessageBox::Retry:
@@ -338,6 +345,8 @@ void FtpWindow::downloadFiles() {
             case QMessageBox::Ignore:
               ok = true;
               completedWithoutError = false;
+              protocol.append(
+                  QString("File ignored by user: %1").arg(fileName));
               break;
 
             default:
@@ -353,6 +362,7 @@ void FtpWindow::downloadFiles() {
         delete item;
         retry = settings.value("automaticRetries", 5).toInt();
         statusBar()->showMessage(tr("Downloaded file %1").arg(fileName));
+        protocol.append(QString("%1: Success").arg(fileName));
       }
     }
 
@@ -364,6 +374,15 @@ void FtpWindow::downloadFiles() {
 
     // statusLabel->setText(tr("Backup completed") );
     statusBar()->showMessage(tr("Backup completed"));
+    protocol.append(QString("Backup completed: Without errors: %1")
+                        .arg(completedWithoutError));
+    if (settings.value("saveProtocol", true).toBool()) {
+        QFile f(m_downloadDir + "/" + backupName + "/backup_log.txt");
+        QTextStream s(&f);
+        f.open(QFile::WriteOnly);
+        s << protocol.join("\n");
+        f.close();
+    }
     if (completedWithoutError) {
       if (setting.value("profiles/" + ui.leIPAddress->lineEdit()->text() + "/compress", "false").toBool()) {
         connect(&zip, &zipper::compressingFile, this, &FtpWindow::compressingFile);
