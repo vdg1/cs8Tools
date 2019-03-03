@@ -233,6 +233,9 @@
    </property>
   </action>
   <action name="actCopy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/edit-copy.png</normaloff>:/icons/32x32/32x32/actions/edit-copy.png</iconset>
@@ -266,6 +269,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/view-filter.png</normaloff>:/icons/32x32/32x32/actions/view-filter.png</iconset>
@@ -280,6 +286,9 @@
    </property>
   </action>
   <action name="actionNext_System_Start">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/arrow-right-double.png</normaloff>:/icons/32x32/32x32/actions/arrow-right-double.png</iconset>
@@ -292,6 +301,9 @@
    </property>
   </action>
   <action name="actionPrevious_System_Start">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/arrow-left-double.png</normaloff>:/icons/32x32/32x32/actions/arrow-left-double.png</iconset>
@@ -307,6 +319,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/run-build-clean.png</normaloff>:/icons/32x32/32x32/actions/run-build-clean.png</iconset>
@@ -318,6 +333,9 @@
   <action name="actionReverse_Order">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
@@ -354,6 +372,9 @@
    </property>
   </action>
   <action name="actionSave_as">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/document-save-as.png</normaloff>:/icons/32x32/32x32/actions/document-save-as.png</iconset>
@@ -363,6 +384,9 @@
    </property>
   </action>
   <action name="actionOpen_Machine_File">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/icons/32x32/32x32/actions/view-pim-tasks.png</normaloff>:/icons/32x32/32x32/actions/view-pim-tasks.png</iconset>
@@ -377,6 +401,9 @@
   <action name="actionScroll_to_Bottom">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
@@ -408,6 +435,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/images/dialog-error.png</normaloff>:/images/dialog-error.png</iconset>
@@ -423,6 +453,9 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
      <normaloff>:/images/dialog-warning.png</normaloff>:/images/dialog-warning.png</iconset>
@@ -437,6 +470,9 @@
   <action name="actionShow_Information">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
    </property>
    <property name="icon">
     <iconset resource="../../../Icons/resources.qrc">
