@@ -46,7 +46,11 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="leUserName"/>
+                <widget class="QLineEdit" name="leUserName">
+                 <property name="placeholderText">
+                  <string>User name with FTP access rights</string>
+                 </property>
+                </widget>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="label_4">
@@ -62,6 +66,12 @@
                 <widget class="QLineEdit" name="lePassword">
                  <property name="echoMode">
                   <enum>QLineEdit::Password</enum>
+                 </property>
+                 <property name="placeholderText">
+                  <string>FTP password for user name</string>
+                 </property>
+                 <property name="clearButtonEnabled">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -96,7 +106,7 @@
                        <string/>
                       </property>
                       <property name="pixmap">
-                       <pixmap resource="../cs8Backup.qrc">:/res/loading19.gif</pixmap>
+                       <pixmap>:/res/loading19.gif</pixmap>
                       </property>
                      </widget>
                     </item>
@@ -198,6 +208,9 @@
                       </property>
                       <property name="toolTip">
                        <string>Please enter the IP address of the controller here, if no controller were detected automatically.</string>
+                      </property>
+                      <property name="toolTipDuration">
+                       <number>2</number>
                       </property>
                       <property name="editable">
                        <bool>true</bool>
@@ -458,8 +471,15 @@ p, li { white-space: pre-wrap; }
         </item>
         <item>
          <widget class="QCommandLinkButton" name="btDownload">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Start Backup</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <normaloff>:/icons/32x32/32x32/actions/dialog-ok-apply.png</normaloff>:/icons/32x32/32x32/actions/dialog-ok-apply.png</iconset>
           </property>
          </widget>
         </item>
@@ -554,12 +574,13 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <tabstops>
-  <tabstop>btUpdate</tabstop>
-  <tabstop>tableViewDetectedControllers</tabstop>
   <tabstop>leIPAddress</tabstop>
   <tabstop>leUserName</tabstop>
   <tabstop>lePassword</tabstop>
   <tabstop>btDownload</tabstop>
+  <tabstop>btUpdate</tabstop>
+  <tabstop>tableViewDetectedControllers</tabstop>
+  <tabstop>rbCompleteSystem</tabstop>
   <tabstop>rbPartitions</tabstop>
   <tabstop>checkBoxSys</tabstop>
   <tabstop>checkBoxUsr</tabstop>
@@ -569,12 +590,10 @@ p, li { white-space: pre-wrap; }
   <tabstop>leDownloadDir</tabstop>
   <tabstop>btSelectDownloadDir</tabstop>
   <tabstop>pushButtonExplore</tabstop>
-  <tabstop>fileList</tabstop>
   <tabstop>tabWidget</tabstop>
+  <tabstop>fileList</tabstop>
  </tabstops>
- <resources>
-  <include location="../cs8Backup.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>action_Quit</sender>
