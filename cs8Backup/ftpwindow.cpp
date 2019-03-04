@@ -308,11 +308,13 @@ void FtpWindow::downloadFiles() {
           if (settings.value("preserveTimeStamp", false).toBool()) {
             setFileTimestamp(localFileName, infoItem->lastModified());
           }
-          lastError = QString("Remote size: %1 bytes, remote size: %2 bytes.").arg(remoteSize).arg(localSize);
-          // ignore file size differences when downlaoding log files (the might
+          lastError = QString("Remote size: %1 bytes, remote size: %2 bytes.")
+                          .arg(remoteSize)
+                          .arg(localSize);
+
+          // ignore file size differences when downloading log files (they might
           // grow during backup...)
-          ok = (remoteSize == localSize) ||
-               (localFileName.contains("errors.log") || localFileName.contains("errors.old"));
+          ok = (remoteSize == localSize) || (fileName.contains("/log/"));
         }
 
         if (!ok) {
