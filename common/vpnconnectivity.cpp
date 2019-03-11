@@ -22,7 +22,7 @@ bool vpnConnectivity::online()
     DWORD dwCb = 0;
     DWORD dwRet = ERROR_SUCCESS;
     DWORD dwConnections = 0;
-    LPRASCONN lpRasConn = NULL;
+    LPRASCONN lpRasConn = nullptr;
 
     // Call RasEnumConnections with lpRasConn = NULL. dwCb is returned with the required buffer size and
     // a return code of ERROR_BUFFER_TOO_SMALL
@@ -32,7 +32,7 @@ bool vpnConnectivity::online()
     {
         // Allocate the memory needed for the array of RAS structure(s).
         lpRasConn = (LPRASCONN) HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, dwCb);
-        if (lpRasConn == NULL)
+        if (lpRasConn == nullptr)
         {
             qDebug() << "HeapAlloc failed!";
             return 0;

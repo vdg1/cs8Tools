@@ -80,10 +80,13 @@ MainWindow::MainWindow() : QMainWindow() {
   ui.mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
   ui.mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
-  connect(ui.mdiArea, &QMdiArea::subWindowActivated, this, &MainWindow::updateMenus);
+  connect(ui.mdiArea, &QMdiArea::subWindowActivated, this,
+          &MainWindow::updateMenus);
   windowMapper = new QSignalMapper(this);
-  connect(windowMapper, SIGNAL(mapped(QWidget *)), this, SLOT(setActiveSubWindow(QWidget *)));
-  connect(ui.treeViewSystemConfigurations, &QTreeView::doubleClicked, this, &MainWindow::slotDoubleClickedSystemConfig);
+  connect(windowMapper, SIGNAL(mapped(QWidget *)), this,
+          SLOT(setActiveSubWindow(QWidget *)));
+  connect(ui.treeViewSystemConfigurations, &QTreeView::doubleClicked, this,
+          &MainWindow::slotDoubleClickedSystemConfig);
 
   createDBConnection();
   createActions();
@@ -101,9 +104,11 @@ MainWindow::MainWindow() : QMainWindow() {
 
   // check if about dialog shall be shown for first time after update
   QSettings settings;
-  if (settings.value("cs8LogFileViewer/releaseNotes", "").toString() != qApp->applicationVersion()) {
+  if (settings.value("cs8LogFileViewer/releaseNotes", "").toString() !=
+      qApp->applicationVersion()) {
     QTimer::singleShot(0, this, SLOT(about()));
-    settings.setValue("cs8LogFileViewer/releaseNotes", qApp->applicationVersion());
+    settings.setValue("cs8LogFileViewer/releaseNotes",
+                      qApp->applicationVersion());
   }
 }
 
@@ -156,8 +161,9 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 void MainWindow::open() {
   QSettings settings;
 
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open log file"), settings.value("lastOpenDir").toString(),
-                                                  tr("Log Files (*.log *.old)"));
+  QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Open log file"), settings.value("lastOpenDir").toString(),
+      tr("Log Files (*.log *.old)"));
   if (!fileName.isEmpty()) {
     settings.setValue("lastOpenDir", QFileInfo(fileName).absolutePath());
     loadFile(fileName);
@@ -169,7 +175,8 @@ void MainWindow::copy(bool withRobotInfo) {
     QClipboard *clip = QApplication::clipboard();
     QMimeData *data = new QMimeData;
 
-    data->setData("text/html", activeMdiChild()->getSelectedLines(true).toLatin1());
+    data->setData("text/html",
+                  activeMdiChild()->getSelectedLines(true).toLatin1());
     qDebug() << "is html: " << data->hasHtml();
     // clip->setMimeData(data);
     clip->setText(activeMdiChild()->getSelectedLines(false, withRobotInfo));
@@ -189,7 +196,8 @@ void MainWindow::resizeSystemConfigViewColumns() {
 void MainWindow::slotDoubleClickedSystemConfig(const QModelIndex &index) {
   if (activeMdiChild() != nullptr) {
     cs8SystemConfigurationModel *model =
-        qobject_cast<cs8SystemConfigurationModel *>(ui.treeViewSystemConfigurations->model());
+        qobject_cast<cs8SystemConfigurationModel *>(
+            ui.treeViewSystemConfigurations->model());
     if (model->data(index, Qt::UserRole).isValid()) {
       int lineNumber = model->data(index, Qt::UserRole).toInt();
       activeMdiChild()->scrollToLine(lineNumber);
@@ -212,33 +220,46 @@ void MainWindow::updateMenus() {
     // update tool bars and dock widgets
     ui.actCopy->setEnabled(activeMdiChild()->hasSelection());
 
-    cs8SystemConfigurationModel *model = activeMdiChild()->model()->metaInformationModel()->systemConfigurationModel();
+    cs8SystemConfigurationModel *model = activeMdiChild()
+                                             ->model()
+                                             ->metaInformationModel()
+                                             ->systemConfigurationModel();
     ui.treeViewSystemConfigurations->setModel(model);
-    connect(model, &cs8SystemConfigurationModel::completed, this, &MainWindow::resizeSystemConfigViewColumns);
+    connect(model, &cs8SystemConfigurationModel::completed, this,
+            &MainWindow::resizeSystemConfigViewColumns);
 
     ui.tableViewAnnotations->setModel(activeMdiChild()->model()->annotationsModel());
 
     ui.widgetSearch->setModel(activeMdiChild()->model());
     ui.actHide_USR_messages->setChecked(!activeMdiChild()->showsUSRMessages());
-    ui.actionHide_Swap_File_Messages->setChecked(!activeMdiChild()->showsSwapFileMessages());
-    ui.actionOpen_Machine_File->setEnabled(!activeMdiChild()->model()->URLId().isEmpty());
+    ui.actionHide_Swap_File_Messages->setChecked(
+        !activeMdiChild()->showsSwapFileMessages());
+    ui.actionOpen_Machine_File->setEnabled(
+        !activeMdiChild()->model()->URLId().isEmpty());
     ui.actionReverse_Order->setChecked(activeMdiChild()->reverseOrder());
-    ui.actionScroll_to_Bottom->setChecked(activeMdiChild()->scrollToBottomWhenLineReceived());
-    ui.actionShow_Errors->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
-    ui.actionShow_Warnings->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
-    ui.actionShow_Information->setEnabled(activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
+    ui.actionScroll_to_Bottom->setChecked(
+        activeMdiChild()->scrollToBottomWhenLineReceived());
+    ui.actionShow_Errors->setEnabled(activeMdiChild()->model()->fileType() ==
+                                     cs8LogFileData::CS9);
+    ui.actionShow_Warnings->setEnabled(activeMdiChild()->model()->fileType() ==
+                                       cs8LogFileData::CS9);
+    ui.actionShow_Information->setEnabled(
+        activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
     ui.actionShow_Errors->setChecked(activeMdiChild()->showsErrorMessages());
-    ui.actionShow_Warnings->setChecked(activeMdiChild()->showsWarningMessages());
-    ui.actionShow_Information->setChecked(activeMdiChild()->showsInformationMesages());
+    ui.actionShow_Warnings->setChecked(
+        activeMdiChild()->showsWarningMessages());
+    ui.actionShow_Information->setChecked(
+        activeMdiChild()->showsInformationMesages());
 
     for (int row = 0; row < model->rowCount(); row++) {
       ui.treeViewSystemConfigurations->expand(model->index(row, 0));
     }
     resizeSystemConfigViewColumns();
 
-    connect(ui.widgetSearch, &cs8SearchWidget::lineSelected, activeMdiChild(), &MdiChild::scrollToLine);
-    connect(activeMdiChild()->model(), &logFileModel::readingComplete, ui.widgetSearch,
-            &cs8SearchWidget::updateSearchParameters);
+    connect(ui.widgetSearch, &cs8SearchWidget::lineSelected, activeMdiChild(),
+            &MdiChild::scrollToLine);
+    connect(activeMdiChild()->model(), &logFileModel::readingComplete,
+            ui.widgetSearch, &cs8SearchWidget::updateSearchParameters);
   }
 }
 
@@ -280,19 +301,23 @@ MdiChild *MainWindow::createMdiChild() {
   ui.mdiArea->addSubWindow(child);
   child->setAttribute(Qt::WA_DeleteOnClose);
   connect(child, &MdiChild::copyAvailable, ui.actCopy, &QAction::setEnabled);
-  connect(child, &MdiChild::deactivated, this, &MainWindow::slotChildDeactivated);
-  connect(this, &MainWindow::highlightRulesChanged, child->model(), &logFileModel::slotRunHighlightRules);
+  connect(child, &MdiChild::deactivated, this,
+          &MainWindow::slotChildDeactivated);
+  connect(this, &MainWindow::highlightRulesChanged, child->model(),
+          &logFileModel::slotRunHighlightRules);
   return child;
 }
 
 void MainWindow::createActions() {
   closeAct = new QAction(tr("Cl&ose"), this);
   closeAct->setStatusTip(tr("Close the active window"));
-  connect(closeAct, &QAction::triggered, ui.mdiArea, &QMdiArea::closeActiveSubWindow);
+  connect(closeAct, &QAction::triggered, ui.mdiArea,
+          &QMdiArea::closeActiveSubWindow);
 
   closeAllAct = new QAction(tr("Close &All"), this);
   closeAllAct->setStatusTip(tr("Close all the windows"));
-  connect(closeAllAct, &QAction::triggered, ui.mdiArea, &QMdiArea::closeAllSubWindows);
+  connect(closeAllAct, &QAction::triggered, ui.mdiArea,
+          &QMdiArea::closeAllSubWindows);
 
   tileAct = new QAction(tr("&Tile"), this);
   tileAct->setStatusTip(tr("Tile the windows"));
@@ -300,18 +325,21 @@ void MainWindow::createActions() {
 
   cascadeAct = new QAction(tr("&Cascade"), this);
   cascadeAct->setStatusTip(tr("Cascade the windows"));
-  connect(cascadeAct, &QAction::triggered, ui.mdiArea, &QMdiArea::cascadeSubWindows);
+  connect(cascadeAct, &QAction::triggered, ui.mdiArea,
+          &QMdiArea::cascadeSubWindows);
 
   nextAct = new QAction(tr("Ne&xt"), this);
   nextAct->setShortcuts(QKeySequence::NextChild);
   nextAct->setStatusTip(tr("Move the focus to the next window"));
-  connect(nextAct, &QAction::triggered, ui.mdiArea, &QMdiArea::activateNextSubWindow);
+  connect(nextAct, &QAction::triggered, ui.mdiArea,
+          &QMdiArea::activateNextSubWindow);
 
   previousAct = new QAction(tr("Pre&vious"), this);
   previousAct->setShortcuts(QKeySequence::PreviousChild);
   previousAct->setStatusTip(tr("Move the focus to the previous "
                                "window"));
-  connect(previousAct, &QAction::triggered, ui.mdiArea, &QMdiArea::activatePreviousSubWindow);
+  connect(previousAct, &QAction::triggered, ui.mdiArea,
+          &QMdiArea::activatePreviousSubWindow);
 
   separatorAct = new QAction(this);
   separatorAct->setSeparator(true);
@@ -327,7 +355,8 @@ void MainWindow::createActions() {
   for (int i = 0; i < MaxRecentFiles; ++i) {
     recentFileActs[i] = new QAction(this);
     recentFileActs[i]->setVisible(false);
-    connect(recentFileActs[i], &QAction::triggered, this, &MainWindow::openRecentFile);
+    connect(recentFileActs[i], &QAction::triggered, this,
+            &MainWindow::openRecentFile);
   }
 
   ui.actionOpen_Machine_File->setEnabled(false);
@@ -340,7 +369,8 @@ void MainWindow::createMenus() {
     fileMenu->insertAction(ui.actExit, recentFileActs[i]);
   fileMenu->insertSeparator(ui.actExit);
 
-  connect(ui.menu_Window, &QMenu::aboutToShow, this, &MainWindow::updateWindowMenu);
+  connect(ui.menu_Window, &QMenu::aboutToShow, this,
+          &MainWindow::updateWindowMenu);
 
   menuBar()->addSeparator();
 
@@ -367,12 +397,15 @@ void MainWindow::readSettings() {
   restoreGeometry(settings.value("mainWindowGeometry").toByteArray());
   restoreState(settings.value("mainWindowState").toByteArray());
 
-  m_dataDir =
-      settings.value("dataDir", QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).toString();
+  m_dataDir = settings
+                  .value("dataDir", QStandardPaths::writableLocation(
+                                        QStandardPaths::AppLocalDataLocation))
+                  .toString();
 
   settings.beginGroup("Search");
   ui.widgetSearch->setSearchText(settings.value("searchText").toString());
-  ui.widgetSearch->setIsRegExp(settings.value("regularExpression", false).toBool());
+  ui.widgetSearch->setIsRegExp(
+      settings.value("regularExpression", false).toBool());
   settings.endGroup();
   /*
      QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
@@ -397,10 +430,13 @@ void MainWindow::writeSettings() {
 }
 
 void MainWindow::readRules() {
-  QString fileName(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/settings.ini");
+  QString fileName(
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
+      "/settings.ini");
   QFile file(fileName);
   if (!file.exists()) {
-    qDebug() << __FUNCDNAME__ << "Read settings from " << qApp->applicationDirPath() + "/settings.ini";
+    qDebug() << __FUNCDNAME__ << "Read settings from "
+             << qApp->applicationDirPath() + "/settings.ini";
     QString sourceFileName(qApp->applicationDirPath() + "/settings.ini");
     QFile source(sourceFileName);
     source.copy(fileName);
@@ -410,25 +446,31 @@ void MainWindow::readRules() {
   int count = settings.beginReadArray("highlightRules");
   for (int i = count - 1; i >= 0; i--) {
     settings.setArrayIndex(i);
-    highlightItems->addRule(0, settings.value("String").toString(),
-                            settings.value("isRegularExpression", false).toBool(),
-                            settings.value("Background").toString(), settings.value("Foreground").toString(),
-                            settings.value("Bold").toBool(), settings.value("IgnoreCase").toBool(),
-                            settings.value("Italic").toBool(), settings.value("highLight").toBool(),
-                            static_cast<cs8LogFileData::MessageLevel>(settings.value("level").toInt()));
+    highlightItems->addRule(
+        0, settings.value("String").toString(),
+        settings.value("isRegularExpression", false).toBool(),
+        settings.value("Background").toString(),
+        settings.value("Foreground").toString(),
+        settings.value("Bold").toBool(), settings.value("IgnoreCase").toBool(),
+        settings.value("Italic").toBool(), settings.value("highLight").toBool(),
+        static_cast<cs8LogFileData::MessageLevel>(
+            settings.value("level").toInt()));
   }
   settings.endArray();
 }
 
 void MainWindow::writeRules() {
-  QSettings settings(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/settings.ini",
-                     QSettings::IniFormat);
+  QSettings settings(
+      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
+          "/settings.ini",
+      QSettings::IniFormat);
   settings.remove("highlightRules");
   settings.beginWriteArray("highlightRules");
   for (int i = 0; i < highlightItems->rowCount(); i++) {
     settings.setArrayIndex(i);
     settings.setValue("String", highlightItems->searchString(i));
-    settings.setValue("isRegularExpression", highlightItems->isRegularExpression(i));
+    settings.setValue("isRegularExpression",
+                      highlightItems->isRegularExpression(i));
     settings.setValue("Background", highlightItems->backgroundColor(i));
     settings.setValue("Foreground", highlightItems->foregroundColor(i));
     settings.setValue("Bold", highlightItems->bold(i));
@@ -502,8 +544,10 @@ void MainWindow::loadFile(const QString &fileName_) {
 
   MdiChild *child = createMdiChild();
   child->setContextMenu(m_contextMenu);
-  connect(child->model(), &logFileModel::loadingFinished, this, &MainWindow::updateMenus);
-  connect(child->model(), &logFileModel::metaInformationAvailable, this, &MainWindow::updateMenus);
+  connect(child->model(), &logFileModel::loadingFinished, this,
+          &MainWindow::updateMenus);
+  connect(child->model(), &logFileModel::metaInformationAvailable, this,
+          &MainWindow::updateMenus);
   if (child->loadFile(fileName)) {
     statusBar()->showMessage(tr("File loaded"), 2000);
     child->show();
@@ -560,7 +604,8 @@ void MainWindow::on_actionHighlighting_triggered() {
 
 void MainWindow::slotChildDeactivated() {
   qDebug() << "child deactivated: " << sender();
-  disconnect(ui.widgetSearch, SIGNAL(lineSelected(int)), sender(), SLOT(scrollToLine(int)));
+  disconnect(ui.widgetSearch, SIGNAL(lineSelected(int)), sender(),
+             SLOT(scrollToLine(int)));
 }
 
 void MainWindow::on_actionNext_System_Start_triggered() {
@@ -590,7 +635,8 @@ void MainWindow::on_actionOnline_triggered() {
   }
 }
 
-void MainWindow::connectToController(const QString &address, quint16 port, bool loadLogFile) {
+void MainWindow::connectToController(const QString &address, quint16 port,
+                                     bool loadLogFile) {
   qDebug() << __FUNCTION__ << "Connect to:" << address << ":" << port;
   QString fileName = QString("CS8:%1:%2").arg(address).arg(port);
   QMdiSubWindow *existing = findMdiChild(fileName);
@@ -603,7 +649,8 @@ void MainWindow::connectToController(const QString &address, quint16 port, bool 
   MdiChild *child = createMdiChild();
   child->setContextMenu(m_contextMenu);
   if (child->connectToHost(address, port, loadLogFile)) {
-    statusBar()->showMessage(tr("Connecting to %1:%2").arg(address).arg(port), 2000);
+    statusBar()->showMessage(tr("Connecting to %1:%2").arg(address).arg(port),
+                             2000);
     child->show();
   } else {
     child->close();
@@ -622,8 +669,11 @@ void MainWindow::connectToController(const QString &address, quint16 port, bool 
 
 void MainWindow::on_actionSend_selected_lines_to_triggered() {
   if (activeMdiChild()) {
-    QString serialNumber =
-        activeMdiChild()->model()->metaInformationModel()->systemConfigurationModel()->machineSerialNumber();
+    QString serialNumber = activeMdiChild()
+                               ->model()
+                               ->metaInformationModel()
+                               ->systemConfigurationModel()
+                               ->machineSerialNumber();
     QString subject = QString("Emailing log data from %1").arg(serialNumber);
     QString body = QString("\nLog data from %1:\n\n[..]\n%2\n[..]\n")
                        .arg(serialNumber)
@@ -636,7 +686,10 @@ void MainWindow::on_actionSend_selected_lines_to_triggered() {
 void MainWindow::on_actionSave_as_triggered() {
   if (activeMdiChild()) {
     MdiChild *child = activeMdiChild();
-    QString serialNumber = child->model()->metaInformationModel()->systemConfigurationModel()->machineSerialNumber();
+    QString serialNumber = child->model()
+                               ->metaInformationModel()
+                               ->systemConfigurationModel()
+                               ->machineSerialNumber();
     QString timeStamp = child->model()
                             ->metaInformationModel()
                             ->systemConfigurationModel()
@@ -645,9 +698,11 @@ void MainWindow::on_actionSave_as_triggered() {
                             .replace(":", "-");
 
     QString suggestedFileName =
-        QDir::toNativeSeparators(child->currentFilePath() + "/errors_" + serialNumber + "_" + timeStamp + ".log");
+        QDir::toNativeSeparators(child->currentFilePath() + "/errors_" +
+                                 serialNumber + "_" + timeStamp + ".log");
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save log data as..."), suggestedFileName, "*.log");
+    QString fileName = QFileDialog::getSaveFileName(
+        this, tr("Save log data as..."), suggestedFileName, "*.log");
     if (!fileName.isEmpty()) {
       if (child->model()->saveLogFile(fileName)) {
         QUrl url;
@@ -656,11 +711,13 @@ void MainWindow::on_actionSave_as_triggered() {
         url.setUrl(info.absolutePath());
         url.setScheme("file");
 
-        QMessageBox::information(
-            this, tr("Log file export"),
-            tr("The log is saved to <a href='%2'>%1</a>.").arg(QDir::toNativeSeparators(fileName)).arg(url.toString()));
+        QMessageBox::information(this, tr("Log file export"),
+                                 tr("The log is saved to <a href='%2'>%1</a>.")
+                                     .arg(QDir::toNativeSeparators(fileName))
+                                     .arg(url.toString()));
       } else
-        QMessageBox::critical(this, tr("Log file export"), tr("Saving log to %1 failed!").arg(fileName));
+        QMessageBox::critical(this, tr("Log file export"),
+                              tr("Saving log to %1 failed!").arg(fileName));
     }
   }
 }
@@ -673,12 +730,14 @@ void MainWindow::on_actionOpen_Machine_File_triggered() {
       QString id = activeMdiChild()->model()->URLId();
       if (!id.isEmpty()) {
 
-        QString url = QString("%1").arg(settings.value("catalogueURL").toString().arg(id));
+        QString url = QString("%1").arg(
+            settings.value("catalogueURL").toString().arg(id));
         QDesktopServices::openUrl(url);
       }
     } else {
       QMessageBox::critical(this, tr("Online machine catalogue"),
-                            tr("No URL is configured for the online machine catalogue. Please check settings!"));
+                            tr("No URL is configured for the online machine "
+                               "catalogue. Please check settings!"));
     }
   }
 }
@@ -689,16 +748,23 @@ void MainWindow::on_actionScroll_to_Bottom_triggered(bool checked) {
 }
 
 void MainWindow::on_actionReset_Dialog_Options_triggered() {
-  if (QMessageBox::question(this, tr("Dialog Options"), tr("Do you want to reset all dialog options?")) ==
+  if (QMessageBox::question(this, tr("Dialog Options"),
+                            tr("Do you want to reset all dialog options?")) ==
       QMessageBox::Yes)
     cs8MetaInformationModel::resetDialogOptions();
 }
 
 void MainWindow::on_actionCopy_lines_and_add_info_triggered() { copy(true); }
 
-void MainWindow::on_actionShow_Warnings_toggled(bool arg1) { activeMdiChild()->showWarningMessages(arg1); }
+void MainWindow::on_actionShow_Warnings_toggled(bool arg1) {
+  if (activeMdiChild())
+    activeMdiChild()->showWarningMessages(arg1);
+}
 
-void MainWindow::on_actionShow_Information_toggled(bool arg1) { activeMdiChild()->showInformationMessages(arg1); }
+void MainWindow::on_actionShow_Information_toggled(bool arg1) {
+  if (activeMdiChild())
+    activeMdiChild()->showInformationMessages(arg1);
+}
 
 void MainWindow::on_actionShow_Errors_toggled(bool arg1) { activeMdiChild()->showErrorMessages(arg1); }
 

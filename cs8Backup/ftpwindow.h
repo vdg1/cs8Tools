@@ -58,11 +58,12 @@ protected slots:
   void slotSelectDownLoadDir();
 
 public:
-  FtpWindow(QWidget *parent = 0);
+  FtpWindow(QWidget *parent = nullptr);
   ~FtpWindow();
 
   void startSyncProcess();
-  bool storeBackupLog(const QString &serialNumber, const QString &backupName, const QString &baseDir);
+  bool storeBackupLog(const QString &serialNumber, const QString &backupName,
+                      const QString &baseDir);
 private slots:
 
   void cancelDownload();
@@ -102,9 +103,11 @@ private slots:
   void slotSelectionChanged(QItemSelection topLeft, QItemSelection bottomRight);
 
   void on_pushButtonExplore_clicked();
-  void on_leIPAddress_currentTextChanged(const QString &arg1);
+  void updateFTPUserProfile();
 
   void on_actionCheck_for_Updates_triggered();
+
+  void on_leIPAddress_editTextChanged(const QString &);
 
 private:
   DetailProgressDialog *m_progressDialog;
@@ -113,10 +116,12 @@ private:
   cs8NetworkScanner *m_scanner;
   cs8Controller *m_controller;
   QLabel *m_transferRateLabel;
-  QMovie *m_movie;
+  QMovie *m_ScannerMovie;
+  QMovie *m_LoadingDataMovie;
   cs8CheckUpdate *m_checkUpdate;
   QWinTaskbarButton *m_button;
   QSqlTableModel *m_backupDataTable;
+  QTimer *m_timerDelayedProfileUpdate;
   int nConfigCmdID;
   QString configBuffer;
   QString m_serialNumber;
@@ -136,7 +141,8 @@ private:
   void checkDBTables();
 
 protected:
-  void closeEvent(QCloseEvent *event);
+  void closeEvent(QCloseEvent *event) override;
+  bool eventFilter(QObject *obj, QEvent *event) override;
 };
 
 #endif
