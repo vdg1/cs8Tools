@@ -236,12 +236,7 @@ void MainWindow::updateMenus() {
     ui.actionReverse_Order->setChecked(activeMdiChild()->reverseOrder());
     ui.actionScroll_to_Bottom->setChecked(
         activeMdiChild()->scrollToBottomWhenLineReceived());
-    ui.actionShow_Errors->setEnabled(activeMdiChild()->model()->fileType() ==
-                                     cs8LogFileData::CS9);
-    ui.actionShow_Warnings->setEnabled(activeMdiChild()->model()->fileType() ==
-                                       cs8LogFileData::CS9);
-    ui.actionShow_Information->setEnabled(
-        activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
+
     ui.actionShow_Errors->setChecked(activeMdiChild()->showsErrorMessages());
     ui.actionShow_Warnings->setChecked(
         activeMdiChild()->showsWarningMessages());
@@ -257,7 +252,19 @@ void MainWindow::updateMenus() {
             &MdiChild::scrollToLine);
     connect(activeMdiChild()->model(), &logFileModel::readingComplete,
             ui.widgetSearch, &cs8SearchWidget::updateSearchParameters);
+
+    ui.actionShow_Errors->setEnabled(activeMdiChild()->model()->fileType() ==
+                                     cs8LogFileData::CS9);
+    ui.actionShow_Warnings->setEnabled(activeMdiChild()->model()->fileType() ==
+                                       cs8LogFileData::CS9);
+    ui.actionShow_Information->setEnabled(
+        activeMdiChild()->model()->fileType() == cs8LogFileData::CS9);
   }
+  ui.actionReverse_Order->setEnabled(hasMdiChild);
+  ui.actionSave_as->setEnabled(hasMdiChild);
+
+  ui.actionNext_System_Start->setEnabled(hasMdiChild);
+  ui.actionPrevious_System_Start->setEnabled(hasMdiChild);
 }
 
 void MainWindow::updateWindowMenu() {
@@ -481,7 +488,7 @@ void MainWindow::writeRules() {
 MdiChild *MainWindow::activeMdiChild() {
   if (QMdiSubWindow *activeSubWindow = ui.mdiArea->activeSubWindow())
     return qobject_cast<MdiChild *>(activeSubWindow);
-  return 0;
+  return nullptr;
 }
 
 QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName) {
@@ -494,7 +501,7 @@ QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName) {
     if (mdiChild->currentFile() == canonicalFilePath)
       return window;
   }
-  return 0;
+  return nullptr;
 }
 
 void MainWindow::setActiveSubWindow(QWidget *window) {
