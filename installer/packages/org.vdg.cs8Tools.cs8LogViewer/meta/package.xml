@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>CS8 Log File Viewer</DisplayName>
     <Description>A log file viewer for cs8/cs9 log files.</Description>
-    <Version>5.3.33</Version>
-    <ReleaseDate>2018-12-29</ReleaseDate>
+    <Version>5.7.34</Version>
+    <ReleaseDate>2019-03-12</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
 </Package>
