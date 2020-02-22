@@ -275,7 +275,9 @@ bool FtpWindow::storeBackupLog(const QString &serialNumber,
 
 void FtpWindow::downloadFiles() {
   // ui.connectButton->setEnabled(false);
+
   ui.btDownload->setEnabled(false);
+  m_controller->enableOnlineCheck(false);
   QSettings settings;
   QStringList protocol;
   protocol.append("Backup started: " + QDateTime::currentDateTime().toString());
@@ -471,6 +473,7 @@ void FtpWindow::downloadFiles() {
       }
     }
   }
+  m_controller->enableOnlineCheck(true);
 }
 
 QString FtpWindow::getSerialNumber() {
