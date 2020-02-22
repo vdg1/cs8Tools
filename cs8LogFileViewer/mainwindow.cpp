@@ -265,6 +265,7 @@ void MainWindow::updateMenus() {
 
   ui.actionNext_System_Start->setEnabled(hasMdiChild);
   ui.actionPrevious_System_Start->setEnabled(hasMdiChild);
+  ui.actionScroll_to_Bottom->setEnabled(hasMdiChild);
 }
 
 void MainWindow::updateWindowMenu() {
@@ -728,13 +729,11 @@ void MainWindow::on_actionSave_as_triggered() {
 void MainWindow::on_actionOpen_Machine_File_triggered() {
   if (activeMdiChild()) {
     QSettings settings;
-    qDebug() << settings.fileName();
-    if (!settings.value("catalogueURL").toString().isEmpty()) {
+    QString path = settings.value("catalogueURL").toString();
+    if (!path.isEmpty()) {
       QString id = activeMdiChild()->model()->URLId();
       if (!id.isEmpty()) {
-
-        QString url = QString("%1").arg(
-            settings.value("catalogueURL").toString().arg(id));
+        QString url = QString("%1%2").arg(path).arg(id);
         QDesktopServices::openUrl(url);
       }
     } else {
