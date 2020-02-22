@@ -1,9 +1,9 @@
 #include "cs8connectdialog.h"
+#include "ui_cs8connectdialog.h"
 #include <QDialogButtonBox>
 #include <QHostAddress>
 #include <QLineEdit>
 #include <QPushButton>
-#include "ui_cs8connectdialog.h"
 
 cs8ConnectDialog::cs8ConnectDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::cs8ConnectDialog) {
@@ -29,11 +29,11 @@ bool cs8ConnectDialog::loadLogFile() const {
 void cs8ConnectDialog::changeEvent(QEvent *e) {
   QDialog::changeEvent(e);
   switch (e->type()) {
-    case QEvent::LanguageChange:
-      ui->retranslateUi(this);
-      break;
-    default:
-      break;
+  case QEvent::LanguageChange:
+    ui->retranslateUi(this);
+    break;
+  default:
+    break;
   }
 }
 

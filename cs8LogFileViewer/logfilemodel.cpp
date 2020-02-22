@@ -16,21 +16,30 @@
 #include <QtConcurrent>
 
 logFileModel::logFileModel(QObject *parent)
-    : QAbstractTableModel(parent), m_lastValidLineWithDate(0), telnetConnection(nullptr) {
+    : QAbstractTableModel(parent), m_lastValidLineWithDate(0),
+      telnetConnection(nullptr) {
   m_metaInformation = new cs8MetaInformationModel(this);
-  connect(&m_watcher, &QFutureWatcherBase::finished, this, &logFileModel::slotLoadingFinished);
-  connect(this, &logFileModel::p_setLogLine, this, &logFileModel::slotSetLogLine, Qt::QueuedConnection);
-  connect(this, &logFileModel::p_setHighlight, this, &logFileModel::slotSetHighlight, Qt::QueuedConnection);
-  connect(this, &logFileModel::p_setLogSize, this, &logFileModel::slotSetLogSize, Qt::QueuedConnection);
-  connect(this, &logFileModel::p_resetHighlight, this, &logFileModel::slotResetHighlight, Qt::QueuedConnection);
-  connect(this, &logFileModel::readingComplete, this, &logFileModel::slotReadingComplete, Qt::QueuedConnection);
+  connect(&m_watcher, &QFutureWatcherBase::finished, this,
+          &logFileModel::slotLoadingFinished);
+  connect(this, &logFileModel::p_setLogLine, this,
+          &logFileModel::slotSetLogLine, Qt::QueuedConnection);
+  connect(this, &logFileModel::p_setHighlight, this,
+          &logFileModel::slotSetHighlight, Qt::QueuedConnection);
+  connect(this, &logFileModel::p_setLogSize, this,
+          &logFileModel::slotSetLogSize, Qt::QueuedConnection);
+  connect(this, &logFileModel::p_resetHighlight, this,
+          &logFileModel::slotResetHighlight, Qt::QueuedConnection);
+  connect(this, &logFileModel::readingComplete, this,
+          &logFileModel::slotReadingComplete, Qt::QueuedConnection);
   connect(m_metaInformation, &cs8MetaInformationModel::metaInformationAvailable,
           [=] { emit metaInformationAvailable(); });
 }
 
 logFileModel::~logFileModel() { m_future.waitForFinished(); }
 
-cs8MetaInformationModel *logFileModel::metaInformationModel() const { return m_metaInformation; }
+cs8MetaInformationModel *logFileModel::metaInformationModel() const {
+  return m_metaInformation;
+}
 
 QString logFileModel::URLId() const { return m_metaInformation->URLId(); }
 
@@ -74,13 +83,15 @@ void logFileModel::loadData(const QStringList &data) {
   // loadFileData(data);
   // slotLoadingFinished();
 }
-void logFileModel::slotSetLogLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ms,
+void logFileModel::slotSetLogLine(int row, const QDateTime &timeStamp,
+                                  const QString &message, int level, double ms,
                                   const QString &type) {
   setLine(row, timeStamp, message, level, ms, type);
   // m_logData.append(message);
 }
 
-void logFileModel::slotSetHighlight(int row, QFont font, QBrush fgBrush, QBrush bgBrush, bool highLight_) {
+void logFileModel::slotSetHighlight(int row, QFont font, QBrush fgBrush,
+                                    QBrush bgBrush, bool highLight_) {
   setData(index(row, 1), font, Qt::FontRole);
   setData(index(row, 1), bgBrush, Qt::BackgroundRole);
   setData(index(row, 1), fgBrush, Qt::ForegroundRole);
@@ -121,13 +132,16 @@ void logFileModel::slotLineReceived(const QString &data) {
     } else
       /*item.*/ message = line;
     lineNumber = rowCount() - 1;
-    slotSetLogLine(lineNumber, timeStamp, message, cs8LogFileData::Anything, 0, "msg");
+    slotSetLogLine(lineNumber, timeStamp, message, cs8LogFileData::Anything, 0,
+                   "msg");
     runHighlightRules(lineNumber, lineNumber);
     emit logMessageReceived();
   }
 }
 
-void logFileModel::slotStateChanged(QAbstractSocket::SocketState state) { qDebug() << "Socket state changed" << state; }
+void logFileModel::slotStateChanged(QAbstractSocket::SocketState state) {
+  qDebug() << "Socket state changed" << state;
+}
 
 QString logFileModel::filePath() const { return m_filePath; }
 
@@ -173,8 +187,8 @@ bool logFileModel::loadFileData(const QStringList &data) {
   QDateTime dateTime;
   QDateTime dateTimeOffset;
   QString type;
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "Start reading in file with " << data.count()
-           << "rows";
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "Start reading in file with " << data.count() << "rows";
   emit p_setLogSize(data.count());
 
   // check if file is valid
@@ -204,7 +218,8 @@ bool logFileModel::loadFileData(const QStringList &data) {
               timeStamp = 0;
 
             type = obj.value("type").toString();
-            level = cs8LogFileData::levelNames.indexOf(obj.value("lvl").toVariant().toString());
+            level = cs8LogFileData::levelNames.indexOf(
+                obj.value("lvl").toVariant().toString());
             level = level == -1 ? cs8LogFileData::Anything : level;
 
             if (type == QStringLiteral("msg")) {
@@ -225,8 +240,13 @@ bool logFileModel::loadFileData(const QStringList &data) {
               rx.setCaseSensitivity(Qt::CaseInsensitive);
               int pos = 0;
               while ((pos = rx.indexIn(message, pos)) != -1) {
-                QString val = dataArray.first().toObject().value("val").toVariant().toString();
-                qDebug() << "Replace " << rx.cap(0) << " at pos " << pos << " with " << val;
+                QString val = dataArray.first()
+                                  .toObject()
+                                  .value("val")
+                                  .toVariant()
+                                  .toString();
+                qDebug() << "Replace " << rx.cap(0) << " at pos " << pos
+                         << " with " << val;
                 message.replace(pos, rx.matchedLength(), val);
                 dataArray.removeFirst();
                 pos += rx.matchedLength();
@@ -247,7 +267,8 @@ bool logFileModel::loadFileData(const QStringList &data) {
             m_timeSpanTill = /*item.*/ dateTime;
             m_lastValidLineWithDate = lineNumber;
 
-            emit p_setLogLine(lineNumber, dateTime, message, level, timeStamp, type);
+            emit p_setLogLine(lineNumber, dateTime, message, level, timeStamp,
+                              type);
             lineNumber++;
           }
         } else {
@@ -272,12 +293,15 @@ bool logFileModel::loadFileData(const QStringList &data) {
         m_lastValidLineWithDate = lineNumber;
       } else
         /*item.*/ message = line;
-      emit p_setLogLine(lineNumber, dateTime, message, cs8LogFileData::Undefined, 0, "msg");
+      emit p_setLogLine(lineNumber, dateTime, message,
+                        cs8LogFileData::Undefined, 0, "msg");
       lineNumber++;
     }
   }
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "Reading completed";
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "hash id:" << m_hashLogFile;
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "Reading completed";
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "hash id:" << m_hashLogFile;
   emit readingComplete(validLogFile);
   return validLogFile;
 }
@@ -307,7 +331,8 @@ cs8LogFileData::MessageLevel logFileModel::logLevel(int row) const {
   QModelIndex idx = index(row, 1);
   if (!idx.isValid())
     return cs8LogFileData::Anything;
-  return static_cast<cs8LogFileData::MessageLevel>(data(idx, Qt::UserRole).toInt());
+  return static_cast<cs8LogFileData::MessageLevel>(
+      data(idx, Qt::UserRole).toInt());
 }
 
 qint64 logFileModel::ns(int row) const {
@@ -319,7 +344,9 @@ qint64 logFileModel::ns(int row) const {
 
 uint logFileModel::hash() const { return m_hashLogFile; }
 
-int logFileModel::lastValidLineWithTimeStamp() const { return m_lastValidLineWithDate; }
+int logFileModel::lastValidLineWithTimeStamp() const {
+  return m_lastValidLineWithDate;
+}
 
 QStringList logFileModel::messageList() { return m_logData.toStringList(); }
 
@@ -333,7 +360,8 @@ QString logFileModel::getLines(int start, int count) {
   QFont font;
   QString line;
 
-  for (int row = qMax(0, start); row < qMin(qMax(0, start) + count, m_logData.size() - 1); ++row) {
+  for (int row = qMax(0, start);
+       row < qMin(qMax(0, start) + count, m_logData.size() - 1); ++row) {
     brush = m_logData[row].foregroundColor;
     font = m_logData[row].font;
     line = QString("%3:[%1]:%2\n")
@@ -351,9 +379,12 @@ QString logFileModel::getLines(int start, int count) {
   return doc.toHtml();
 }
 
-void logFileModel::setHighlightRules(highlightItemList *list) { m_highlightRules = list; }
+void logFileModel::setHighlightRules(highlightItemList *list) {
+  m_highlightRules = list;
+}
 
-void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns,
+void logFileModel::setLine(int row, const QDateTime &timeStamp,
+                           const QString &message, int level, double ns,
                            const QString &type) {
   Q_ASSERT(row < rowCount());
   int r = row == -1 ? rowCount() - 1 : row;
@@ -364,11 +395,15 @@ void logFileModel::setLine(int row, const QDateTime &timeStamp, const QString &m
   setData(index(r, 2), message, Qt::DisplayRole);
   setData(index(r, 1), level, Qt::DisplayRole);
 
-  setData(index(r, 2), QString("[%1]:%2").arg(timeStamp.toString("dd/MM/yy HH:mm:ss"), message), Qt::UserRole);
+  setData(
+      index(r, 2),
+      QString("[%1]:%2").arg(timeStamp.toString("dd/MM/yy HH:mm:ss"), message),
+      Qt::UserRole);
   setData(index(r, 1), type, Qt::UserRole);
 }
 
-QVariant logFileModel::headerData(int section, Qt::Orientation orientation, int role) const {
+QVariant logFileModel::headerData(int section, Qt::Orientation orientation,
+                                  int role) const {
   if (role != Qt::DisplayRole)
     return QVariant();
 
@@ -397,7 +432,8 @@ QVariant logFileModel::headerData(int section, Qt::Orientation orientation, int 
   return QVariant();
 }
 
-bool logFileModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+bool logFileModel::setData(const QModelIndex &index, const QVariant &value,
+                           int role) {
   if (!index.isValid() || index.row() >= m_logData.size())
     return false;
 
@@ -477,23 +513,26 @@ bool logFileModel::loadLogFile(QFile *logFile, QFile *swapFile) {
       case cs8MetaInformationModel::Unset: {
         QMessageBox dlg;
         QCheckBox *cb = new QCheckBox(tr("Don't ask me again for this file."));
-        dlg.setText(tr("The time gap between the log file and the swap file is "
-                       "invalid."
-                       "The swap file ends at %1, the log file starts at %2. Do you "
-                       "still want to load the swap file?")
-                        .arg(swapFileData.endDate().toString("yyyy-MM-dd HH:mm:ss"))
-                        .arg(logFileData.startDate().toString("yyyy-MM-dd HH:mm:ss")));
+        dlg.setText(
+            tr("The time gap between the log file and the swap file is "
+               "invalid."
+               "The swap file ends at %1, the log file starts at %2. Do you "
+               "still want to load the swap file?")
+                .arg(swapFileData.endDate().toString("yyyy-MM-dd HH:mm:ss"))
+                .arg(logFileData.startDate().toString("yyyy-MM-dd HH:mm:ss")));
         dlg.setWindowTitle(tr("Log Swap File"));
         dlg.setCheckBox(cb);
         dlg.setIcon(QMessageBox::Question);
         dlg.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
         if (dlg.exec() == QMessageBox::No) {
           loadSwapFile = false;
-          cs8MetaInformationModel::setDlgIgnoreTimeGap(m_hashLogFile, cb->isChecked() ? cs8MetaInformationModel::No
-                                                                                      : cs8MetaInformationModel::Unset);
+          cs8MetaInformationModel::setDlgIgnoreTimeGap(
+              m_hashLogFile, cb->isChecked() ? cs8MetaInformationModel::No
+                                             : cs8MetaInformationModel::Unset);
         } else
-          cs8MetaInformationModel::setDlgIgnoreTimeGap(m_hashLogFile, cb->isChecked() ? cs8MetaInformationModel::Yes
-                                                                                      : cs8MetaInformationModel::Unset);
+          cs8MetaInformationModel::setDlgIgnoreTimeGap(
+              m_hashLogFile, cb->isChecked() ? cs8MetaInformationModel::Yes
+                                             : cs8MetaInformationModel::Unset);
         break;
       }
 
@@ -507,7 +546,8 @@ bool logFileModel::loadLogFile(QFile *logFile, QFile *swapFile) {
       }
     }
   }
-  loadData(loadSwapFile ? swapFileData.rawData() + logFileData.rawData() : logFileData.rawData());
+  loadData(loadSwapFile ? swapFileData.rawData() + logFileData.rawData()
+                        : logFileData.rawData());
   return true;
 }
 
@@ -519,7 +559,9 @@ bool logFileModel::saveLogFile(const QString &fileName) {
   QTextStream out(&file);
   QString lineData;
   for (int line = 0; line < rowCount(); line++) {
-    lineData = QString("[%1]: %2\n").arg(logTimeStampString(line)).arg(logMessage(line));
+    lineData = QString("[%1]: %2\n")
+                   .arg(logTimeStampString(line))
+                   .arg(logMessage(line));
     out << lineData;
   }
   file.close();
@@ -527,7 +569,8 @@ bool logFileModel::saveLogFile(const QString &fileName) {
 }
 
 void logFileModel::downloadLogFile(const QString &address) {
-  QProgressDialog progressDlg("Loading file /log/errors.log", "", 0, 100, qApp->activeWindow());
+  QProgressDialog progressDlg("Loading file /log/errors.log", "", 0, 100,
+                              qApp->activeWindow());
   progressDlg.setModal(true);
   progressDlg.setCancelButton(0);
 
@@ -535,23 +578,25 @@ void logFileModel::downloadLogFile(const QString &address) {
   QByteArray buffer;
   controller->setAddress(address);
   controller->setLoginData("default", "");
-  connect(controller, &cs8Controller::transferProgress, [&](qint64 done, qint64 total) {
-    progressDlg.setMaximum(total);
-    progressDlg.setValue(done);
-
-  });
+  connect(controller, &cs8Controller::transferProgress,
+          [&](qint64 done, qint64 total) {
+            progressDlg.setMaximum(total);
+            progressDlg.setValue(done);
+          });
   if (controller->getFileContent("/log/errors.log", buffer)) {
     QTextStream in(buffer);
     loadData(in.readAll().split("\n"));
   } else {
     QMessageBox::critical(qApp->activeWindow(), tr("Error"),
-                          tr("Loading file /log/errors.log failed: %1").arg(controller->lastError()));
+                          tr("Loading file /log/errors.log failed: %1")
+                              .arg(controller->lastError()));
   }
   controller->deleteLater();
 }
 
-bool logFileModel::connectToController(const cs8LogInterface::ControllerType type, const QString &address, quint16 port,
-                                       bool loadLogFile) {
+bool logFileModel::connectToController(
+    const cs8LogInterface::ControllerType type, const QString &address,
+    quint16 port, bool loadLogFile) {
   m_dateFormat = "[MMM dd yyyy hh:mm:ss]";
 
   if (loadLogFile) {
@@ -566,15 +611,18 @@ bool logFileModel::connectToController(const cs8LogInterface::ControllerType typ
   telnetConnection = new cs8Telnet(this);
   telnetConnection->connectToHost(address, port);
 
-  connect(telnetConnection, &cs8LogInterface::telnetLine, this, &logFileModel::slotLineReceived);
+  connect(telnetConnection, &cs8LogInterface::readyReadLine, this,
+          &logFileModel::slotLineReceived);
 
-  connect(telnetConnection, &cs8LogInterface::connectionError, [=](const QAbstractSocket::SocketError error) {
-    qDebug() << __FUNCTION__ << " Connection error: " << error;
-  });
-  connect(telnetConnection, &cs8LogInterface::stateChanged, [=](const QAbstractSocket::SocketState state) {
-    qDebug() << __FUNCTION__ << " Connection state changed: " << state;
-    emit stateChanged(state);
-  });
+  connect(telnetConnection, &cs8LogInterface::connectionError,
+          [=](const QAbstractSocket::SocketError error) {
+            qDebug() << __FUNCTION__ << " Connection error: " << error;
+          });
+  connect(telnetConnection, &cs8LogInterface::stateChanged,
+          [=](const QAbstractSocket::SocketState state) {
+            qDebug() << __FUNCTION__ << " Connection state changed: " << state;
+            emit stateChanged(state);
+          });
 
   return true;
 }
@@ -584,7 +632,9 @@ void logFileModel::process() {
   m_metaInformation->setLogData(this);
 }
 
-int logFileModel::rowCount(const QModelIndex &) const { return m_logData.size(); }
+int logFileModel::rowCount(const QModelIndex &) const {
+  return m_logData.size();
+}
 
 int logFileModel::columnCount(const QModelIndex &) const { return 3; }
 
@@ -606,8 +656,9 @@ QVariant logFileModel::data(const QModelIndex &index, int role) const {
     }
 
     case 1: {
-      val =
-          m_logData[index.row()].level > 0 ? cs8LogFileData::levelNames.at(m_logData[index.row()].level) : QString("");
+      val = m_logData[index.row()].level > 0
+                ? cs8LogFileData::levelNames.at(m_logData[index.row()].level)
+                : QString("");
       break;
     }
 
@@ -661,7 +712,8 @@ void logFileModel::setRowCount(int totalRowCount, int startRowForInsert) {
   int rowsToInsert = qMax(0, totalRowCount - rowCount());
   if (startRowForInsert == -1)
     startRowForInsert = rowCount();
-  beginInsertRows(QModelIndex(), startRowForInsert, startRowForInsert + rowsToInsert - 1);
+  beginInsertRows(QModelIndex(), startRowForInsert,
+                  startRowForInsert + rowsToInsert - 1);
   m_logData.resize(totalRowCount);
   // m_logData.resize(totalRowCount);
   // for (int i=startRowForInsert;i<totalRowCount;i++)
@@ -672,9 +724,11 @@ void logFileModel::setRowCount(int totalRowCount, int startRowForInsert) {
 }
 
 void logFileModel::runHighlightRules(int startRow_, int endRow_) {
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "Running highlight rules ...";
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "Running highlight rules ...";
   emit p_resetHighlight();
-  for (int row = (startRow_ == -1 ? 0 : qMax(0, startRow_ - 1)); row < (endRow_ == -1 ? rowCount() : endRow_); row++) {
+  for (int row = (startRow_ == -1 ? 0 : qMax(0, startRow_ - 1));
+       row < (endRow_ == -1 ? rowCount() : endRow_); row++) {
     for (int rule = 0; rule < m_highlightRules->rowCount(); rule++) {
       QString line = logMessage(row);
       cs8LogFileData::MessageLevel level = logLevel(row);
@@ -684,8 +738,10 @@ void logFileModel::runHighlightRules(int startRow_, int endRow_) {
       else
         testHit = line.contains(m_highlightRules->searchString(rule));
       if ((testHit && !(m_highlightRules->searchString(rule).isEmpty()) &&
-           (level == cs8LogFileData::Anything || level == cs8LogFileData::Undefined)) ||
-          (m_highlightRules->searchString(rule).isEmpty() && level == m_highlightRules->level(rule) &&
+           (level == cs8LogFileData::Anything ||
+            level == cs8LogFileData::Undefined)) ||
+          (m_highlightRules->searchString(rule).isEmpty() &&
+           level == m_highlightRules->level(rule) &&
            level != cs8LogFileData::Undefined)) {
         QFont font;
         QBrush fgBrush, bgBrush;
@@ -694,15 +750,18 @@ void logFileModel::runHighlightRules(int startRow_, int endRow_) {
         bgBrush.setColor(m_highlightRules->backgroundColor(rule));
         fgBrush.setColor(m_highlightRules->foregroundColor(rule));
 
-        emit p_setHighlight(row, font, fgBrush, bgBrush, m_highlightRules->highlightInScrollbar(rule));
+        emit p_setHighlight(row, font, fgBrush, bgBrush,
+                            m_highlightRules->highlightInScrollbar(rule));
       }
     }
   }
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "Running highlight rules completed";
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "Running highlight rules completed";
 }
 
 void logFileModel::slotLoadingFinished() {
-  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss") << "Loading completed";
+  qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
+           << "Loading completed";
   emit loadingFinished();
 }
 
