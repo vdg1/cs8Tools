@@ -53,6 +53,7 @@ class QWinTaskbarButton;
 
 class FtpWindow : public QMainWindow {
   Q_OBJECT
+  Q_ENUMS(State)
 
 protected slots:
   void slotSelectDownLoadDir();
@@ -64,6 +65,8 @@ public:
   void startSyncProcess();
   bool storeBackupLog(const QString &serialNumber, const QString &backupName,
                       const QString &baseDir);
+
+  enum State { Idle, Scanning, PreparingBackup, LoadFileList, DownloadFiles };
 private slots:
 
   void cancelDownload();
@@ -133,6 +136,7 @@ private:
   bool prepareDownload();
   void saveSettings();
   QString getBackupName(const QString &serialNumber_);
+  State m_state;
   void setFileTimestamp(const QString &fileName_, const QDateTime &timeStamp_);
   void setupPaths();
   void restoreWindow();

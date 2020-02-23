@@ -2,7 +2,7 @@ TEMPLATE = aux
 
 INSTALLER = cs8Tools_Installer
 
-QFIW_DIR=D:/Qt/Tools/QtInstallerFramework/3.0
+QFIW_DIR=D:/Qt/Tools/QtInstallerFramework/3.2
 INPUT = $$PWD/config/config.xml $$PWD/packages
 
 Backup.input = $$PWD/../bin/cs8Backup.exe $$PWD/../bin/cs8BackupSync.exe

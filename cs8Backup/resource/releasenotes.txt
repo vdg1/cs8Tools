@@ -1,3 +1,6 @@
+Version 5.9
+- Small fix: Disable online scanner while backup is conducted
+
 Version 5.7
 - Detailed FTP logging
 

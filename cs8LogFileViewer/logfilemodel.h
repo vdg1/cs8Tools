@@ -51,7 +51,8 @@ public:
   bool setData(const QModelIndex &index, const QVariant &value, int role);
   bool loadLogFile(QFile *logFile, QFile *swapFile = nullptr);
   bool saveLogFile(const QString &fileName);
-  bool connectToController(const cs8LogInterface::ControllerType type, const QString &address, quint16 port,
+  bool connectToController(const cs8LogInterface::ControllerType type,
+                           const QString &address, quint16 port,
                            bool loadLogFile);
   int swapLineCount() const;
 
@@ -69,7 +70,8 @@ signals:
 
   // internal signals
   void p_resetHighlight();
-  void p_setLogLine(uint, const QDateTime &, const QString &, int, double, const QString &);
+  void p_setLogLine(uint, const QDateTime &, const QString &, int, double,
+                    const QString &);
   void p_setHighlight(int, QFont, QBrush, QBrush, bool);
   void p_setLogSize(int);
   void logMessageReceived();
@@ -78,7 +80,8 @@ signals:
 
 public slots:
   void setHighlightRules(highlightItemList *list);
-  void setLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ns, const QString &type);
+  void setLine(int row, const QDateTime &timeStamp, const QString &message,
+               int level, double ns, const QString &type);
   void slotRunHighlightRules();
 
 protected:
@@ -87,9 +90,11 @@ protected:
 protected slots:
   void slotLoadingFinished();
   void slotReadingComplete(bool valid);
-  void slotSetLogLine(int row, const QDateTime &timeStamp, const QString &message, int level, double ms,
+  void slotSetLogLine(int row, const QDateTime &timeStamp,
+                      const QString &message, int level, double ms,
                       const QString &type);
-  void slotSetHighlight(int row, QFont font, QBrush fgBrush, QBrush bgBrush, bool highLight_);
+  void slotSetHighlight(int row, QFont font, QBrush fgBrush, QBrush bgBrush,
+                        bool highLight_);
   void slotSetLogSize(int rowCount);
   void slotAppendRows(int rowCount);
   void slotResetHighlight();
