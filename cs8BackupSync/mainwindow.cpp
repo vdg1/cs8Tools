@@ -314,13 +314,21 @@ void MainWindow::syncBackupsToRemote() {
           } else {
             if (!fileInfo.exists())
               trayIcon->showMessage(tr("Syncing"),
-                                    tr("Error: %1: %2").arg(tr("The backup does not exists!")).arg(backupName),
+                                    tr("Error: %1: %2")
+                                        .arg(tr("The backup does not exists!"))
+                                        .arg(backupName),
                                     QSystemTrayIcon::Critical);
           }
         }
       }
       /// TODO commit changes?
-      settings.setValue("lastSync", QDateTime::currentDateTime().toString(Qt::ISODate));
+      settings.setValue("lastSync",
+                        QDateTime::currentDateTime().toString(Qt::ISODate));
+      // touch a file to indicate this is the sync directory
+      QFile file(remotePath + "/.sync");
+      if (file.open(QIODevice::WriteOnly)) {
+        // created sync file
+      }
       // qxtLog->info() << "Sync complete at: " << QDateTime::currentDateTime();
     }
   }

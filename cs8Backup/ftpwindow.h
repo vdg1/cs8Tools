@@ -143,6 +143,8 @@ private:
   void setupUi();
   void createObjects();
   void checkDBTables();
+  bool validateDownloadDir(QString &validationResult);
+  bool bBlockDownload;
 
 protected:
   void closeEvent(QCloseEvent *event) override;

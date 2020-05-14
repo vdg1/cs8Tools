@@ -191,8 +191,25 @@ void FtpWindow::checkDBTables() {
                     QDateTime::currentDateTime().toString(Qt::ISODate));
 }
 
+bool FtpWindow::validateDownloadDir(QString &validationResult) {
+  QDir dir(ui.leDownloadDir->text());
+  if (!dir.exists()) {
+    validationResult = tr("The download folder does not exist!");
+    return false;
+  }
+
+  if (QFile::exists(dir.absolutePath() + "/.sync")) {
+    validationResult =
+        tr("The download folder seems to be identical with the syncronisation "
+           "folder. Please check the settings in cs8backup sync!");
+    return false;
+  }
+
+  return true;
+}
+
 FtpWindow::FtpWindow(QWidget *parent)
-    : QMainWindow(parent), m_progressDialog(nullptr) {
+    : QMainWindow(parent), m_progressDialog(nullptr), bBlockDownload(true) {
   ui.setupUi(this);
 
   checkDBTables();
@@ -341,6 +358,7 @@ void FtpWindow::downloadFiles() {
         ok = m_controller->downloadFile(fileName, localFileName, remoteSize);
         if (!ok) {
           lastError = m_controller->lastError();
+
           qDebug() << "transfer failed:" << lastError;
           protocol.append(QString("Failed to download: %1 : %2")
                               .arg(fileName)
@@ -860,7 +878,7 @@ void FtpWindow::on_btSelectDownloadDir_clicked() {
 
 void FtpWindow::slotOnlineState(bool online, int /*error*/,
                                 const QString &errorString) {
-  ui.btDownload->setEnabled(online);
+  ui.btDownload->setEnabled(online && !bBlockDownload);
   m_LoadingDataMovie->stop();
 
   if (!online) {
@@ -985,6 +1003,16 @@ bool FtpWindow::eventFilter(QObject *obj, QEvent *event) {
 
 void FtpWindow::on_leDownloadDir_textChanged(const QString &arg1) {
   ui.leDownloadDir->setToolTip(arg1);
+  ui.leDownloadDir->setStyleSheet("");
+
+  QString result;
+  if (!validateDownloadDir(result)) {
+    ui.leDownloadDir->setToolTip(result);
+    ui.leDownloadDir->setStyleSheet("border: 1px solid red");
+    bBlockDownload = true;
+  } else {
+    bBlockDownload = false;
+  }
 }
 
 void FtpWindow::slotSelectionChanged(QItemSelection selected,
