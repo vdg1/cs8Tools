@@ -611,7 +611,7 @@ bool logFileModel::connectToController(
   telnetConnection = new cs8Telnet(this);
   telnetConnection->connectToHost(address, port);
 
-  connect(telnetConnection, &cs8LogInterface::readyReadLine, this,
+  connect(telnetConnection, &cs8LogInterface::telnetLine, this,
           &logFileModel::slotLineReceived);
 
   connect(telnetConnection, &cs8LogInterface::connectionError,

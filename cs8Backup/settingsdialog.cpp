@@ -95,7 +95,8 @@ QStringList settingsDialog::findQmFiles() {
   return fileNames;
 }
 
-void settingsDialog::on_leBackupTemplate_textChanged(const QString /*&arg1*/) {
+void settingsDialog::on_leBackupTemplate_textChanged(
+    const QString & /*&arg1*/) {
   QString name = ui.leBackupTemplate->text();
   name.replace("%SN", "F06_123A1_C_01");
   name = QDateTime::currentDateTime().toString("yyyyMMdd-hhmm") + name;

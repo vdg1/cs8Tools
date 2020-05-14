@@ -20,17 +20,20 @@
 #include <../common/machinecatalogue.h>
 #include <../common/vpnconnectivity.h>
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
   // start
   createDBConnection();
 
   ui->setupUi(this);
   watcher = new QFileSystemWatcher(this);
-  connect(watcher, &QFileSystemWatcher::fileChanged, this, &MainWindow::updateCatalogue);
+  connect(watcher, &QFileSystemWatcher::fileChanged, this,
+          &MainWindow::updateCatalogue);
 
   m_checkUpdate = new cs8CheckUpdate(this);
   m_checkUpdate->enableRegularCheck(600);
-  connect(m_checkUpdate, &cs8CheckUpdate::checkCompleted, this, &MainWindow::slotUpdateCheckFinished);
+  connect(m_checkUpdate, &cs8CheckUpdate::checkCompleted, this,
+          &MainWindow::slotUpdateCheckFinished);
   QTimer::singleShot(100, m_checkUpdate, SLOT(checkForUpdates()));
 
   createActions();
@@ -40,7 +43,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
   // qxtLog->addLoggerEngine( "logger", new QxtBasicFileLoggerEngine( m_appData
   // + "/cs8BackSync.log" ) );  qxtLog->info( "cs8BackupSync started" );
 
-  // trayIcon->showMessage(tr("CS8 Backup & Logging Tools Sync started"), tr(""), QSystemTrayIcon::Information, 5);
+  // trayIcon->showMessage(tr("CS8 Backup & Logging Tools Sync started"),
+  // tr(""), QSystemTrayIcon::Information, 5);
 
   pollTimer = new QTimer(this);
   pollTimer->start(60000);
@@ -50,7 +54,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
   // check if about dialog shall be shown for first time after update
   QSettings settings;
-  if (settings.value("cs8BackupSync/releaseNotes", "").toString() != qApp->applicationVersion()) {
+  if (settings.value("cs8BackupSync/releaseNotes", "").toString() !=
+      qApp->applicationVersion()) {
     on_actionAbout_triggered();
     settings.setValue("cs8BackupSync/releaseNotes", qApp->applicationVersion());
   }
@@ -120,11 +125,16 @@ void MainWindow::restoreSettings() {
   ui->cbAutoStart->setChecked(settings.value("autoStart", true).toBool());
   ui->cbEnableSync->setChecked(settings.value("enableSync", true).toBool());
   ui->cbAvoidVpn->setChecked(settings.value("avoidVPNSync", true).toBool());
-  ui->leRemotePath->setText(
-      QDir::toNativeSeparators(settings.value("remotePath", QString::fromUtf8("S:/Service/RobotBackups")).toString()));
-  ui->cbEnableCatalogueImport->setChecked(settings.value("enableCatalogueImport", true).toBool());
+  ui->leRemotePath->setText(QDir::toNativeSeparators(
+      settings.value("remotePath", QString::fromUtf8("S:/Service/RobotBackups"))
+          .toString()));
+  ui->cbEnableCatalogueImport->setChecked(
+      settings.value("enableCatalogueImport", true).toBool());
   ui->leCatalogueFile->setText(QDir::toNativeSeparators(
-      settings.value("catalogueFile", QString::fromUtf8("S:/Service/RobotBackups/Catalogue.xlsx")).toString()));
+      settings
+          .value("catalogueFile",
+                 QString::fromUtf8("S:/Service/RobotBackups/Catalogue.xlsx"))
+          .toString()));
   ui->leMaintainer->setText(settings.value("maintainer").toString());
   ui->leCatalogue_URL->setText(settings.value("catalogueURL").toString());
 
@@ -142,7 +152,8 @@ void MainWindow::saveSettings() {
   settings.setValue("enableSync", ui->cbEnableSync->isChecked());
   settings.setValue("avoidVPNSync", ui->cbAvoidVpn->isChecked());
   settings.setValue("remotePath", ui->leRemotePath->text());
-  settings.setValue("enableCatalogueImport", ui->cbEnableCatalogueImport->isChecked());
+  settings.setValue("enableCatalogueImport",
+                    ui->cbEnableCatalogueImport->isChecked());
   settings.setValue("catalogueFile", ui->leCatalogueFile->text());
   settings.setValue("catalogueURL", ui->leCatalogue_URL->text());
   settings.setValue("maintainer", ui->leMaintainer->text());
@@ -171,7 +182,8 @@ void MainWindow::createTrayIcon() {
   trayIcon->setToolTip(tr("cs8 Backup & Logging Tools Sync"));
   setWindowIcon(icon);
 
-  connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
+  connect(trayIcon, &QSystemTrayIcon::activated, this,
+          &MainWindow::iconActivated);
 }
 
 void MainWindow::createActions() {
@@ -182,15 +194,17 @@ void MainWindow::createActions() {
   connect(quitAction, &QAction::triggered, this, &MainWindow::slotAskToQuit);
 
   updateAction = new QAction(tr("Check for updates"), this);
-  connect(updateAction, &QAction::triggered, this, &MainWindow::slotCheckUpdate);
+  connect(updateAction, &QAction::triggered, this,
+          &MainWindow::slotCheckUpdate);
 }
 
 void MainWindow::checkAutoStart() {
   QSettings settings;
   QString appName = QApplication::applicationName();
   QString path = QApplication::applicationFilePath();
-  QSettings regSettings("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-                        QSettings::NativeFormat);
+  QSettings regSettings(
+      "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+      QSettings::NativeFormat);
   if (settings.value("autoStart", true).toBool())
     regSettings.setValue(appName, path.replace('/', '\\'));
   else
@@ -208,15 +222,18 @@ void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
   }
 }
 
-void MainWindow::slotUpdateCheckFinished(const QStringList &updates, const QStringList &versions, bool error) {
+void MainWindow::slotUpdateCheckFinished(const QStringList &updates,
+                                         const QStringList &versions,
+                                         bool error) {
   if (!error && updates.count() != 0)
     trayIcon->showMessage(tr("cs8Tools Update"), tr("Updates available!"));
 }
 
 void MainWindow::on_pbRemotePathBrowse_clicked() {
   QString path;
-  path =
-      QFileDialog::getExistingDirectory(this, tr("Select remote location of backup storage"), ui->leRemotePath->text());
+  path = QFileDialog::getExistingDirectory(
+      this, tr("Select remote location of backup storage"),
+      ui->leRemotePath->text());
   if (!path.isEmpty()) {
     ui->leRemotePath->setText(QDir::toNativeSeparators(path));
     saveSettings();
@@ -225,7 +242,8 @@ void MainWindow::on_pbRemotePathBrowse_clicked() {
 
 void MainWindow::on_pbCatalogueFileBrowse_clicked() {
   QString fileName;
-  fileName = QFileDialog::getOpenFileName(this, tr("Select catalogue file"), ui->leCatalogueFile->text(),
+  fileName = QFileDialog::getOpenFileName(this, tr("Select catalogue file"),
+                                          ui->leCatalogueFile->text(),
                                           tr("Table (*.xlsx)"));
   if (!fileName.isEmpty()) {
     ui->leCatalogueFile->setText(QDir::toNativeSeparators(fileName));
@@ -233,20 +251,24 @@ void MainWindow::on_pbCatalogueFileBrowse_clicked() {
   }
 }
 
-void MainWindow::on_cbEnableCatalogueImport_toggled(bool /*checked*/) { saveSettings(); }
+void MainWindow::on_cbEnableCatalogueImport_toggled(bool /*checked*/) {
+  saveSettings();
+}
 
 void MainWindow::on_cbEnableSync_toggled(bool /*checked*/) { saveSettings(); }
 
 void MainWindow::syncBackupsToRemote() {
   bool vpnActive = vpnConnectivity::online();
-  if (ui->cbEnableSync->isChecked() && ((vpnActive && !ui->cbAvoidVpn->isChecked()) || !vpnActive)) {
+  if (ui->cbEnableSync->isChecked() &&
+      ((vpnActive && !ui->cbAvoidVpn->isChecked()) || !vpnActive)) {
     QSettings settings;
     QDateTime lastUpdate = settings.value("lastSync").toDateTime();
     QDateTime lastBackup = settings.value("lastBackup").toDateTime();
     QString remotePath = ui->leRemotePath->text();
     QFileInfo remotePathInfo(remotePath);
 
-    if (remotePathInfo.exists() && ((lastBackup > lastUpdate) || !lastUpdate.isValid())) {
+    if (remotePathInfo.exists() &&
+        ((lastBackup > lastUpdate) || !lastUpdate.isValid())) {
       QSqlTableModel table;
       table.setTable("backupData");
       table.select();
@@ -272,7 +294,8 @@ void MainWindow::syncBackupsToRemote() {
             relFilePath.remove(0, basePath.length());
             // qxtLog->info() << "sync Backup: " << relFilePath;
 
-            trayIcon->showMessage(tr("Syncing"), tr("Backup: %1").arg(relFilePath));
+            trayIcon->showMessage(tr("Syncing"),
+                                  tr("Backup: %1").arg(relFilePath));
             QFile f(backupName);
             QString dest = remotePath + relFilePath;
             do {
@@ -289,7 +312,8 @@ void MainWindow::syncBackupsToRemote() {
                 } else {
                   n.append("#1");
                 }
-                dest = fileInfo.absolutePath() + "/" + n + "." + fileInfo.suffix();
+                dest =
+                    fileInfo.absolutePath() + "/" + n + "." + fileInfo.suffix();
                 // qxtLog->info() << "sync Backup: " <<
                 // fileInfo.absoluteFilePath() << "already exist - set dest to "
                 // << dest;
@@ -306,7 +330,9 @@ void MainWindow::syncBackupsToRemote() {
               if (!table.setRecord(row, record))
                 qDebug() << "Failed to update backup log";
             } else {
-              trayIcon->showMessage(tr("Syncing"), tr("Error: %1").arg(f.errorString()), QSystemTrayIcon::Critical);
+              trayIcon->showMessage(tr("Syncing"),
+                                    tr("Error: %1").arg(f.errorString()),
+                                    QSystemTrayIcon::Critical);
               // qxtLog->error() << "sync Backup: " <<
               // fileInfo.absoluteFilePath() << "failed:" << f.errorString();
             }
@@ -345,27 +371,36 @@ void MainWindow::updateCatalogue() {
     QDateTime lastUpdate = settings.value("lastCatalogueImport").toDateTime();
     QFileInfo remoteFileInfo(ui->leCatalogueFile->text());
     machineCatalogue catalogue;
-    qDebug() << "remote catalogue: " << remoteFileInfo.absoluteFilePath() << " exists: " << remoteFileInfo.exists()
-             << " modified: " << remoteFileInfo.lastModified().toString() << " last update: " << lastUpdate.toString();
+    qDebug() << "remote catalogue: " << remoteFileInfo.absoluteFilePath()
+             << " exists: " << remoteFileInfo.exists()
+             << " modified: " << remoteFileInfo.lastModified().toString()
+             << " last update: " << lastUpdate.toString();
     if (remoteFileInfo.exists() &&
-        ((remoteFileInfo.lastModified() > lastUpdate) || !lastUpdate.isValid() || catalogue.entries() == 0)) {
+        ((remoteFileInfo.lastModified() > lastUpdate) ||
+         !lastUpdate.isValid() || catalogue.entries() == 0)) {
       // qxtLog->info() << "Importing new machine catalogue";
-      trayIcon->showMessage(tr("New Machine Catalogue detected"), tr("Importing the new machine catalogue"));
+      trayIcon->showMessage(tr("New Machine Catalogue detected"),
+                            tr("Importing the new machine catalogue"));
 
       if (!catalogue.importFile(remoteFileInfo.absoluteFilePath())) {
-        QMessageBox::critical(this, tr("CS8Backup Catalogue Update"), tr("The import of the new catalogue failed!"),
+        QMessageBox::critical(this, tr("CS8Backup Catalogue Update"),
+                              tr("The import of the new catalogue failed!"),
                               QMessageBox::Ok);
       } else {
-        trayIcon->showMessage(tr("New Machine Catalogue detected"), tr("Import complete!"));
-        settings.setValue("lastCatalogueImport", QDateTime::currentDateTime().toString(Qt::ISODate));
+        trayIcon->showMessage(tr("New Machine Catalogue detected"),
+                              tr("Import complete!"));
+        settings.setValue("lastCatalogueImport",
+                          QDateTime::currentDateTime().toString(Qt::ISODate));
       }
     }
   }
 }
 
 void MainWindow::slotAskToQuit() {
-  if (QMessageBox::question(this, tr("CS8Backup Sync"), tr("Are you sure you want to quit CS8Backup Sync?"),
-                            QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+  if (QMessageBox::question(this, tr("CS8Backup Sync"),
+                            tr("Are you sure you want to quit CS8Backup Sync?"),
+                            QMessageBox::Yes | QMessageBox::No) ==
+      QMessageBox::Yes) {
     qApp->quit();
   }
 }
@@ -379,11 +414,14 @@ void MainWindow::on_cbAvoidVpn_toggled(bool /*checked*/) { saveSettings(); }
 void MainWindow::on_leMaintainer_editingFinished() { saveSettings(); }
 
 void MainWindow::on_pbConfigureImport_clicked() {
-  DialogMachineCatalogueImportConfiguration dlg(this, ui->leCatalogueFile->text());
+  DialogMachineCatalogueImportConfiguration dlg(this,
+                                                ui->leCatalogueFile->text());
   dlg.exec();
 }
 
-void MainWindow::slotCheckUpdate() { m_checkUpdate->checkForUpdates(true, true); }
+void MainWindow::slotCheckUpdate() {
+  m_checkUpdate->checkForUpdates(true, true);
+}
 
 void MainWindow::on_cbAutoStart_toggled(bool /*checked*/) {
   saveSettings();
