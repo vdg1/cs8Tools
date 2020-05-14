@@ -126,6 +126,10 @@ private slots:
 
   void on_actionShow_Errors_toggled(bool arg1);
 
+  void on_actionSystem_Configurations_triggered();
+
+  void on_actionSearch_triggered();
+
 private:
   void createActions();
   void createMenus();
@@ -134,7 +138,8 @@ private:
   void writeSettings();
   void readRules();
   void writeRules();
-  void connectToController(const QString &address, quint16 port, bool loadLogFile);
+  void connectToController(const QString &address, quint16 port,
+                           bool loadLogFile);
   highlightItemList *highlightItems;
   MdiChild *createMdiChild();
   MdiChild *activeMdiChild();

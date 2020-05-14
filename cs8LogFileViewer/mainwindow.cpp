@@ -772,3 +772,9 @@ void MainWindow::on_actionShow_Errors_toggled(bool arg1) {
   if (activeMdiChild())
     activeMdiChild()->showErrorMessages(arg1);
 }
+
+void MainWindow::on_actionSystem_Configurations_triggered() {
+  ui.dwSystemConfiguration->show();
+}
+
+void MainWindow::on_actionSearch_triggered() { ui.dwSearch->show(); }
