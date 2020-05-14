@@ -33,52 +33,55 @@
 
 #include <QWidget>
 
-#include "ui_cs8searchwidget.h"
 #include "logfilemodel.h"
+#include "ui_cs8searchwidget.h"
 
 class QTimer;
 class QSortFilterProxyModel;
 
-class cs8SearchWidget: public QWidget {
-    Q_OBJECT
+class cs8SearchWidget : public QWidget {
+  Q_OBJECT
 
 public:
-    cs8SearchWidget(QWidget *parent = 0)	;
-    ~	cs8SearchWidget();
+  cs8SearchWidget(QWidget *parent = 0);
+  ~cs8SearchWidget();
 
-    void setModel(logFileModel* model);
+  void setModel(logFileModel *model);
 
-    QString searchText() const;
-    void setSearchText(const QString &searchText);
+  QString searchText() const;
+  void setSearchText(const QString &searchText);
 
-    bool isRegExp() const;
-    void setIsRegExp(bool isRegExp);
+  bool isRegExp() const;
+  void setIsRegExp(bool isRegExp);
 
 private:
-    Ui::cs8SearchWidgetClass ui;
+  Ui::cs8SearchWidgetClass ui;
 
-    void updateSearchFilterProxy();
+  void updateSearchFilterProxy();
 
 public slots:
 
-    void updateSearchParameters();
-    
+  void updateSearchParameters();
+
 protected slots:
-    void on_toolButtonClear_clicked();
-    void on_lineEditSearchText_textChanged(const QString & searchText);
-    void slotSearchResultSelected(const QModelIndex & index);
+  void on_toolButtonClear_clicked();
+  void on_lineEditSearchText_textChanged(const QString &searchText);
+  void slotSearchResultSelected(const QModelIndex &index);
+  void slotRegExpValid(bool valid);
 
 protected:
-    QSortFilterProxyModel * m_filterProxy;
-    QTimer * m_timer;
-    QString m_searchText;
-    logFileModel *m_sourceModel;
-    bool m_isRegExp;
+  QSortFilterProxyModel *m_filterProxy;
+  QTimer *m_timer;
+  QString m_searchText;
+  logFileModel *m_sourceModel;
+  bool m_isRegExp;
 
 signals:
-    void lineSelected(int line);
+  void lineSelected(int line);
+  void searchRegExpValid(bool valid);
+
 private slots:
-    void on_cbRegularExpression_toggled(bool checked);
+  void on_cbRegularExpression_toggled(bool checked);
 };
 
 #endif // CS8SEARCHWIDGET_H
