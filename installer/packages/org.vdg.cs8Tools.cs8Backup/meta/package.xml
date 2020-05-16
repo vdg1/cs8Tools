@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>CS8 Backup</DisplayName>
     <Description>CS8 Backup program and synchronisation tool.</Description>
-    <Version>5.9.104</Version>
-    <ReleaseDate>2020-02-23</ReleaseDate>
+    <Version>6.0.0</Version>
+    <ReleaseDate>2020-05-16</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
     <Licenses>

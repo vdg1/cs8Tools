@@ -1,3 +1,7 @@
+Version 6.0.0
+- Fixed Windows theme (no more old school UI)
+- Added check if download folder is identical with the syncronisation folder. If it is, the backup cannot be started.
+
 Version 5.9
 - Small fix: Disable online scanner while backup is conducted
 

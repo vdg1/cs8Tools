@@ -6,3 +6,5 @@
 **/ui_*.h
 **/package.xml
 bin/
+Makefile*
+installer/packages/

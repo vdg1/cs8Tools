@@ -6,13 +6,15 @@
 #include <QDomDocument>
 #include <QFile>
 
-aboutDialog::aboutDialog(const QString &releaseNotesFile, QWidget *parent) : QDialog(parent), ui(new Ui::aboutDialog) {
+aboutDialog::aboutDialog(const QString &releaseNotesFile, QWidget *parent)
+    : QDialog(parent), ui(new Ui::aboutDialog) {
 
   ui->setupUi(this);
   ui->labelVersion->setText(qApp->applicationVersion());
 
   QFile file(releaseNotesFile);
-  qDebug() << "release notes file:" << file.fileName() << " exists:" << file.exists();
+  qDebug() << "release notes file:" << file.fileName()
+           << " exists:" << file.exists();
   if (file.open(QFile::ReadOnly))
     ui->textEditChangelog->setPlainText(file.readAll());
   this->setWindowTitle(tr("About %1").arg(qApp->applicationName()));

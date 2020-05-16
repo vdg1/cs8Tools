@@ -1,3 +1,9 @@
+Version 6.0.0
+- Fixed Windows theme (no more old school UI)
+- Highlight search text box if regular expression is enabled and the expression text in the search box is not a
+  valid regular expression.
+- Added menu entries to restore "System configuration" and "Search" dock if they have been closed by the user.
+
 Version 5.9
 - Fixed "Scroll to bottom" action not enabled
 - Fixed URL call to machine catalogue file

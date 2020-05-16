@@ -1,8 +1,10 @@
-MAJOR_VERSION=5
-MINOR_VERSION=9
+MAJOR_VERSION=6
+MINOR_VERSION=0
+REVISION=0
+BUILD_NO=$$cat($$_PRO_FILE_PWD_"/build.txt")
 
 
-VERSION = 5.9
+VERSION = 6.0.0
 
 # Define the preprocessor macro to get the application version in our application.
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -58,11 +60,11 @@ CONFIG(release, debug|release) {
     PRE_TARGETDEPS += build_nr
     system(build_inc.bat $$shell_path($$_PRO_FILE_PWD_))
 }
-BUILD_NO=$$cat($$_PRO_FILE_PWD_"/build.txt")
+
 
 # set version information
 # message($$_PRO_FILE_PWD_"/build.txt >> "$$BUILD_NO)
-NW_VERSION=$${MAJOR_VERSION}.$${MINOR_VERSION}.$${BUILD_NO}
+NW_VERSION=$${MAJOR_VERSION}.$${MINOR_VERSION}.$${REVISION}
 SED=$$quote(C:\Progra~2\GnuWin32\bin\sed.exe  s/Revision://g)
 
 DEFINES += "VERSION_RC=$${NW_VERSION}"
@@ -74,7 +76,7 @@ DEFINES += "PRODUCT_VERSION_STRING=\\\"$${NW_VERSION}\\\""
 PROD_VERSION=$${NW_VERSION}
 # BUILDDATE = $$system(echo %date:/=-% )
 BUILDDATE=$$system(powershell get-date -format "{yyyy-MM-dd}")
-message("product version of $$_PRO_FILE_PWD_: "$${PROD_VERSION}" date: "$${BUILDDATE})
+message("product version of $$_PRO_FILE_PWD_: "$${PROD_VERSION}" build: "$${BUILD_NO}" date: "$${BUILDDATE})
 
 # update package files
 package=$$cat($$PACKAGE_DIR/meta/package.template.xml,blob)
