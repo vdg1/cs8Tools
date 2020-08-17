@@ -10,7 +10,8 @@ QStringList cs8LogFileData::levelNames = QStringList() << "Anything"
                                                        << "ERROR"
                                                        << "UNDEFINED";
 
-cs8LogFileData::cs8LogFileData(QObject *parent) : QObject(parent), m_hashLogFile(0) {}
+cs8LogFileData::cs8LogFileData(QObject *parent)
+    : QObject(parent), m_hashLogFile(0) {}
 
 void cs8LogFileData::load(QFile *file) {
   QTextStream in(file);
@@ -38,8 +39,8 @@ QString cs8LogFileData::guessDateFormat(const QStringList &lines) {
          qDebug() << "cs8LogModel::guessDateFormat: " << format;
          return format;
        */
-      foreach (QString f, dateFormats) {
-        // qDebug() << line.split("]:").first();
+      for (auto f : dateFormats) {
+        qDebug() << line.split("]:").first();
         if (QDateTime::fromString(line.split("]:").first() + "]", f).isValid())
           return f;
       }
@@ -104,12 +105,14 @@ void cs8LogFileData::process() {
   m_data.clear();
   foreach (QString line, m_rawData) {
     logFileLineItem item;
-    // qDebug() << rxHash.match(line) << rxId.match(line) << rxTimeStamp.match(line);
+    // qDebug() << rxHash.match(line) << rxId.match(line) <<
+    // rxTimeStamp.match(line);
     item.hash = rxHash.match(line).captured(1).toInt(&ok, 16);
     line.remove(rxHash);
     item.id = rxId.match(line).captured(1);
     line.remove(rxId);
-    item.date = QDateTime::fromString(rxTimeStamp.match(line).captured(1), m_dateFormat);
+    item.date = QDateTime::fromString(rxTimeStamp.match(line).captured(1),
+                                      m_dateFormat);
     line.remove(rxTimeStamp);
     item.message = line.simplified();
     m_data.append(item);

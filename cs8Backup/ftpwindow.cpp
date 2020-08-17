@@ -409,6 +409,7 @@ void FtpWindow::downloadFiles() {
                 // delete local file on retry
                 file.remove(localFileName);
                 retry = settings.value("automaticRetries", 5).toInt();
+                // m_controller->closeFtpConnection();
                 break;
 
               case QMessageBox::Ignore:
