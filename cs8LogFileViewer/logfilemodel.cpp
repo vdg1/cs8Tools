@@ -233,7 +233,9 @@ bool logFileModel::loadFileData(const QStringList &data) {
               qDebug() << "unknown entry type row " << lineNumber;
             }
             // replace place holders in message
-            if (dataArray.size() > 0) {
+            buildMessageString(message, dataArray);
+            /*
+             * if (dataArray.size() > 0) {
               QRegExp rx;
               rx.setPattern("(%[usdg]){1}");
               rx.setMinimal(false);
@@ -252,6 +254,7 @@ bool logFileModel::loadFileData(const QStringList &data) {
                 pos += rx.matchedLength();
               }
             }
+*/
 
             // timeStamp=(timeStamp-floor(timeStamp))*1000;
             // store ms in QDateTime
@@ -757,6 +760,34 @@ void logFileModel::runHighlightRules(int startRow_, int endRow_) {
   }
   qDebug() << QDateTime::currentDateTime().toString("hh:mm:ss")
            << "Running highlight rules completed";
+}
+
+void logFileModel::buildMessageString(QString &message,
+                                      const QJsonArray &dataArray) {
+    qDebug() << dataArray;
+    for (auto data : dataArray) {
+        qDebug() << data;
+        if (data.toObject()["data"].isArray()) {
+            QString intermediate = data.toObject()["val"].toString();
+            buildMessageString(intermediate, data.toObject()["data"].toArray());
+            // buildMessageString(data.toObject()["val"].toString(), message);
+            QRegularExpression rx;
+            rx.setPattern("(%[usdg]){1}");
+            rx.setPatternOptions(rx.CaseInsensitiveOption);
+            auto match = rx.match(message);
+            message.replace(match.capturedStart(), match.capturedLength(),
+                            intermediate);
+        } else {
+            QRegularExpression rx;
+            rx.setPattern("(%[usdg]){1}");
+            rx.setPatternOptions(rx.CaseInsensitiveOption);
+            auto match = rx.match(message);
+            message.replace(
+                match.capturedStart(), match.capturedLength(),
+                QString("%1").arg(
+                    data.toObject().value("val").toVariant().toString()));
+        }
+    }
 }
 
 void logFileModel::slotLoadingFinished() {

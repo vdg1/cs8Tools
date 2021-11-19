@@ -131,6 +131,7 @@ private:
   bool loadFileData(const QStringList &data);
   void preProcessData(const QStringList &lines);
   void runHighlightRules(int startRow_ = -1, int endRow_ = -1);
+  void buildMessageString(QString &message, const QJsonArray &data);
 
   cs8LogInterface *telnetConnection;
 };
